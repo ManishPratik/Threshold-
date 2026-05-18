@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0C0A07">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="THRESHOLD">
+<title>THRESHOLD</title>
+<link rel="manifest" href="data:application/json,{%22name%22:%22THRESHOLD%22,%22short_name%22:%22THRESHOLD%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%230C0A07%22,%22theme_color%22:%22%230C0A07%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230C0A07'/><text y='.9em' font-size='75' x='12'>⚡</text></svg>%22,%22sizes%22:%22any%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any maskable%22}]}"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   THRESHOLD v2.0 | Built: May 2026
+   SECTION: DESIGN TOKENS
+   — Never change token names, only values
+═══════════════════════════════════════════════════ */
+:root {
+  --bg:           #0C0A07;
+  --surface-1:    #141009;
+  --surface-2:    #1C160C;
+  --surface-3:    #241E10;
+  --border:       rgba(212,168,84,0.1);
+  --border-act:   rgba(212,168,84,0.3);
+  --gold-dim:     #4A3A16;
+  --gold-mid:     #C49A3C;
+  --gold:         #D4A854;
+  --gold-bright:  #EFC96A;
+  --gold-blaze:   #FFE08A;
+  --gold-glow:    rgba(212,168,84,0.15);
+  --gold-glow2:   rgba(212,168,84,0.06);
+  --crimson-deep: #3A0808;
+  --crimson:      #8B1A1A;
+  --crimson-br:   #C42B2B;
+  --crimson-glow: rgba(139,26,26,0.25);
+  --worm-1:       #C47A6A;
+  --worm-2:       #8A6060;
+  --worm-3:       #5A4A4A;
+  --worm-4:       #3A2A2A;
+  --green:        #3A6B4A;
+  --green-br:     #5A9B6A;
+  --text:         #F0E8D0;
+  --text-2:       #A89870;
+  --text-3:       #6A5A40;
+  --text-4:       #3A2E1E;
+  --font-d:       'Playfair Display', serif;
+  --font-b:       'DM Sans', sans-serif;
+  --font-m:       'JetBrains Mono', monospace;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   SECTION: BADGE OVERLAY STYLES
+═══════════════════════════════════════════════════ */
+/* (see #ov-badge in modals section) */
+
+/* ═══════════════════════════════════════════════════
+   SECTION: INSTALL BANNER STYLES
+═══════════════════════════════════════════════════ */
+/* (see #install-banner) */
+/* ═══════════════════════════════════════════════════
+   SECTION: RESET & BASE
+═══════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+button{font-family:var(--font-b);cursor:pointer;border:none;background:none;color:inherit;}
+input{font-family:var(--font-b);}
+::-webkit-scrollbar{width:0;}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: ATMOSPHERE
+═══════════════════════════════════════════════════ */
+#atm{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.ember{position:absolute;border-radius:50%;animation:ember-rise var(--d) ease-in-out infinite;opacity:0;}
+@keyframes ember-rise{
+  0%{opacity:0;transform:translateY(0) translateX(0) scale(0);}
+  20%{opacity:var(--o);}
+  80%{opacity:var(--o);}
+  100%{opacity:0;transform:translateY(-140px) translateX(var(--x)) scale(0.2);}
+}
+.heat{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;}
+.heat-a{width:350px;height:250px;background:radial-gradient(ellipse,rgba(212,168,84,0.05) 0%,transparent 70%);bottom:-60px;left:50%;transform:translateX(-50%);animation:heat-pulse-a 10s ease-in-out infinite;}
+.heat-b{width:250px;height:250px;background:radial-gradient(circle,rgba(139,26,26,0.04) 0%,transparent 70%);top:20%;right:-60px;animation:heat-pulse-b 14s ease-in-out infinite;}
+@keyframes heat-pulse-a{0%,100%{opacity:0.5;transform:scale(1) translateX(-50%);}50%{opacity:1;transform:scale(1.2) translateX(-50%);}}
+@keyframes heat-pulse-b{0%,100%{opacity:0.4;transform:scale(1);}50%{opacity:0.8;transform:scale(1.15);}}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: SCREEN SYSTEM
+═══════════════════════════════════════════════════ */
+.screen{display:none;min-height:100vh;position:relative;z-index:1;}
+.screen.active{display:block;}
+#s-launch.active{display:flex;flex-direction:column;}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: LAUNCH SCREEN
+═══════════════════════════════════════════════════ */
+#s-launch{align-items:stretch;overflow-y:auto;padding:56px 0 40px;}
+.launch-word{font-family:var(--font-m);font-size:10px;letter-spacing:0.4em;color:var(--gold);text-align:center;margin-bottom:32px;opacity:0.7;}
+.launch-title{font-family:var(--font-d);font-size:72px;font-weight:700;text-align:center;line-height:0.85;margin-bottom:6px;background:linear-gradient(180deg,var(--gold-blaze) 0%,var(--gold) 50%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.launch-sub{font-family:var(--font-m);font-size:11px;letter-spacing:0.2em;color:var(--text-3);text-align:center;margin-bottom:36px;}
+.launch-outcomes{padding:0 20px;display:flex;flex-direction:column;gap:14px;margin-bottom:28px;}
+.oc{background:var(--surface-1);border:1px solid var(--border);border-radius:18px;padding:22px;position:relative;overflow:hidden;}
+.oc-glow{position:absolute;inset:0;border-radius:18px;opacity:0.06;}
+.oc-1 .oc-glow{background:radial-gradient(ellipse at top right,#FFD700,transparent 60%);}
+.oc-2 .oc-glow{background:radial-gradient(ellipse at top right,#FFA060,transparent 60%);}
+.oc-3 .oc-glow{background:radial-gradient(ellipse at top right,#FF6090,transparent 60%);}
+.oc-num{font-family:var(--font-m);font-size:9px;letter-spacing:0.25em;color:var(--text-3);margin-bottom:10px;}
+.oc-icon{font-size:30px;display:block;margin-bottom:10px;}
+.oc-title{font-family:var(--font-d);font-size:22px;font-weight:600;color:var(--gold-bright);margin-bottom:10px;line-height:1.1;}
+.oc-body{font-size:13px;line-height:1.8;color:var(--text-2);}
+.oc-tag{font-family:var(--font-m);font-size:9px;letter-spacing:0.15em;color:var(--gold);margin-top:12px;opacity:0.6;}
+.launch-astro{margin:0 20px 28px;background:linear-gradient(135deg,rgba(212,168,84,0.07),rgba(212,168,84,0.03));border:1px solid rgba(212,168,84,0.2);border-radius:14px;padding:16px;display:flex;gap:12px;}
+.la-icon{font-size:20px;flex-shrink:0;}
+.la-text{font-size:13px;line-height:1.7;color:var(--text-2);}
+.launch-decl{display:flex;align-items:center;gap:16px;padding:0 20px;margin-bottom:28px;}
+.ld-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim));opacity:0.4;}
+.ld-line:last-child{background:linear-gradient(90deg,var(--gold-dim),transparent);}
+.ld-text{font-family:var(--font-d);font-style:italic;font-size:14px;color:var(--text-2);text-align:center;min-width:170px;line-height:1.6;}
+.launch-form{padding:0 20px;display:flex;flex-direction:column;gap:14px;}
+.f-label{font-family:var(--font-m);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-3);display:block;margin-bottom:6px;}
+.f-input{width:100%;background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:14px 16px;color:var(--text);font-size:16px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;-webkit-appearance:none;}
+.f-input:focus{border-color:rgba(212,168,84,0.4);box-shadow:0 0 0 3px var(--gold-glow2);}
+.f-input::placeholder{color:var(--text-3);}
+.btn-ignite{width:100%;padding:18px;background:linear-gradient(180deg,var(--gold-bright),var(--gold));border-radius:14px;color:var(--bg);font-family:var(--font-m);font-size:13px;font-weight:500;letter-spacing:0.25em;box-shadow:0 8px 32px rgba(212,168,84,0.2);transition:transform 0.15s,box-shadow 0.15s;position:relative;overflow:hidden;}
+.btn-ignite:active{transform:scale(0.97);}
+.btn-ignite-ripple{position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,0.3),transparent);opacity:0;animation:ignite-ripple 0.6s ease forwards;}
+@keyframes ignite-ripple{0%{transform:scale(0);opacity:1;}100%{transform:scale(3);opacity:0;}}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: APP SHELL
+═══════════════════════════════════════════════════ */
+#s-app{padding-bottom:76px;}
+.top-bar{padding:52px 20px 14px;display:flex;justify-content:space-between;align-items:center;}
+.tb-word{font-family:var(--font-m);font-size:11px;letter-spacing:0.3em;color:var(--gold);opacity:0.8;}
+.tb-right{display:flex;gap:8px;align-items:center;}
+.tb-btn{font-size:18px;color:var(--text-3);padding:4px;transition:color 0.2s;}
+.tb-btn:active{color:var(--gold);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: BOTTOM NAV
+═══════════════════════════════════════════════════ */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,10,7,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;padding:10px 0 calc(10px + env(safe-area-inset-bottom));z-index:100;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;color:var(--text-3);transition:color 0.2s;position:relative;}
+.nav-btn.active{color:var(--gold);}
+.nav-btn.active::before{content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--gold);border-radius:0 0 2px 2px;}
+.nav-icon{font-size:19px;line-height:1;}
+.nav-label{font-family:var(--font-m);font-size:8px;letter-spacing:0.12em;}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: WAR ROOM
+═══════════════════════════════════════════════════ */
+.wr-countdown{text-align:center;padding:8px 20px 20px;border-bottom:1px solid rgba(212,168,84,0.06);}
+.wr-hrs{font-family:var(--font-m);font-size:72px;font-weight:300;line-height:1;background:linear-gradient(180deg,var(--gold-blaze) 0%,var(--gold) 60%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.03em;}
+.wr-hrs-label{font-family:var(--font-m);font-size:10px;letter-spacing:0.15em;color:var(--text-3);margin-top:4px;}
+.wr-hrs-sub{font-family:var(--font-d);font-style:italic;font-size:12px;color:var(--text-3);margin-top:3px;}
+
+/* Body Now Strip */
+.body-strip{margin:16px 20px;background:linear-gradient(135deg,rgba(212,168,84,0.06),rgba(212,168,84,0.02));border:1px solid rgba(212,168,84,0.15);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;min-height:56px;}
+.bs-icon{font-size:22px;flex-shrink:0;animation:bs-pulse 3s ease-in-out infinite;}
+@keyframes bs-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+.bs-content{flex:1;}
+.bs-hour{font-family:var(--font-m);font-size:9px;letter-spacing:0.15em;color:var(--gold);margin-bottom:3px;}
+.bs-text{font-size:12px;line-height:1.5;color:var(--text-2);}
+
+/* Orb */
+.wr-orb-wrap{display:flex;flex-direction:column;align-items:center;padding:20px 20px 8px;}
+.orb-outer{position:relative;width:190px;height:190px;margin-bottom:12px;}
+.orb-sphere{width:190px;height:190px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;border:1px solid rgba(212,168,84,0.15);overflow:hidden;transition:box-shadow 2s ease;}
+.orb-liquid{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(212,168,84,0.6) 0%,rgba(212,168,84,0.3) 100%);transition:height 3s ease;border-radius:0 0 95px 95px;}
+.orb-shine{position:absolute;top:15%;left:20%;width:35%;height:35%;background:radial-gradient(circle,rgba(255,255,255,0.15),transparent);border-radius:50%;pointer-events:none;}
+.orb-inner{position:relative;z-index:2;text-align:center;}
+.orb-pct{font-family:var(--font-d);font-size:44px;font-weight:400;line-height:1;color:var(--text);}
+.orb-lbl{font-family:var(--font-m);font-size:9px;letter-spacing:0.2em;color:rgba(240,232,208,0.6);margin-top:2px;}
+.orb-rings{position:absolute;inset:0;border-radius:50%;pointer-events:none;}
+.orb-ring{position:absolute;border-radius:50%;border:1px solid rgba(212,168,84,0.08);animation:orb-ring-pulse 4s ease-in-out infinite;}
+.orb-ring-1{inset:-10px;animation-delay:0s;}
+.orb-ring-2{inset:-22px;animation-delay:1s;opacity:0.6;}
+.orb-ring-3{inset:-36px;animation-delay:2s;opacity:0.3;}
+@keyframes orb-ring-pulse{0%,100%{transform:scale(1);opacity:0.3;}50%{transform:scale(1.02);opacity:0.6;}}
+.orb-caption{font-family:var(--font-d);font-style:italic;font-size:13px;color:var(--text-3);text-align:center;}
+
+/* Stats row */
+.wr-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 20px 12px;}
+.wrs{background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;}
+.wrs-icon{font-size:20px;margin-bottom:6px;}
+.wrs-val{font-family:var(--font-d);font-size:22px;font-weight:400;color:var(--gold-bright);line-height:1;margin-bottom:3px;}
+.wrs-lbl{font-family:var(--font-m);font-size:9px;letter-spacing:0.12em;color:var(--text-3);}
+.wrs-sub{font-size:10px;color:var(--gold);margin-top:4px;font-family:var(--font-m);}
+
+/* Outcome mini cards */
+.wr-outcomes{padding:0 20px 12px;}
+.wro-track{position:relative;min-height:130px;}
+.wro{background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:18px;display:none;animation:wro-in 0.4s ease;}
+.wro.active{display:block;}
+@keyframes wro-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.wro-n{font-family:var(--font-m);font-size:9px;letter-spacing:0.2em;color:var(--text-3);margin-bottom:8px;}
+.wro-icon{font-size:22px;display:block;margin-bottom:8px;}
+.wro-title{font-family:var(--font-d);font-size:19px;color:var(--gold-bright);margin-bottom:6px;}
+.wro-body{font-size:12px;line-height:1.7;color:var(--text-2);}
+.wro-dots{display:flex;justify-content:center;gap:7px;padding:8px 0 12px;}
+.wro-dot{width:5px;height:5px;border-radius:50%;background:var(--text-4);cursor:pointer;transition:all 0.2s;}
+.wro-dot.active{background:var(--gold);transform:scale(1.4);}
+
+/* Urgency strip */
+.wr-urgency{margin:0 20px 16px;background:linear-gradient(135deg,rgba(139,26,26,0.08),rgba(12,10,7,0));border:1px solid rgba(139,26,26,0.2);border-radius:12px;padding:14px 16px;}
+.wu-text{font-family:var(--font-d);font-style:italic;font-size:13px;line-height:1.7;color:var(--text-2);}
+
+/* Craving button */
+.wr-craving{padding:0 20px 20px;}
+.craving-btn{width:100%;background:linear-gradient(135deg,rgba(139,26,26,0.2),rgba(139,26,26,0.08));border:1px solid rgba(139,26,26,0.35);border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px;transition:all 0.2s;}
+.craving-btn:active{transform:scale(0.98);background:linear-gradient(135deg,rgba(139,26,26,0.3),rgba(139,26,26,0.15));}
+.cb-dot{width:10px;height:10px;border-radius:50%;background:var(--crimson-br);flex-shrink:0;animation:cb-pulse 1.8s ease-in-out infinite;}
+@keyframes cb-pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(196,43,43,0.4);}50%{transform:scale(1.3);box-shadow:0 0 0 8px rgba(196,43,43,0);}}
+.cb-text{flex:1;text-align:left;}
+.cb-title{font-family:var(--font-m);font-size:13px;font-weight:500;color:#E06060;letter-spacing:0.03em;}
+.cb-sub{font-size:11px;color:var(--text-3);margin-top:2px;}
+.cb-arrow{font-size:16px;color:var(--text-3);}
+
+/* Progress bar */
+.wr-progress{padding:0 20px 32px;}
+.wp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.wp-lbl{font-family:var(--font-m);font-size:9px;letter-spacing:0.2em;color:var(--text-3);}
+.wp-pct{font-family:var(--font-m);font-size:10px;color:var(--gold);}
+.wp-track{height:3px;background:var(--surface-2);border-radius:2px;overflow:hidden;margin-bottom:6px;}
+.wp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold-bright));border-radius:2px;transition:width 2s ease;}
+.wp-dates{display:flex;justify-content:space-between;font-family:var(--font-m);font-size:9px;color:var(--text-3);}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: TASKS TAB
+═══════════════════════════════════════════════════ */
+.tasks-head{display:flex;justify-content:space-between;align-items:flex-start;padding:16px 20px 14px;}
+.th-date{font-size:12px;color:var(--text-3);margin-top:2px;}
+.th-pill{background:rgba(212,168,84,0.08);border:1px solid rgba(212,168,84,0.18);border-radius:12px;padding:8px 14px;text-align:center;}
+.th-pts{font-family:var(--font-d);font-size:22px;color:var(--gold-bright);line-height:1;}
+.th-pts-lbl{font-family:var(--font-m);font-size:8px;letter-spacing:0.12em;color:var(--text-3);margin-top:2px;}
+.dns{margin:12px 20px;background:var(--surface-1);border:1px solid var(--border);border-radius:16px;padding:28px 20px;text-align:center;}
+.dns-icon{font-size:36px;margin-bottom:12px;}
+.dns-text{font-size:14px;color:var(--text-2);line-height:1.6;margin-bottom:20px;}
+.btn-start{width:100%;padding:15px;background:linear-gradient(180deg,var(--gold-bright),var(--gold));border-radius:12px;color:var(--bg);font-family:var(--font-m);font-size:12px;letter-spacing:0.2em;box-shadow:0 4px 20px rgba(212,168,84,0.2);transition:transform 0.15s;}
+.btn-start:active{transform:scale(0.97);}
+.blk-head{padding:14px 20px 8px;display:flex;align-items:center;gap:8px;}
+.blk-icon{font-size:13px;}
+.blk-name{font-family:var(--font-m);font-size:9px;letter-spacing:0.2em;color:var(--text-3);}
+.blk-pts{margin-left:auto;font-family:var(--font-m);font-size:9px;color:var(--gold);}
+.task-list{padding:0 20px;display:flex;flex-direction:column;gap:8px;}
+.task{background:var(--surface-1);border:1px solid var(--border);border-radius:13px;padding:13px 14px;display:flex;align-items:center;gap:13px;transition:all 0.25s;position:relative;overflow:hidden;}
+.task.t-done{border-color:rgba(58,107,74,0.3);background:linear-gradient(135deg,rgba(58,107,74,0.07),var(--surface-1));}
+.task.t-active{border-color:rgba(212,168,84,0.35);background:linear-gradient(135deg,rgba(212,168,84,0.05),var(--surface-1));box-shadow:0 0 0 1px rgba(212,168,84,0.08);}
+.task.t-up{opacity:0.45;}
+.t-check{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border-act);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all 0.2s;font-size:13px;}
+.task.t-done .t-check{background:var(--green-br);border-color:var(--green-br);color:white;}
+.task.t-active .t-check{border-color:var(--gold);animation:t-pulse 2s ease-in-out infinite;}
+@keyframes t-pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,168,84,0.3);}50%{box-shadow:0 0 0 5px rgba(212,168,84,0);}}
+.t-info{flex:1;min-width:0;}
+.t-name{font-size:14px;font-weight:500;color:var(--text);}
+.task.t-done .t-name{color:var(--text-3);text-decoration:line-through;}
+.t-meta{display:flex;gap:8px;align-items:center;margin-top:3px;}
+.t-time{font-family:var(--font-m);font-size:10px;color:var(--text-3);}
+.t-pts{font-family:var(--font-m);font-size:9px;color:var(--gold);letter-spacing:0.06em;}
+.t-countdown{font-family:var(--font-m);font-size:10px;color:var(--gold-bright);font-weight:500;}
+.t-edit{font-size:14px;color:var(--text-3);padding:4px;transition:color 0.15s;}
+.t-edit:active{color:var(--gold);}
+/* Points fly animation */
+.pts-fly{position:fixed;font-family:var(--font-m);font-size:13px;color:var(--gold-blaze);font-weight:500;pointer-events:none;z-index:500;animation:pts-fly-up 1.2s ease forwards;}
+@keyframes pts-fly-up{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-60px);}}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: FREEDOM TAB — WORM & HEALTH
+═══════════════════════════════════════════════════ */
+.fr-timer{text-align:center;padding:20px 20px 16px;border-bottom:1px solid rgba(212,168,84,0.06);}
+.fr-timer-lbl{font-family:var(--font-m);font-size:9px;letter-spacing:0.2em;color:var(--text-3);margin-bottom:6px;}
+.fr-timer-val{font-family:var(--font-m);font-size:38px;font-weight:300;background:linear-gradient(180deg,var(--gold-blaze),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.02em;line-height:1;}
+.fr-timer-sub{font-size:12px;color:var(--text-3);margin-top:5px;}
+
+/* Worm Stage */
+.fr-worm-section{padding:20px;display:flex;gap:16px;align-items:flex-end;}
+.fr-natural-high{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
+.nh-label{font-family:var(--font-m);font-size:8px;letter-spacing:0.12em;color:var(--text-3);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);}
+.nh-tube{width:16px;height:120px;background:var(--surface-2);border-radius:8px;overflow:hidden;border:1px solid var(--border);position:relative;}
+.nh-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,var(--gold-bright),var(--gold-dim));border-radius:8px;transition:height 3s ease;}
+.nh-icon{font-size:14px;}
+
+.worm-center{flex:1;display:flex;flex-direction:column;align-items:center;}
+.worm-stage-label{font-family:var(--font-m);font-size:9px;letter-spacing:0.15em;color:var(--crimson-br);margin-bottom:10px;text-align:center;}
+.worm-arena{width:100%;max-width:200px;height:100px;position:relative;display:flex;align-items:center;justify-content:center;}
+
+/* THE WORM */
+.worm{display:flex;align-items:center;position:relative;transform-origin:center;}
+.seg{border-radius:50%;position:absolute;transition:all 2s ease;}
+
+/* Worm animations by stage */
+@keyframes wriggle-fast{0%,100%{transform:rotate(-15deg) scaleY(1);}25%{transform:rotate(15deg) scaleY(0.9);}50%{transform:rotate(-10deg) scaleY(1.1);}75%{transform:rotate(10deg) scaleY(0.95);}}
+@keyframes wriggle-med{0%,100%{transform:rotate(-8deg);}33%{transform:rotate(8deg);}66%{transform:rotate(-5deg);}}
+@keyframes wriggle-slow{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
+@keyframes wriggle-dying{0%,85%,100%{transform:rotate(0deg);}90%{transform:rotate(-3deg);}95%{transform:rotate(2deg);}}
+@keyframes seg-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);}}
+@keyframes worm-glow{0%,100%{filter:drop-shadow(0 0 6px rgba(196,122,106,0.4));}50%{filter:drop-shadow(0 0 14px rgba(196,122,106,0.7));}}
+@keyframes ash-drift{0%{opacity:0.6;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-30px) scale(0.3);}}
+
+.worm-status{margin-top:12px;text-align:center;}
+.ws-title{font-family:var(--font-d);font-size:14px;color:var(--gold-bright);margin-bottom:3px;}
+.ws-fact{font-size:11px;color:var(--text-3);line-height:1.5;}
+
+.fr-money{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fm-val{font-family:var(--font-d);font-size:20px;color:var(--gold-bright);line-height:1;text-align:center;}
+.fm-lbl{font-family:var(--font-m);font-size:8px;letter-spacing:0.1em;color:var(--text-3);margin-top:4px;}
+.fm-icon{font-size:14px;margin-bottom:4px;}
+
+/* Dopamine trap card */
+.fr-dopamine{margin:0 20px 16px;background:linear-gradient(135deg,rgba(139,26,26,0.1),rgba(12,10,7,0));border:1px solid rgba(139,26,26,0.25);border-radius:14px;padding:18px;}
+.fd-title{font-family:var(--font-m);font-size:9px;letter-spacing:0.2em;color:var(--crimson-br);margin-bottom:10px;}
+.fd-body{font-size:13px;line-height:1.8;color:var(--text-2);}
+.fd-body strong{color:var(--text);}
+.fd-truth{margin-top:12px;padding:10px 12px;background:rgba(139,26,26,0.12);border-radius:8px;font-family:var(--font-d);font-style:italic;font-size:13px;color:var(--text-2);line-height:1.6;}
+
+/* Health milestones */
+.fr-milestones{padding:0 20px;display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.frm{background:var(--surface-1);border:1px solid var(--border);border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:13px;transition:all 0.4s;}
+.frm.reached{border-color:rgba(58,107,74,0.3);background:linear-gradient(135deg,rgba(58,107,74,0.06),var(--surface-1));}
+.frm.upcoming{opacity:0.38;}
+.frm-icon{font-size:22px;filter:grayscale(1);min-width:28px;text-align:center;}
+.frm.reached .frm-icon{filter:none;}
+.frm-content{flex:1;}
+.frm-title{font-size:13px;font-weight:500;}
+.frm-desc{font-size:11px;color:var(--text-3);margin-top:2px;line-height:1.4;}
+.frm-time{font-family:var(--font-m);font-size:9px;color:var(--gold);margin-top:4px;letter-spacing:0.06em;}
+.frm-time.dim{color:var(--text-3);}
+
+.fr-relapse{padding:0 20px 40px;margin-top:8px;}
+.btn-relapse{width:100%;padding:13px;background:rgba(139,26,26,0.1);border:1px solid rgba(139,26,26,0.25);border-radius:11px;color:#C06060;font-family:var(--font-m);font-size:10px;letter-spacing:0.12em;transition:all 0.2s;}
+.btn-relapse:active{background:rgba(139,26,26,0.2);}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: LOG TAB
+═══════════════════════════════════════════════════ */
+.log-stats{display:flex;gap:8px;padding:16px 20px 12px;flex-wrap:wrap;}
+.log-stat{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-family:var(--font-m);font-size:10px;color:var(--text-2);}
+.log-stat span{color:var(--gold);font-weight:500;}
+.log-group{padding:0 20px 4px;}
+.log-day-lbl{font-family:var(--font-m);font-size:9px;letter-spacing:0.15em;color:var(--text-3);padding:12px 0 8px;}
+.log-entry{background:var(--surface-1);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;gap:11px;margin-bottom:8px;}
+.le-icon{font-size:15px;min-width:20px;margin-top:1px;}
+.le-title{font-size:13px;font-weight:500;}
+.le-time{font-family:var(--font-m);font-size:9px;color:var(--text-3);margin-top:2px;letter-spacing:0.06em;}
+.le-note{font-size:11px;color:var(--text-2);margin-top:3px;font-style:italic;}
+.log-empty{text-align:center;padding:48px 20px;color:var(--text-3);font-size:14px;line-height:1.8;}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: MODALS & OVERLAYS
+═══════════════════════════════════════════════════ */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(12,10,7,0.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:flex-end;justify-content:center;padding:16px;}
+.overlay.open{display:flex;animation:ov-in 0.25s ease;}
+@keyframes ov-in{from{opacity:0;}to{opacity:1;}}
+.sheet{background:var(--surface-2);border:1px solid var(--border-act);border-radius:22px;padding:24px 20px 32px;width:100%;max-width:420px;animation:sheet-up 0.3s cubic-bezier(0.22,1,0.36,1);}
+@keyframes sheet-up{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.sheet-handle{width:32px;height:3px;background:var(--border-act);border-radius:2px;margin:0 auto 20px;}
+.sheet-title{font-family:var(--font-d);font-size:24px;margin-bottom:18px;}
+
+/* Craving overlay — full screen */
+#ov-craving{align-items:stretch;padding:0;}
+#ov-craving .sheet{border-radius:0;max-width:100%;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:48px 24px 40px;}
+.craving-step{display:none;flex-direction:column;}
+.craving-step.active{display:flex;}
+.cs-title{font-family:var(--font-d);font-size:30px;font-weight:700;margin-bottom:12px;line-height:1.1;}
+.cs-sub{font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:20px;}
+.cs-cycle{background:linear-gradient(135deg,rgba(139,26,26,0.15),rgba(12,10,7,0));border:1px solid rgba(139,26,26,0.3);border-radius:14px;padding:18px;margin-bottom:20px;}
+.csc-title{font-family:var(--font-m);font-size:9px;letter-spacing:0.2em;color:var(--crimson-br);margin-bottom:10px;}
+.csc-body{font-size:13px;line-height:1.8;color:var(--text-2);}
+.csc-truth{margin-top:12px;font-family:var(--font-d);font-style:italic;font-size:14px;color:var(--text);line-height:1.6;border-top:1px solid rgba(139,26,26,0.2);padding-top:12px;}
+.craving-tasks{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.ct-item{background:var(--surface-1);border:1px solid var(--border);border-radius:13px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;}
+.ct-item:active{background:rgba(212,168,84,0.07);border-color:rgba(212,168,84,0.3);}
+.cti-icon{font-size:20px;}
+.cti-name{flex:1;font-size:14px;font-weight:500;}
+.cti-pts{font-family:var(--font-m);font-size:10px;color:var(--gold);}
+.cs-vision{background:linear-gradient(135deg,rgba(212,168,84,0.07),rgba(212,168,84,0.02));border:1px solid rgba(212,168,84,0.2);border-radius:16px;padding:22px;margin-bottom:20px;}
+.csv-icon{font-size:36px;display:block;margin-bottom:12px;}
+.csv-title{font-family:var(--font-d);font-size:22px;color:var(--gold-bright);margin-bottom:10px;}
+.csv-body{font-family:var(--font-d);font-style:italic;font-size:14px;line-height:1.8;color:var(--text-2);}
+
+/* Buttons */
+.btn-p{width:100%;padding:15px;background:linear-gradient(180deg,var(--gold-bright),var(--gold));border-radius:12px;color:var(--bg);font-family:var(--font-m);font-size:11px;letter-spacing:0.2em;box-shadow:0 4px 20px rgba(212,168,84,0.18);transition:transform 0.15s;margin-bottom:10px;}
+.btn-p:active{transform:scale(0.97);}
+.btn-s{width:100%;padding:14px;background:rgba(212,168,84,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text-2);font-family:var(--font-m);font-size:10px;letter-spacing:0.15em;transition:background 0.15s;margin-bottom:8px;}
+.btn-s:active{background:rgba(212,168,84,0.1);}
+.btn-d{width:100%;padding:13px;background:rgba(139,26,26,0.12);border:1px solid rgba(139,26,26,0.25);border-radius:11px;color:#C06060;font-family:var(--font-m);font-size:10px;letter-spacing:0.12em;transition:all 0.15s;margin-bottom:8px;}
+.btn-d:active{background:rgba(139,26,26,0.22);}
+
+/* Badge overlay */
+#ov-badge{align-items:center;justify-content:center;cursor:pointer;}
+.badge-box{background:var(--surface-2);border:1px solid rgba(212,168,84,0.3);border-radius:24px;padding:36px 28px;text-align:center;box-shadow:0 0 80px rgba(212,168,84,0.12);animation:badge-pop 0.45s cubic-bezier(0.22,1,0.36,1);}
+@keyframes badge-pop{from{transform:scale(0.6) rotate(-5deg);opacity:0;}to{transform:scale(1) rotate(0);opacity:1;}}
+.bb-emoji{font-size:60px;margin-bottom:16px;display:block;}
+.bb-title{font-family:var(--font-d);font-size:28px;color:var(--gold-bright);margin-bottom:8px;}
+.bb-body{font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:20px;}
+.bb-close{font-family:var(--font-m);font-size:10px;letter-spacing:0.1em;color:var(--text-3);}
+
+/* Settings sheet */
+#ov-settings .sheet-title{font-size:22px;}
+
+/* Task edit sheet */
+#ov-task-edit .sheet-title{font-size:20px;}
+
+/* Install banner */
+#install-banner{display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--gold),var(--gold-bright));padding:14px 20px;z-index:999;align-items:center;justify-content:space-between;gap:12px;font-family:'DM Sans',sans-serif;}
+.ib-text-title{font-size:14px;font-weight:700;color:var(--bg);}
+.ib-text-sub{font-size:11px;color:rgba(12,10,7,0.6);margin-top:1px;}
+.ib-btns{display:flex;gap:8px;flex-shrink:0;}
+.ib-later{background:rgba(12,10,7,0.15);border:none;color:var(--bg);padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.ib-install{background:var(--bg);border:none;color:var(--gold);padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: TRANSITIONS & POLISH
+═══════════════════════════════════════════════════ */
+#s-app{animation:screen-in 0.5s cubic-bezier(0.22,1,0.36,1);}
+@keyframes screen-in{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.tab-pane{animation:tab-in 0.25s ease;}
+@keyframes tab-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+/* Smooth task state transitions */
+.task{transition:background 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;}
+.t-check{transition:background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;}
+.t-check:active{transform:scale(0.88);}
+/* Orb liquid smooth */
+.orb-liquid{transition:height 4s cubic-bezier(0.4,0,0.2,1);}
+/* Natural high smooth */
+.nh-fill{transition:height 4s cubic-bezier(0.4,0,0.2,1);}
+/* Progress bar smooth */
+.wp-fill{transition:width 3s cubic-bezier(0.4,0,0.2,1);}
+/* Worm arena fade on stage change */
+.worm-arena{transition:opacity 0.6s ease;}
+/* Nav active indicator animation */
+.nav-btn.active::before{animation:nav-slide-in 0.2s ease;}
+@keyframes nav-slide-in{from{width:0;opacity:0;}to{width:24px;opacity:1;}}
+/* Sheet titles */
+.sheet-title{font-family:var(--font-d);font-size:24px;margin-bottom:18px;font-weight:400;}
+/* Input focus glow */
+.f-input{transition:border-color 0.2s ease, box-shadow 0.2s ease;}
+/* Outcome cards — subtle hover */
+.oc{transition:transform 0.2s ease, box-shadow 0.2s ease;}
+.oc:active{transform:scale(0.99);}
+/* Badge animation enhancement */
+.badge-box{max-width:320px;width:100%;}
+/* Milestone reached — subtle celebration */
+.frm.reached{animation:milestone-in 0.5s ease;}
+@keyframes milestone-in{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+/* Craving button — more dramatic pulse */
+.craving-btn{transition:transform 0.15s ease, background 0.2s ease;}
+/* Body strip — fade on message change */
+.bs-text{transition:opacity 0.3s ease;}
+/* Section labels consistent */
+.sec-lbl{display:block;}
+/* Scroll behavior */
+html{scroll-behavior:smooth;}
+/* Better tap areas on mobile */
+.nav-btn{min-height:48px;}
+.t-check{min-width:44px;min-height:44px;margin:-8px -8px -8px -4px;border-radius:50%;display:flex;align-items:center;justify-content:center;width:26px;height:26px;}
+</style>
+</head>
+<body>
+
+<!-- ═══ ATMOSPHERE ═══ -->
+<div id="atm">
+  <div class="heat heat-a"></div>
+  <div class="heat heat-b"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN: LAUNCH
+════════════════════════════════════════ -->
+<div id="s-launch" class="screen active">
+  <div class="launch-word">Mission · June 2 · 2026</div>
+  <div class="launch-title">THRESH<br>OLD</div>
+  <div class="launch-sub">15 days · do or die</div>
+
+  <div class="launch-outcomes">
+    <div class="oc oc-1">
+      <div class="oc-glow"></div>
+      <div class="oc-num">01</div>
+      <span class="oc-icon">💰</span>
+      <div class="oc-title">The Wire Lands</div>
+      <div class="oc-body">Your phone buzzes. Wire transfer confirmed — Zymo's account. The number has more zeros than anything with your name on it. You built this from scratch. You are a funded CEO.</div>
+      <div class="oc-tag">Zymo Fundraising Round</div>
+    </div>
+    <div class="oc oc-2">
+      <div class="oc-glow"></div>
+      <div class="oc-num">02</div>
+      <span class="oc-icon">⚡</span>
+      <div class="oc-title">Peak Presence</div>
+      <div class="oc-body">Full lungs. Zero fog. Sharp mind. You walk into a room and something is different — you carry yourself differently. Clear-eyed. Dangerous in the best way. This is 15 days of discipline.</div>
+      <div class="oc-tag">Physical Peak · Mental Clarity</div>
+    </div>
+    <div class="oc oc-3">
+      <div class="oc-glow"></div>
+      <div class="oc-num">03</div>
+      <span class="oc-icon">🔥</span>
+      <div class="oc-title">Magnetic Force</div>
+      <div class="oc-body">Confidence is a scent. Women respond to a man who controls his world. A man building something real, who doesn't need a cigarette to calm his nerves. That man is magnetic. That man is you.</div>
+      <div class="oc-tag">Presence · Attraction · Power</div>
+    </div>
+  </div>
+
+  <div class="launch-astro">
+    <div class="la-icon">🪐</div>
+    <div class="la-text">Jupiter enters Cancer on June 2 — exalted in your 10th house. This transit happens once in 12 years. Everything is aligned. The only variable is you.</div>
+  </div>
+
+  <div class="launch-decl">
+    <div class="ld-line"></div>
+    <div class="ld-text">These 15 days<br>are not coming back.</div>
+    <div class="ld-line"></div>
+  </div>
+
+  <div class="launch-form">
+    <div>
+      <label class="f-label">Mission Start — Set to right now when you're ready</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="datetime-local" id="in-quit" class="f-input" style="flex:1"/>
+        <button onclick="setNow()" style="background:rgba(212,168,84,0.15);border:1px solid rgba(212,168,84,0.3);border-radius:10px;padding:14px 12px;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:0.1em;white-space:nowrap;flex-shrink:0;">Now</button>
+      </div>
+    </div>
+    <div>
+      <label class="f-label">Daily Pack Cost (₹)</label>
+      <input type="number" id="in-pack" class="f-input" placeholder="200"/>
+    </div>
+    <button class="btn-ignite" onclick="igniteMission(this)">⚡ IGNITE MISSION</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN: APP
+════════════════════════════════════════ -->
+<div id="s-app" class="screen">
+  <div class="top-bar">
+    <div class="tb-word">Threshold</div>
+    <div class="tb-right">
+      <button class="tb-btn" onclick="openSettings()">⚙️</button>
+    </div>
+  </div>
+
+  <!-- WAR ROOM TAB -->
+  <div id="tab-wr" class="tab-pane active">
+    <div class="wr-countdown">
+      <div class="wr-hrs" id="wr-hrs">—</div>
+      <div class="wr-hrs-label">hours until everything changes</div>
+      <div class="wr-hrs-sub">June 2 · Jupiter enters Cancer</div>
+    </div>
+
+    <div class="body-strip" id="body-strip">
+      <div class="bs-icon" id="bs-icon">⏳</div>
+      <div class="bs-content">
+        <div class="bs-hour" id="bs-hour">BODY RIGHT NOW</div>
+        <div class="bs-text" id="bs-text">Mission not yet started</div>
+      </div>
+    </div>
+
+    <div class="wr-orb-wrap">
+      <div class="orb-outer">
+        <div class="orb-sphere" id="orb-sphere">
+          <div class="orb-liquid" id="orb-liquid" style="height:0%"></div>
+          <div class="orb-shine"></div>
+          <div class="orb-rings">
+            <div class="orb-ring orb-ring-1"></div>
+            <div class="orb-ring orb-ring-2"></div>
+            <div class="orb-ring orb-ring-3"></div>
+          </div>
+          <div class="orb-inner">
+            <div class="orb-pct" id="orb-pct">0%</div>
+            <div class="orb-lbl">probability</div>
+          </div>
+        </div>
+      </div>
+      <div class="orb-caption" id="orb-caption">Your outcomes are waiting. Earn them.</div>
+    </div>
+
+    <div class="wr-stats">
+      <div class="wrs">
+        <div class="wrs-icon">🚭</div>
+        <div class="wrs-val" id="wr-clean">—</div>
+        <div class="wrs-lbl">smoke-free</div>
+        <div class="wrs-sub" id="wr-smoke-pts">0 pts</div>
+      </div>
+      <div class="wrs">
+        <div class="wrs-icon">⚡</div>
+        <div class="wrs-val" id="wr-task-pts">0</div>
+        <div class="wrs-lbl">task points</div>
+        <div class="wrs-sub" id="wr-today-done">0 done today</div>
+      </div>
+    </div>
+
+    <div class="wr-outcomes">
+      <div class="wro-track">
+        <div class="wro active" data-i="0">
+          <div class="wro-n">01</div>
+          <span class="wro-icon">💰</span>
+          <div class="wro-title">The Wire Lands</div>
+          <div class="wro-body">Your phone buzzes. Zymo's account. Wire transfer confirmed. You are a funded CEO. This moment is being earned right now — every clean hour, every task.</div>
+        </div>
+        <div class="wro" data-i="1">
+          <div class="wro-n">02</div>
+          <span class="wro-icon">⚡</span>
+          <div class="wro-title">Peak Presence</div>
+          <div class="wro-body">Full lungs. Zero fog. The room feels you walk in. 15 days of discipline does this to a man's body and energy.</div>
+        </div>
+        <div class="wro" data-i="2">
+          <div class="wro-n">03</div>
+          <span class="wro-icon">🔥</span>
+          <div class="wro-title">Magnetic Force</div>
+          <div class="wro-body">A man who controls his habits needs no effort to attract. You chose control. That choice is now visible on you.</div>
+        </div>
+      </div>
+      <div class="wro-dots">
+        <div class="wro-dot active" onclick="showWro(0)"></div>
+        <div class="wro-dot" onclick="showWro(1)"></div>
+        <div class="wro-dot" onclick="showWro(2)"></div>
+      </div>
+    </div>
+
+    <div class="wr-urgency">
+      <div class="wu-text" id="wu-text">"These 15 days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away."</div>
+    </div>
+
+    <div class="wr-craving">
+      <button class="craving-btn" onclick="openCraving()">
+        <div class="cb-dot"></div>
+        <div class="cb-text">
+          <div class="cb-title">I'm having a craving</div>
+          <div class="cb-sub">Tap — your battle plan is ready</div>
+        </div>
+        <div class="cb-arrow">→</div>
+      </button>
+    </div>
+
+    <div class="wr-progress">
+      <div class="wp-head">
+        <div class="wp-lbl">Mission Progress</div>
+        <div class="wp-pct" id="wp-pct">0%</div>
+      </div>
+      <div class="wp-track">
+        <div class="wp-fill" id="wp-fill" style="width:0%"></div>
+      </div>
+      <div class="wp-dates">
+        <div id="wp-start">—</div>
+        <div>Jun 2</div>
+      </div>
+    </div>
+  </div><!-- end tab-wr -->
+
+  <!-- TASKS TAB -->
+  <div id="tab-tasks" class="tab-pane">
+    <div class="tasks-head">
+      <div>
+        <div style="font-family:var(--font-d);font-size:22px;font-weight:600;">Today</div>
+        <div class="th-date" id="th-date"></div>
+      </div>
+      <div class="th-pill">
+        <div class="th-pts" id="th-pts">0</div>
+        <div class="th-pts-lbl">pts today</div>
+      </div>
+    </div>
+    <div id="day-not-started"></div>
+    <div id="task-list-wrap"></div>
+  </div>
+
+  <!-- FREEDOM TAB -->
+  <div id="tab-fr" class="tab-pane">
+    <div class="fr-timer">
+      <div class="fr-timer-lbl">Smoke-Free Time</div>
+      <div class="fr-timer-val" id="fr-time">—</div>
+      <div class="fr-timer-sub" id="fr-sub">The parasite is starving</div>
+    </div>
+
+    <div class="fr-worm-section">
+      <div class="fr-natural-high">
+        <div class="nh-icon">✨</div>
+        <div class="nh-tube">
+          <div class="nh-fill" id="nh-fill" style="height:0%"></div>
+        </div>
+        <div class="nh-label">Natural High</div>
+      </div>
+
+      <div class="worm-center">
+        <div class="worm-stage-label" id="worm-stage-lbl">Stage: Fed & Demanding</div>
+        <div class="worm-arena" id="worm-arena"></div>
+        <div class="worm-status">
+          <div class="ws-title" id="ws-title">The Parasite</div>
+          <div class="ws-fact" id="ws-fact">It has been feeding on you. Time to starve it.</div>
+        </div>
+      </div>
+
+      <div class="fr-money">
+        <div class="fm-icon">💰</div>
+        <div class="fm-val" id="fr-money">₹0</div>
+        <div class="fm-lbl">saved</div>
+        <div class="fm-lbl" style="color:var(--gold);margin-top:4px;font-size:7px;">= AIRA ad spend</div>
+      </div>
+    </div>
+
+    <div class="fr-dopamine">
+      <div class="fd-title">⚠️ The Dopamine Trap — Science</div>
+      <div class="fd-body">Nicotine does not give your brain pleasure. It <strong>hijacks your natural dopamine system</strong>, lowers your baseline, then charges you a cigarette every 45 minutes to feel normal again.<br><br>Between cigarettes, you feel <strong>worse than a non-smoker</strong>. The "relief" from smoking is just returning to the baseline a non-smoker has for free — all the time.</div>
+      <div class="fd-truth">"Smoking right now will not make you feel good. It will make you feel slightly less bad — for 4 minutes. Then worse than you feel right now."</div>
+    </div>
+
+    <div class="sec-lbl">Health Milestones</div>
+    <div class="fr-milestones" id="fr-milestones"></div>
+
+    <div class="fr-relapse">
+      <button class="btn-relapse" onclick="confirmSmoked()">I smoked — reset streak</button>
+    </div>
+  </div><!-- end tab-fr -->
+
+  <!-- LOG TAB -->
+  <div id="tab-log" class="tab-pane">
+    <div class="log-stats" id="log-stats"></div>
+    <div id="log-list"></div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="switchTab('wr',this)">
+      <div class="nav-icon">⚔️</div>
+      <div class="nav-label">War Room</div>
+    </button>
+    <button class="nav-btn" onclick="switchTab('tasks',this)">
+      <div class="nav-icon">📋</div>
+      <div class="nav-label">Tasks</div>
+    </button>
+    <button class="nav-btn" onclick="switchTab('fr',this)">
+      <div class="nav-icon">🔥</div>
+      <div class="nav-label">Freedom</div>
+    </button>
+    <button class="nav-btn" onclick="switchTab('log',this)">
+      <div class="nav-icon">📜</div>
+      <div class="nav-label">Log</div>
+    </button>
+  </nav>
+</div><!-- end s-app -->
+
+<!-- ════════════════════════════════════════
+     OVERLAY: CRAVING
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-craving">
+  <div class="sheet">
+    <div class="craving-step active" id="cs-1">
+      <div class="cs-title" style="color:#E06060">Craving hits.<br>Stop. Read this.</div>
+      <div class="cs-cycle">
+        <div class="csc-title">🔴 The truth about what you're feeling</div>
+        <div class="csc-body">This craving is the parasite dying. It is not you wanting a cigarette. It is the worm sending a distress signal because it has not been fed.<br><br>If you smoke right now — the craving will return in 20 minutes, stronger. You will have fed the parasite and it will demand more.<br><br>If you do not smoke — this craving will pass in 3–5 minutes. The next one will be weaker. The worm will be smaller.</div>
+        <div class="csc-truth">"The discomfort you feel right now is the sound of the parasite losing its grip. That is not suffering. That is winning."</div>
+      </div>
+      <button class="btn-p" onclick="cravingStep(2)">I understand. What do I do?</button>
+      <button class="btn-s" onclick="closeCraving()">I'm already okay</button>
+    </div>
+    <div class="craving-step" id="cs-2">
+      <div class="cs-title">Occupy your mind now.</div>
+      <div class="cs-sub">The parasite loses power when your mind is engaged. Pick one task and start it right now:</div>
+      <div class="craving-tasks" id="ct-list"></div>
+      <button class="btn-s" onclick="cravingStep(3)">Show me Theatre of the Mind</button>
+      <button class="btn-s" onclick="closeCraving()">I'm okay now</button>
+    </div>
+    <div class="craving-step" id="cs-3">
+      <div class="cs-title">Theatre of the Mind</div>
+      <div class="cs-sub">Close your eyes after reading. See this clearly.</div>
+      <div class="cs-vision" id="cs-vision"></div>
+      <button class="btn-p" onclick="logResisted()">✓ I resisted the craving</button>
+      <button class="btn-s" onclick="closeCraving()">I'm okay</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: BADGE
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-badge" onclick="closeBadge()">
+  <div class="badge-box">
+    <span class="bb-emoji" id="bb-emoji">🏆</span>
+    <div class="bb-title" id="bb-title">Milestone</div>
+    <div class="bb-body" id="bb-body"></div>
+    <div class="bb-close">Tap anywhere to continue</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: SETTINGS
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-settings" onclick="closeOverlayOutside(event,'ov-settings')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <div class="sheet-title" style="margin-bottom:0">Settings</div>
+      <button onclick="closeOverlay('ov-settings')" style="font-size:20px;color:var(--text-3);padding:4px 8px;">✕</button>
+    </div>
+    <div style="margin-bottom:14px">
+      <label class="f-label">Pack Cost per Day (₹)</label>
+      <input type="number" id="set-pack" class="f-input" placeholder="200"/>
+    </div>
+    <button class="btn-p" onclick="saveSettings()">Save Changes</button>
+    <button class="btn-d" onclick="confirmReset()">Reset Mission</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: TASK EDIT
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-task-edit" onclick="closeOverlayOutside(event,'ov-task-edit')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <div class="sheet-title" style="margin-bottom:0">Edit Task</div>
+      <button onclick="closeOverlay('ov-task-edit')" style="font-size:20px;color:var(--text-3);padding:4px 8px;">✕</button>
+    </div>
+    <input type="hidden" id="edit-id"/>
+    <div style="margin-bottom:14px">
+      <label class="f-label">Task Name</label>
+      <input type="text" id="edit-name" class="f-input"/>
+    </div>
+    <div style="margin-bottom:20px">
+      <label class="f-label">Duration (minutes)</label>
+      <input type="number" id="edit-mins" class="f-input"/>
+    </div>
+    <button class="btn-p" onclick="saveTaskEdit()">Save</button>
+    <button class="btn-s" onclick="closeOverlay('ov-task-edit')">Cancel</button>
+  </div>
+</div>
+
+<!-- PWA INSTALL BANNER -->
+<div id="install-banner">
+  <div>
+    <div class="ib-text-title">Install THRESHOLD</div>
+    <div class="ib-text-sub">Add to home screen</div>
+  </div>
+  <div class="ib-btns">
+    <button class="ib-later" id="ib-later">Later</button>
+    <button class="ib-install" id="ib-install">Install</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   THRESHOLD v2.0 JavaScript
+   SECTION: FROZEN LOCALSTORAGE KEYS
+   — These keys must NEVER be renamed
+═══════════════════════════════════════════════════ */
+const LS = {
+  MISSION_START:  'th_mission_start',
+  QUIT_TIME:      'th_quit_time',
+  PACK_COST:      'th_pack_cost',
+  SMOKING_START:  'th_smoking_start',
+  TASK_PTS_TOTAL: 'th_task_pts_total',
+  TASK_LOG:       'th_task_log',
+  CRAVING_LOG:    'th_craving_log',
+  BADGES_SHOWN:   'th_badges_shown',
+  TASKS_CUSTOM:   'th_tasks_custom',
+  DAY_START:      'th_day_start_',
+};
+
+/* ═══════════════════════════════════════════════════
+   SECTION: CONSTANTS
+═══════════════════════════════════════════════════ */
+const JUNE2 = new Date('2026-06-02T00:00:00+05:30').getTime();
+
+/* ═══════════════════════════════════════════════════
+   SECTION: TASK DEFINITIONS
+   — To add/edit tasks: change this array only
+═══════════════════════════════════════════════════ */
+const DEFAULT_TASKS = [
+  {id:'warm-water',     name:'Warm Water',          mins:5,  pts:4,  block:'Morning Ritual'},
+  {id:'get-fresh',      name:'Get Fresh',            mins:15, pts:4,  block:'Morning Ritual'},
+  {id:'morning-viz',    name:'Morning Visualization',mins:45, pts:15, block:'Morning Ritual'},
+  {id:'gym',            name:'Gym',                  mins:60, pts:12, block:'Morning Ritual'},
+  {id:'bath-breakfast', name:'Bath + Breakfast',     mins:30, pts:5,  block:'Morning Ritual'},
+  {id:'newspaper',      name:'Newspaper Reading',    mins:60, pts:6,  block:'Morning Ritual'},
+  {id:'deep-work-1',    name:'Deep Work 1',          mins:90, pts:12, block:'Work Block I'},
+  {id:'deep-work-2',    name:'Deep Work 2',          mins:90, pts:12, block:'Work Block I'},
+  {id:'lunch-yog',      name:'Lunch + Yog Nidra',    mins:60, pts:8,  block:'Work Block I'},
+  {id:'deep-work-3',    name:'Deep Work 3',          mins:90, pts:12, block:'Work Block II'},
+  {id:'deep-work-4',    name:'Deep Work 4',          mins:90, pts:12, block:'Work Block II'},
+  {id:'reading',        name:'Reading',              mins:60, pts:8,  block:'Work Block II'},
+  {id:'deep-work-5',    name:'Deep Work 5',          mins:90, pts:12, block:'Work Block III'},
+  {id:'deep-work-6',    name:'Deep Work 6',          mins:90, pts:12, block:'Work Block III'},
+  {id:'night-viz',      name:'Night Visualization',  mins:20, pts:15, block:'Night Ritual'},
+];
+const BLOCK_ICONS = {'Morning Ritual':'🌅','Work Block I':'⚡','Work Block II':'🔥','Work Block III':'💎','Night Ritual':'🌙'};
+const MAX_TASK_PER_DAY = DEFAULT_TASKS.reduce((s,t)=>s+t.pts,0);
+
+/* ═══════════════════════════════════════════════════
+   SECTION: HEALTH MILESTONES
+   — Scientifically accurate timings
+═══════════════════════════════════════════════════ */
+const MILESTONES = [
+  {mins:20,    emoji:'❤️',  title:'Heart Rate Drops',       desc:'Blood pressure begins normalizing. Your cardiovascular system starts recovery.'},
+  {mins:120,   emoji:'🩸',  title:'50% Nicotine Gone',      desc:'Half-life complete. Half the nicotine has already left your bloodstream.'},
+  {mins:480,   emoji:'🫁',  title:'Carbon Monoxide Clears', desc:'8 hours. CO replaced by oxygen. Brain and body getting cleaner fuel.'},
+  {mins:720,   emoji:'🧠',  title:'Nicotine Almost Gone',   desc:'12 hours. Nicotine nearly cleared from blood. The parasite is starving.'},
+  {mins:1440,  emoji:'👃',  title:'Taste & Smell Return',   desc:'24 hours. Nicotine gone from blood. Sensory systems beginning to reawaken.'},
+  {mins:2880,  emoji:'⚡',  title:'Nerve Endings Regenerating', desc:'48 hours. Damaged nerve endings start growing back. The body heals fast.'},
+  {mins:4320,  emoji:'💪',  title:'Peak Withdrawal Passed', desc:'72 hours. The hardest phase is behind you. Nicotine fully cleared from blood.'},
+  {mins:10080, emoji:'🌬️', title:'1 Week — Lungs Clearing', desc:'Cilia regenerating in lungs. Each breath is measurably cleaner than last week.'},
+  {mins:30240, emoji:'🫀',  title:'3 Weeks — Traces Gone',  desc:'No traces of nicotine anywhere in your body. The parasite is completely dead.'},
+  {mins:43200, emoji:'🌟',  title:'1 Month — Heart Risk ↓', desc:'Circulation improved. Lung function increasing. Jupiter entered Cancer this week.'},
+];
+
+/* ═══════════════════════════════════════════════════
+   SECTION: HOURLY BODY MESSAGES
+   — Days 1-7: per hour. After: per day.
+═══════════════════════════════════════════════════ */
+const HOURLY_MSGS = {
+  0:  {icon:'🚀', hour:'Hour 0', text:'Mission ignited. The parasite\'s food supply just got cut off.'},
+  1:  {icon:'⏱️', hour:'Hour 1', text:'Nicotine half-life has begun. It starts losing strength from this moment.'},
+  2:  {icon:'🩸', hour:'Hour 2', text:'50% of nicotine already gone from your blood. The worm is half-starved.'},
+  3:  {icon:'💪', hour:'Hour 3', text:'Blood pressure dropping toward normal. Heart working easier.'},
+  4:  {icon:'⚡', hour:'Hour 4', text:'Withdrawal starting. This discomfort is the worm fighting back. It means you\'re winning.'},
+  5:  {icon:'🧠', hour:'Hour 5', text:'Brain oxygen levels rising. Nicotine fog beginning to lift.'},
+  6:  {icon:'❤️', hour:'Hour 6', text:'Heart rate stabilizing. Blood pressure closer to normal than it\'s been in years.'},
+  7:  {icon:'🌊', hour:'Hour 7', text:'Blood circulation improving. Hands and feet warming up.'},
+  8:  {icon:'🫁', hour:'Hour 8', text:'Carbon monoxide leaving your blood. Pure oxygen replacing it. Brain getting cleaner fuel.'},
+  9:  {icon:'✨', hour:'Hour 9', text:'Nerve cells beginning to recover from nicotine\'s chemical grip.'},
+  10: {icon:'💧', hour:'Hour 10', text:'Body detoxing. The worm\'s toxins being flushed out.'},
+  11: {icon:'🌅', hour:'Hour 11', text:'Almost half a day clean. The parasite is visibly weakening.'},
+  12: {icon:'🩺', hour:'Hour 12', text:'Nicotine nearly fully cleared from bloodstream. Milestone approaching.'},
+  13: {icon:'🎯', hour:'Hour 13', text:'Dopamine receptors beginning to recalibrate toward natural production.'},
+  14: {icon:'⚡', hour:'Hour 14', text:'Physical energy beginning to return as body stops compensating for nicotine.'},
+  15: {icon:'🧬', hour:'Hour 15', text:'Cellular repair processes accelerating throughout the body.'},
+  16: {icon:'❤️', hour:'Hour 16', text:'Heart beating more efficiently. Every pump doing more useful work.'},
+  17: {icon:'🌙', hour:'Hour 17', text:'Sleep quality will improve tonight. Nicotine disrupts deep sleep cycles.'},
+  18: {icon:'🧠', hour:'Hour 18', text:'Brain clarity measurably improving. Fog that felt normal was nicotine all along.'},
+  19: {icon:'💪', hour:'Hour 19', text:'Physical withdrawal symptoms beginning to peak. This is the hardest stretch. Hold.'},
+  20: {icon:'🌟', hour:'Hour 20', text:'Brain oxygen at highest level since you started smoking. It shows.'},
+  21: {icon:'🫁', hour:'Hour 21', text:'Lungs beginning to clear. Small airways relaxing and opening.'},
+  22: {icon:'⏳', hour:'Hour 22', text:'22 hours. Less than 2 hours to the first major milestone. Stay.'},
+  23: {icon:'🔥', hour:'Hour 23', text:'Nicotine almost entirely gone. The worm is gasping. One more hour.'},
+  24: {icon:'🎖️', hour:'Hour 24', text:'MILESTONE: Nicotine cleared from blood. Taste and smell returning. One full day.'},
+  30: {icon:'🧬', hour:'Hour 30', text:'Nerve endings beginning to regenerate. Body rebuilding what nicotine damaged.'},
+  36: {icon:'🌊', hour:'Hour 36', text:'Dopamine receptors actively recalibrating. Your natural good feeling is rising.'},
+  48: {icon:'⚡', hour:'Hour 48', text:'MILESTONE: Nicotine byproducts clearing. Nerve regeneration underway. 2 days.'},
+  54: {icon:'🫁', hour:'Hour 54', text:'Carbon monoxide fully replaced by oxygen throughout body.'},
+  60: {icon:'🌬️', hour:'Hour 60', text:'Lungs actively clearing mucus. Each breath carries more oxygen.'},
+  72: {icon:'🏆', hour:'Hour 72', text:'MILESTONE: Peak withdrawal passed. The absolute worst is behind you. 3 days.'},
+  84: {icon:'✨', hour:'Hour 84', text:'Energy returning. Brain fog lifting. The real you is emerging.'},
+  96: {icon:'🫁', hour:'Hour 96', text:'Cilia in lungs regenerating. Breathing becoming noticeably easier.'},
+  108:{icon:'💪', hour:'Hour 108', text:'Physical symptoms fading. Body has largely stabilized without nicotine.'},
+  120:{icon:'🌟', hour:'Hour 120', text:'5 days. Circulation improving significantly. Worm is nearly dead.'},
+  132:{icon:'🧠', hour:'Hour 132', text:'Lung capacity measurably increasing with every hour.'},
+  144:{icon:'🎯', hour:'Hour 144', text:'6 days. Brain reward system actively recalibrating toward natural dopamine.'},
+  168:{icon:'🏆', hour:'Hour 168', text:'MILESTONE: 7 DAYS. The hardest week of your life is done. The worm is dying.'},
+};
+
+const DAILY_MSGS = [
+  {icon:'🌬️', text:'Day 8. Lungs clearing faster. Breathing easier every morning.'},
+  {icon:'⚡',  text:'Day 9. Energy levels rising as body fully adjusts to no nicotine.'},
+  {icon:'🧠',  text:'Day 10. Mental clarity noticeably sharper. Focus improving daily.'},
+  {icon:'💪',  text:'Day 11. Physical stamina returning. The body is reclaiming itself.'},
+  {icon:'🌟',  text:'Day 12. Dopamine baseline rising. Natural joy returning without effort.'},
+  {icon:'🎯',  text:'Day 13. Cravings becoming infrequent. Each one shorter than the last.'},
+  {icon:'🏆',  text:'Day 14. Two weeks. Lung function improved by over 30%. Keep going.'},
+  {icon:'🚀',  text:'Day 15+. You did it. The parasite is dead. This is the new baseline.'},
+];
+
+/* ═══════════════════════════════════════════════════
+   SECTION: VISION CARDS (Theatre of the Mind)
+═══════════════════════════════════════════════════ */
+const VISIONS = [
+  {icon:'💰', title:'The Wire Lands', body:'Your phone buzzes. Wire transfer confirmed — Zymo\'s account. The number has more zeros than anything with your name on it. You built this from scratch. You are a funded CEO. This moment was earned one clean hour at a time.'},
+  {icon:'⚡', title:'Peak Presence', body:'Full lungs. Zero fog. You walk into a room and something shifts. Clear-eyed. Voice carries. Dangerous in the best way. This is what 15 days without a cigarette does to a man\'s body and energy.'},
+  {icon:'🔥', title:'Magnetic Force', body:'A man who controls his world needs no effort to attract. Women feel the difference. You don\'t need the cigarette. You never needed it. The discipline you\'re showing right now is the most attractive thing about you.'},
+];
+
+/* ═══════════════════════════════════════════════════
+   SECTION: URGENCY MESSAGES
+═══════════════════════════════════════════════════ */
+const URGENCY = [
+  'These 15 days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away.',
+  'The Zymo round does not close itself. Every task you skip is a door you leave unopened.',
+  'Half the day is gone. The other half decides everything. Get back to work, Manish.',
+  'Tonight still counts. Jupiter does not care about excuses. Neither should you.',
+  'A man who controls his habits controls his destiny. This hour is the test.',
+  'There are no neutral days in this window. Today either worked for you or against you.',
+  'June 2 is not moving. You either show up for these 15 days or you don\'t.',
+];
+
+/* ═══════════════════════════════════════════════════
+   SECTION: STATE
+═══════════════════════════════════════════════════ */
+const S = {
+  missionStart: null,
+  packCost: 200,
+  visionIdx: 0,
+  wroIdx: 0,
+  wroTimer: null,
+  shownBadges: [],
+  lastWormStage: -1,   // Track worm stage — only re-render on change
+  lastBadgeCheck: 0,   // Throttle badge checks to once per minute
+};
+
+/* ═══════════════════════════════════════════════════
+   SECTION: SCORING ENGINE
+═══════════════════════════════════════════════════ */
+function smokePtsPerHr(h){
+  if(h<=72) return 10;
+  if(h<=168) return 6;
+  return 3;
+}
+
+function calcSmokePts(startTs){
+  const h = Math.max(0, (Date.now()-startTs)/3600000);
+  if(h<=72) return Math.floor(h*10);
+  if(h<=168) return Math.floor(72*10+(h-72)*6);
+  return Math.floor(72*10+96*6+(h-168)*3);
+}
+
+function calcMaxPts(){
+  const msLeft = Math.max(0,JUNE2-Date.now());
+  const h = msLeft/3600000;
+  const d = msLeft/86400000;
+  let maxSmoke = h<=72?h*10:h<=168?72*10+(h-72)*6:72*10+96*6+(h-168)*3;
+  return Math.floor(maxSmoke + Math.ceil(d)*MAX_TASK_PER_DAY) || 4221;
+}
+
+function calcProb(){
+  const now = Date.now();
+  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||now);
+  const sp = calcSmokePts(ss);
+  const tp = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
+
+  // Time-based base — every second of the mission window counts
+  const totalMissionMs = Math.max(1, JUNE2 - parseInt(S.missionStart||now));
+  const elapsedMs = Math.max(0, now - parseInt(S.missionStart||now));
+  const timePct = (elapsedMs / totalMissionMs) * 20; // max 20% from time alone
+
+  // Points-based probability
+  const pointsPct = ((sp + tp) / calcMaxPts()) * 75; // max 75% from points
+
+  const total = Math.min(95, timePct + pointsPct);
+  return Math.max(0, total);
+}
+
+function fmtProb(p){
+  if(p < 0.1)  return p.toFixed(3)+'%';
+  if(p < 1)    return p.toFixed(2)+'%';
+  if(p < 10)   return p.toFixed(1)+'%';
+  return Math.round(p)+'%';
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: WORM RENDERER
+═══════════════════════════════════════════════════ */
+function getWormStage(cleanHrs){
+  if(cleanHrs < 2)   return 1;
+  if(cleanHrs < 24)  return 2;
+  if(cleanHrs < 72)  return 3;
+  if(cleanHrs < 504) return 4; // 3 weeks
+  return 5;
+}
+
+function renderWorm(stage){
+  const arena = document.getElementById('worm-arena');
+  if(!arena) return;
+
+  if(stage === 5){
+    // ASH PARTICLES
+    let html = '';
+    for(let i=0;i<8;i++){
+      const x = 60 + (Math.random()-0.5)*80;
+      const y = 50 + (Math.random()-0.5)*60;
+      const s = 3+Math.random()*4;
+      html += `<div style="position:absolute;width:${s}px;height:${s}px;border-radius:50%;background:var(--text-4);left:${x}px;top:${y}px;animation:ash-drift ${2+Math.random()*3}s ease-out ${Math.random()*2}s infinite;opacity:0.5;"></div>`;
+    }
+    arena.innerHTML = html;
+    return;
+  }
+
+  // Worm config by stage
+  const configs = {
+    1: {segs:8, baseSize:18, color:'#C47A6A', speed:'1.2s', anim:'wriggle-fast', glow:'rgba(196,122,106,0.5)', spacing:14},
+    2: {segs:7, baseSize:15, color:'#9A6060', speed:'2s',   anim:'wriggle-med',  glow:'rgba(154,96,96,0.3)',   spacing:12},
+    3: {segs:5, baseSize:11, color:'#6A4A4A', speed:'3.5s', anim:'wriggle-slow', glow:'none',                  spacing:10},
+    4: {segs:3, baseSize:7,  color:'#4A3232', speed:'5s',   anim:'wriggle-dying',glow:'none',                  spacing:8},
+  };
+  const c = configs[stage];
+  const arenaW = arena.offsetWidth || 160;
+  const totalW = c.segs * c.spacing;
+  const startX = (arenaW - totalW)/2;
+
+  let html = '';
+  for(let i=0;i<c.segs;i++){
+    const size = c.baseSize - i*0.5;
+    const x = startX + i*c.spacing;
+    const y = 50 - size/2;
+    const delay = i*0.15;
+    const glowStyle = c.glow !== 'none' ? `filter:drop-shadow(0 0 4px ${c.glow});` : '';
+    html += `<div style="position:absolute;width:${size}px;height:${size}px;border-radius:50%;background:${c.color};left:${x}px;top:${y}px;animation:${c.anim} ${c.speed} ease-in-out ${delay}s infinite, seg-bob ${(1.5+i*0.1).toFixed(1)}s ease-in-out ${delay}s infinite;${glowStyle}opacity:${1-i*0.04};"></div>`;
+  }
+  // Head eyes for stage 1-2
+  if(stage <= 2){
+    const hx = startX + 2;
+    const hs = c.baseSize;
+    html += `<div style="position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(255,220,200,0.8);left:${hx+hs*0.25}px;top:${50-hs/2+3}px;z-index:2;"></div>`;
+  }
+  arena.innerHTML = html;
+}
+
+const WORM_DATA = {
+  1:{label:'Fed & Demanding',    title:'The Parasite is Strong',    fact:'It has been feeding on you for years. But you just cut off its supply.'},
+  2:{label:'Starving — Half Dead', title:'The Parasite is Weakening', fact:'50% of its nicotine supply is gone. It is fighting back with cravings. That is fear.'},
+  3:{label:'Collapsing',         title:'The Parasite is Collapsing', fact:'Nicotine cleared from blood. It is running on empty. Every hour you hold is another blow.'},
+  4:{label:'Dying — Almost Gone', title:'The Parasite is Dying',     fact:'Barely alive. Almost translucent. In days it will be completely gone.'},
+  5:{label:'Dead ✓',             title:'The Parasite is Dead',       fact:'Gone. Your mind is yours again. This is what freedom feels like.'},
+};
+
+/* ═══════════════════════════════════════════════════
+   SECTION: BODY STRIP UPDATER
+═══════════════════════════════════════════════════ */
+function getBodyMsg(cleanHrs){
+  if(!S.missionStart) return {icon:'⏳',hour:'BODY RIGHT NOW',text:'Mission not yet started.'};
+  const h = Math.floor(cleanHrs);
+  // Days 1-7: hourly
+  if(h <= 168){
+    // Find closest hour
+    const keys = Object.keys(HOURLY_MSGS).map(Number).sort((a,b)=>a-b);
+    let best = 0;
+    for(const k of keys){ if(k<=h) best=k; }
+    return HOURLY_MSGS[best] || HOURLY_MSGS[0];
+  }
+  // After day 7: daily
+  const dayIdx = Math.min(Math.floor(h/24)-7, DAILY_MSGS.length-1);
+  return {icon:DAILY_MSGS[dayIdx].icon, hour:`Day ${Math.floor(h/24)}`, text:DAILY_MSGS[dayIdx].text};
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: WAR ROOM UPDATER — runs every second
+═══════════════════════════════════════════════════ */
+function updateWarRoom(){
+  if(!S.missionStart) return;
+  const now = Date.now();
+
+  // Hours to June 2
+  const msLeft = Math.max(0,JUNE2-now);
+  const hrsLeft = Math.floor(msLeft/3600000);
+  setText('wr-hrs', hrsLeft.toLocaleString('en-IN'));
+
+  // Clean time
+  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart);
+  const cleanMs = Math.max(0,now-ss);
+  const cleanHrs = cleanMs/3600000;
+  setText('wr-clean', fmtClean(cleanMs));
+
+  // Smoke pts
+  const sp = calcSmokePts(ss);
+  setText('wr-smoke-pts', sp+' pts earned');
+
+  // Task pts
+  const tp = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
+  setText('wr-task-pts', tp.toLocaleString('en-IN'));
+
+  // Today tasks done
+  const tdKey = todayKey();
+  const tLog = getTaskLog();
+  const doneCnt = tLog[tdKey] ? Object.keys(tLog[tdKey]).filter(k=>tLog[tdKey][k]).length : 0;
+  setText('wr-today-done', doneCnt+' done today');
+
+  // Probability + orb
+  const prob = calcProb();
+  setText('orb-pct', fmtProb(prob));
+  const liq = document.getElementById('orb-liquid');
+  if(liq) liq.style.height = prob+'%';
+  // Orb glow color
+  const sphere = document.getElementById('orb-sphere');
+  if(sphere){
+    const glow = prob < 20 ? 'rgba(74,58,22,0.5)' : prob < 50 ? 'rgba(196,154,60,0.4)' : prob < 75 ? 'rgba(212,168,84,0.6)' : 'rgba(255,224,138,0.7)';
+    sphere.style.boxShadow = `0 0 ${20+prob}px ${glow}, inset 0 0 40px rgba(0,0,0,0.4)`;
+  }
+  // Orb caption
+  const captions = ['Mission ignited. Every second counts.','The ember is lit. Keep going.','The fire is building. Don\'t stop now.','Jupiter is watching. Push through.','The door is open. Walk through it.'];
+  const ci = prob<2?0:prob<30?1:prob<60?2:prob<80?3:4;
+  setText('orb-caption', captions[ci]);
+
+  // Body strip
+  const bm = getBodyMsg(cleanHrs);
+  setText('bs-icon', bm.icon);
+  setText('bs-hour', bm.hour);
+  setText('bs-text', bm.text);
+
+  // Progress bar — guard against negative total
+  const total = Math.max(1, JUNE2 - S.missionStart);
+  const elapsed = now - S.missionStart;
+  const pct = Math.min(100, Math.max(0,(elapsed/total)*100));
+  const pf = document.getElementById('wp-fill');
+  if(pf) pf.style.width = pct.toFixed(1)+'%';
+  setText('wp-pct', pct.toFixed(1)+'%');
+  const ws = document.getElementById('wp-start');
+  if(ws){ const d=new Date(S.missionStart); ws.textContent=d.toLocaleDateString('en-IN',{day:'numeric',month:'short'}); }
+
+  // Urgency
+  const h = new Date().getHours();
+  const ui = h<9?0:h<13?1:h<17?2:h<21?3:4;
+  setText('wu-text', '"'+URGENCY[ui]+'"');
+
+  // Check milestone badges — throttled to once per 60s to avoid per-second overhead
+  const now2 = Date.now();
+  if(now2 - S.lastBadgeCheck > 60000){
+    S.lastBadgeCheck = now2;
+    checkBadges(cleanHrs);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: FREEDOM TAB UPDATER
+═══════════════════════════════════════════════════ */
+function updateFreedom(){
+  if(!S.missionStart) return;
+  const now = Date.now();
+  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart);
+  const cleanMs = Math.max(0,now-ss);
+  const cleanHrs = cleanMs/3600000;
+  const cleanDays = cleanMs/86400000;
+
+  setText('fr-time', fmtCleanLong(cleanMs));
+
+  // Sub text
+  const d = Math.floor(cleanDays);
+  const subTexts = ['Hour by hour. The worm is starving.','The hardest 72 hours. Hold the line.','Peak withdrawal passing. The worst is almost done.','7 days. The parasite is dying.','The parasite is nearly gone.','Free. The worm is dead.'];
+  const si = cleanHrs<24?0:cleanHrs<72?1:cleanHrs<96?2:cleanHrs<168?3:cleanHrs<504?4:5;
+  setText('fr-sub', subTexts[si]);
+
+  // Worm — only re-render on stage change to preserve CSS animations
+  const stage = getWormStage(cleanHrs);
+  const wd = WORM_DATA[stage];
+  setText('worm-stage-lbl', 'Stage: '+wd.label);
+  setText('ws-title', wd.title);
+  setText('ws-fact', wd.fact);
+  if(stage !== S.lastWormStage){
+    S.lastWormStage = stage;
+    renderWorm(stage);
+  }
+
+  // Natural high meter — 3 months = 100%
+  const nhPct = Math.min(100, (cleanHrs/(24*90))*100);
+  const nhFill = document.getElementById('nh-fill');
+  if(nhFill) nhFill.style.height = nhPct.toFixed(1)+'%';
+
+  // Money
+  const money = Math.floor(cleanDays*S.packCost);
+  setText('fr-money', '₹'+money.toLocaleString('en-IN'));
+
+  // Milestones
+  const ml = document.getElementById('fr-milestones');
+  if(ml){
+    ml.innerHTML = MILESTONES.map(m=>{
+      const reached = cleanHrs*60 >= m.mins;
+      const minsLeft = m.mins - cleanHrs*60;
+      const timeLabel = reached ? '✓ Reached' : 'In ~'+fmtDur(minsLeft);
+      return `<div class="frm ${reached?'reached':'upcoming'}">
+        <div class="frm-icon">${m.emoji}</div>
+        <div class="frm-content">
+          <div class="frm-title">${m.title}</div>
+          <div class="frm-desc">${m.desc}</div>
+          <div class="frm-time ${reached?'':'dim'}">${timeLabel}</div>
+        </div>
+        ${reached?'<div style="font-size:16px">✅</div>':''}
+      </div>`;
+    }).join('');
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: TASKS ENGINE
+═══════════════════════════════════════════════════ */
+function getTasks(){
+  const custom = JSON.parse(localStorage.getItem(LS.TASKS_CUSTOM)||'{}');
+  return DEFAULT_TASKS.map(t=>({...t, name:custom[t.id]?.name||t.name, mins:custom[t.id]?.mins||t.mins}));
+}
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+function getTaskLog(){ return JSON.parse(localStorage.getItem(LS.TASK_LOG)||'{}'); }
+function getDayStart(){ return parseInt(localStorage.getItem(LS.DAY_START+todayKey())||'0'); }
+
+function startDay(){
+  localStorage.setItem(LS.DAY_START+todayKey(), Date.now());
+  renderTasks();
+}
+
+let lastTaskRenderKey = '';
+
+function renderTasks(){
+  const dns = document.getElementById('day-not-started');
+  const tlw = document.getElementById('task-list-wrap');
+  if(!dns||!tlw) return;
+
+  const dateEl = document.getElementById('th-date');
+  if(dateEl) dateEl.textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
+
+  const dayStart = getDayStart();
+  if(!dayStart){
+    dns.innerHTML = `<div class="dns"><div class="dns-icon">⏳</div><div class="dns-text">Tap when you're ready to begin your day.<br>The timer starts from this moment.</div><button class="btn-start" onclick="startDay()">Start My Day Now</button></div>`;
+    tlw.innerHTML = '';
+    lastTaskRenderKey = '';
+    return;
+  }
+  dns.innerHTML = '';
+
+  const tasks = getTasks();
+  const log = getTaskLog();
+  const tdKey = todayKey();
+  const tdLog = log[tdKey]||{};
+  const now = Date.now();
+
+  // Build a render key — only full re-render if completion state changes
+  const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('');
+  const needFullRender = completionKey !== lastTaskRenderKey;
+  lastTaskRenderKey = completionKey;
+
+  // Calc times
+  let t = dayStart;
+  const timed = tasks.map(tk=>{
+    const s=t; t+=tk.mins*60000;
+    return{...tk,tStart:s,tEnd:t};
+  });
+
+  // Today pts
+  const tp = tasks.filter(tk=>tdLog[tk.id]).reduce((s,tk)=>s+tk.pts,0);
+  const tpEl = document.getElementById('th-pts');
+  if(tpEl) tpEl.textContent = tp;
+
+  if(needFullRender){
+    // Full DOM rebuild
+    const blocks={};
+    timed.forEach(tk=>{ if(!blocks[tk.block]) blocks[tk.block]=[]; blocks[tk.block].push(tk); });
+
+    let html='';
+    for(const [bname,btasks] of Object.entries(blocks)){
+      const bPts = btasks.reduce((s,tk)=>s+tk.pts,0);
+      const bDone = btasks.filter(tk=>tdLog[tk.id]).reduce((s,tk)=>s+tk.pts,0);
+      html+=`<div class="blk-head"><span class="blk-icon">${BLOCK_ICONS[bname]||'📋'}</span><span class="blk-name">${bname}</span><span class="blk-pts">${bDone}/${bPts}pts</span></div><div class="task-list">`;
+      btasks.forEach(tk=>{
+        const done=!!tdLog[tk.id];
+        const active=!done&&now>=tk.tStart&&now<tk.tEnd;
+        const up=!done&&now<tk.tStart;
+        const fmt=ts=>new Date(ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+        html+=`<div class="task ${done?'t-done':active?'t-active':up?'t-up':''}" data-id="${tk.id}">
+          <div class="t-check" onclick="completeTask('${tk.id}',event)">${done?'✓':''}</div>
+          <div class="t-info">
+            <div class="t-name">${tk.name}</div>
+            <div class="t-meta"><span class="t-time">${fmt(tk.tStart)} · ${tk.mins}m</span><span class="t-pts">+${tk.pts}pts</span><span class="t-countdown" data-end="${tk.tEnd}" data-active="${active&&!done}"></span></div>
+          </div>
+          <button class="t-edit" onclick="openTaskEdit('${tk.id}')">✏️</button>
+        </div>`;
+      });
+      html+='</div>';
+    }
+    tlw.innerHTML = html;
+  }
+
+  // Always update countdowns in-place (fast — no DOM rebuild)
+  tlw.querySelectorAll('.t-countdown').forEach(el=>{
+    const end = parseInt(el.dataset.end);
+    const isActive = el.dataset.active === 'true';
+    if(isActive && end > now){
+      const rm=Math.floor((end-now)/60000);
+      const rs=Math.floor(((end-now)%60000)/1000);
+      el.textContent = rm+':'+String(rs).padStart(2,'0')+' left';
+      el.dataset.active = (end > Date.now()).toString();
+    } else {
+      el.textContent = '';
+    }
+  });
+}
+
+function completeTask(id, evt){
+  const tdKey = todayKey();
+  const log = getTaskLog();
+  if(!log[tdKey]) log[tdKey]={};
+  const tasks = getTasks();
+  const task = tasks.find(t=>t.id===id);
+  if(!task) return;
+
+  let total = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
+  if(log[tdKey][id]){
+    delete log[tdKey][id];
+    total = Math.max(0,total-task.pts);
+  } else {
+    log[tdKey][id] = Date.now();
+    total += task.pts;
+    // Points fly animation
+    if(evt){
+      const fly = document.createElement('div');
+      fly.className = 'pts-fly';
+      fly.textContent = '+'+task.pts+'pts';
+      fly.style.left = evt.clientX+'px';
+      fly.style.top = (evt.clientY-10)+'px';
+      document.body.appendChild(fly);
+      setTimeout(()=>fly.remove(),1200);
+    }
+    // Pulse orb
+    const sphere = document.getElementById('orb-sphere');
+    if(sphere){ sphere.style.transform='scale(1.06)'; setTimeout(()=>sphere.style.transform='',300); }
+  }
+  localStorage.setItem(LS.TASK_LOG, JSON.stringify(log));
+  localStorage.setItem(LS.TASK_PTS_TOTAL, total);
+  renderTasks();
+  updateWarRoom();
+}
+
+function openTaskEdit(id){
+  const tasks = getTasks();
+  const t = tasks.find(t=>t.id===id);
+  if(!t) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-name').value = t.name;
+  document.getElementById('edit-mins').value = t.mins;
+  openOverlay('ov-task-edit');
+}
+
+function saveTaskEdit(){
+  const id = document.getElementById('edit-id').value;
+  const name = document.getElementById('edit-name').value.trim();
+  const mins = parseInt(document.getElementById('edit-mins').value);
+  if(!name||!mins) return;
+  const custom = JSON.parse(localStorage.getItem(LS.TASKS_CUSTOM)||'{}');
+  custom[id] = {name,mins};
+  localStorage.setItem(LS.TASKS_CUSTOM, JSON.stringify(custom));
+  closeOverlay('ov-task-edit');
+  renderTasks();
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: CRAVING SYSTEM
+═══════════════════════════════════════════════════ */
+function openCraving(){
+  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  log.push({ts:Date.now(),resisted:false,note:''});
+  localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
+  // Reset to step 1
+  document.querySelectorAll('.craving-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('cs-1').classList.add('active');
+  openOverlay('ov-craving');
+}
+
+function cravingStep(n){
+  document.querySelectorAll('.craving-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('cs-'+n).classList.add('active');
+  if(n===2) renderCravingTasks();
+  if(n===3) renderVision();
+}
+
+function renderCravingTasks(){
+  const tasks = getTasks();
+  const log = getTaskLog();
+  const tdLog = log[todayKey()]||{};
+  const dayStart = getDayStart();
+  const pending = dayStart ? tasks.filter(t=>!tdLog[t.id]).slice(0,5) : tasks.slice(0,5);
+  const ct = document.getElementById('ct-list');
+  if(!ct) return;
+  if(!pending.length){
+    ct.innerHTML='<div style="font-size:13px;color:var(--text-3);padding:8px">All tasks done. Take a 5-minute walk right now.</div>';
+    return;
+  }
+  ct.innerHTML = pending.map(t=>`
+    <div class="ct-item" onclick="pickCravingTask('${t.id}')">
+      <div class="cti-icon">⚡</div>
+      <div class="cti-name">${t.name}</div>
+      <div class="cti-pts">+${t.pts}pts</div>
+    </div>`).join('');
+}
+
+function pickCravingTask(id){
+  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  if(log.length>0){log[log.length-1].resisted=true;log[log.length-1].note='Task: '+id;}
+  localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
+  closeCraving();
+  // Find tasks nav button by its label, not by position
+  const tasksBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b=>b.querySelector('.nav-label')?.textContent==='Tasks');
+  if(tasksBtn) switchTab('tasks', tasksBtn);
+}
+
+function renderVision(){
+  const v = VISIONS[S.visionIdx%VISIONS.length];
+  S.visionIdx++;
+  const el = document.getElementById('cs-vision');
+  if(el) el.innerHTML=`<span class="csv-icon">${v.icon}</span><div class="csv-title">${v.title}</div><div class="csv-body">${v.body}</div>`;
+}
+
+function logResisted(){
+  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  if(log.length>0){log[log.length-1].resisted=true;log[log.length-1].note='Theatre of the Mind';}
+  localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
+  closeCraving();
+  renderLog();
+}
+
+function closeCraving(){
+  closeOverlay('ov-craving');
+  // Only re-render log if log tab has been visited (elements exist)
+  if(document.getElementById('log-list')) renderLog();
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: MILESTONE BADGES
+═══════════════════════════════════════════════════ */
+function checkBadges(cleanHrs){
+  S.shownBadges = JSON.parse(localStorage.getItem(LS.BADGES_SHOWN)||'[]');
+  MILESTONES.forEach(m=>{
+    if(cleanHrs*60>=m.mins && !S.shownBadges.includes(m.mins)){
+      S.shownBadges.push(m.mins);
+      localStorage.setItem(LS.BADGES_SHOWN,JSON.stringify(S.shownBadges));
+      showBadge(m.emoji,m.title,m.desc);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: MILESTONE BADGES — queued, no stacking
+═══════════════════════════════════════════════════ */
+const badgeQueue = [];
+let badgeShowing = false;
+
+function checkBadges(cleanHrs){
+  S.shownBadges = JSON.parse(localStorage.getItem(LS.BADGES_SHOWN)||'[]');
+  MILESTONES.forEach(m=>{
+    if(cleanHrs*60>=m.mins && !S.shownBadges.includes(m.mins)){
+      S.shownBadges.push(m.mins);
+      localStorage.setItem(LS.BADGES_SHOWN,JSON.stringify(S.shownBadges));
+      badgeQueue.push({emoji:m.emoji,title:m.title,body:m.desc});
+      if(!badgeShowing) showNextBadge();
+    }
+  });
+}
+
+function showNextBadge(){
+  if(!badgeQueue.length){ badgeShowing=false; return; }
+  badgeShowing = true;
+  const b = badgeQueue.shift();
+  document.getElementById('bb-emoji').textContent=b.emoji;
+  document.getElementById('bb-title').textContent=b.title;
+  document.getElementById('bb-body').textContent=b.body;
+  // Close any open overlay first, then show badge
+  document.querySelectorAll('.overlay.open').forEach(o=>{ if(o.id!=='ov-badge') o.classList.remove('open'); });
+  openOverlay('ov-badge');
+}
+
+function showBadge(emoji,title,body){
+  badgeQueue.push({emoji,title,body});
+  if(!badgeShowing) showNextBadge();
+}
+
+function closeBadge(){
+  closeOverlay('ov-badge');
+  badgeShowing = false;
+  // Show next queued badge after short delay
+  if(badgeQueue.length) setTimeout(showNextBadge, 400);
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: LOG RENDERER
+═══════════════════════════════════════════════════ */
+function renderLog(){
+  const cravings = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  const ss = document.getElementById('log-stats');
+  const ll = document.getElementById('log-list');
+  if(!ss||!ll) return;
+
+  const total = cravings.length;
+  const resisted = cravings.filter(c=>c.resisted).length;
+  const cleanDays = S.missionStart ? Math.floor((Date.now()-parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart))/86400000) : 0;
+  ss.innerHTML=`<div class="log-stat">Cravings: <span>${total}</span></div><div class="log-stat">Resisted: <span>${resisted}</span></div><div class="log-stat">Clean days: <span>${cleanDays}</span></div>`;
+
+  if(!cravings.length){
+    ll.innerHTML='<div class="log-empty">No cravings logged yet.<br>The parasite hasn\'t dared to challenge you.</div>';
+    return;
+  }
+  const grouped={};
+  [...cravings].reverse().forEach(c=>{
+    const k=new Date(c.ts).toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'});
+    if(!grouped[k]) grouped[k]=[];
+    grouped[k].push(c);
+  });
+  ll.innerHTML='<div class="log-group">'+Object.entries(grouped).map(([day,items])=>`
+    <div class="log-day-lbl">${day}</div>
+    ${items.map(e=>`<div class="log-entry">
+      <div class="le-icon">${e.type==='relapse'?'💔':e.resisted?'✅':'⚡'}</div>
+      <div>
+        <div class="le-title">${e.type==='relapse'?'Relapse — Streak Reset':e.resisted?'Craving Resisted':'Craving Hit'}</div>
+        <div class="le-time">${new Date(e.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div>
+        ${e.note?'<div class="le-note">'+e.note+'</div>':''}
+      </div>
+    </div>`).join('')}
+  `).join('')+'</div>';
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: SMOKED / RELAPSE
+═══════════════════════════════════════════════════ */
+function confirmSmoked(){
+  if(confirm('Reset your smoke-free streak? Smoking points will be wiped.')){
+    localStorage.setItem(LS.SMOKING_START, Date.now());
+    localStorage.setItem(LS.BADGES_SHOWN,'[]');
+    S.shownBadges=[];
+    const log=JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+    log.push({ts:Date.now(),resisted:false,note:'Smoked — streak reset',type:'relapse'});
+    localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
+    updateFreedom(); updateWarRoom(); renderLog();
+    alert('Streak reset. The cycle breaks NOW. Start again — this moment is Day Zero.');
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: OVERLAY SYSTEM
+═══════════════════════════════════════════════════ */
+function openOverlay(id){ document.getElementById(id).classList.add('open'); }
+function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
+function closeOverlayOutside(e,id){ if(e.target===document.getElementById(id)) closeOverlay(id); }
+function openSettings(){ document.getElementById('set-pack').value=S.packCost; openOverlay('ov-settings'); }
+function saveSettings(){
+  const pc=parseFloat(document.getElementById('set-pack').value);
+  if(!isNaN(pc)&&pc>0){S.packCost=pc;localStorage.setItem(LS.PACK_COST,pc);}
+  closeOverlay('ov-settings');
+}
+function confirmReset(){
+  if(confirm('Reset THRESHOLD? All data will be erased.')){localStorage.clear();location.reload();}
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: TAB SWITCHER
+═══════════════════════════════════════════════════ */
+function switchTab(name, el){
+  document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const pane = document.getElementById('tab-'+name);
+  pane.classList.add('active');
+  // Re-trigger animation
+  pane.style.animation='none';
+  pane.offsetHeight; // reflow
+  pane.style.animation='';
+  el.classList.add('active');
+  if(name==='tasks') renderTasks();
+  if(name==='fr'){
+    updateFreedom();
+    const ss2 = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||Date.now());
+    const stage = getWormStage((Date.now()-ss2)/3600000);
+    if(stage !== S.lastWormStage){ S.lastWormStage=stage; renderWorm(stage); }
+  }
+  if(name==='log') renderLog();
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: OUTCOME CARD ROTATION
+═══════════════════════════════════════════════════ */
+function showWro(i){
+  S.wroIdx=i;
+  document.querySelectorAll('.wro').forEach(w=>w.classList.remove('active'));
+  document.querySelectorAll('.wro-dot').forEach(d=>d.classList.remove('active'));
+  const w=document.querySelector(`.wro[data-i="${i}"]`);
+  const d=document.querySelectorAll('.wro-dot')[i];
+  if(w) w.classList.add('active');
+  if(d) d.classList.add('active');
+}
+function startWroRotation(){
+  S.wroTimer=setInterval(()=>showWro((S.wroIdx+1)%3), 6000);
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: LAUNCH & INIT
+═══════════════════════════════════════════════════ */
+function setNow(){
+  const now=new Date();
+  const p=n=>String(n).padStart(2,'0');
+  document.getElementById('in-quit').value=`${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}T${p(now.getHours())}:${p(now.getMinutes())}`;
+}
+
+function igniteMission(btn){
+  const qt=document.getElementById('in-quit').value;
+  const pc=document.getElementById('in-pack').value;
+  if(!qt){alert('Tap "Now" to set your mission start time, then Ignite.');return;}
+  // Visual feedback — disable button, show loading
+  btn.disabled = true;
+  btn.textContent = '🔥 IGNITING...';
+  // Ripple
+  const r=document.createElement('div');
+  r.className='btn-ignite-ripple';
+  btn.appendChild(r);
+  setTimeout(()=>r.remove(),600);
+
+  const ts=new Date(qt).getTime();
+  S.missionStart=ts;
+  S.packCost=pc?parseFloat(pc):200;
+  localStorage.setItem(LS.MISSION_START,ts);
+  localStorage.setItem(LS.QUIT_TIME,ts);
+  localStorage.setItem(LS.PACK_COST,S.packCost);
+  localStorage.setItem(LS.SMOKING_START,ts);
+  localStorage.setItem(LS.TASK_PTS_TOTAL,'0');
+  localStorage.setItem(LS.CRAVING_LOG,'[]');
+  localStorage.setItem(LS.BADGES_SHOWN,'[]');
+  localStorage.setItem(LS.TASK_LOG,'{}');
+  setTimeout(showApp, 400);
+}
+
+function showApp(){
+  document.getElementById('s-launch').classList.remove('active');
+  document.getElementById('s-app').classList.add('active');
+  updateWarRoom();
+  renderTasks();
+  renderLog();
+}
+
+function init(){
+  const ms=localStorage.getItem(LS.MISSION_START);
+  S.packCost=parseFloat(localStorage.getItem(LS.PACK_COST)||'200');
+  S.shownBadges=JSON.parse(localStorage.getItem(LS.BADGES_SHOWN)||'[]');
+  // No pre-fill — user sets the exact moment they commit
+  document.getElementById('in-pack').value=S.packCost;
+  if(ms){
+    S.missionStart=parseInt(ms);
+    showApp();
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: UTILITY FUNCTIONS
+═══════════════════════════════════════════════════ */
+function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+function fmtClean(ms){
+  if(ms<60000) return 'Just now';
+  const d=Math.floor(ms/86400000),h=Math.floor((ms%86400000)/3600000),m=Math.floor((ms%3600000)/60000);
+  if(d>0)return d+'d '+h+'h';
+  if(h>0)return h+'h '+m+'m';
+  return m+'m';
+}
+function fmtCleanLong(ms){
+  const d=Math.floor(ms/86400000),h=Math.floor((ms%86400000)/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
+  if(d>0)return d+'d '+h+'h '+m+'m';
+  if(h>0)return h+'h '+m+'m '+s+'s';
+  return m+'m '+s+'s';
+}
+function fmtDur(mins){
+  if(mins<60) return Math.round(mins)+'m';
+  if(mins<1440) return Math.round(mins/60)+'h';
+  return Math.round(mins/1440)+'d';
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: ATMOSPHERE — EMBERS
+═══════════════════════════════════════════════════ */
+function spawnEmbers(){
+  const atm=document.getElementById('atm');
+  for(let i=0;i<30;i++){
+    const e=document.createElement('div');
+    e.className='ember';
+    const s=1+Math.random()*2;
+    e.style.cssText=`width:${s}px;height:${s}px;background:var(--gold);bottom:${Math.random()*25}%;left:${15+Math.random()*70}%;--d:${5+Math.random()*10}s;--o:${0.15+Math.random()*0.4};--x:${(Math.random()-0.5)*50}px;animation-delay:${Math.random()*10}s;`;
+    atm.appendChild(e);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: PWA — SERVICE WORKER & INSTALL
+═══════════════════════════════════════════════════ */
+if('serviceWorker' in navigator){
+  const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>clients.claim());self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>new Response('')))));`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
+}
+let dP=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dP=e;document.getElementById('install-banner').style.display='flex';});
+document.getElementById('ib-install').onclick=async()=>{if(dP){dP.prompt();await dP.userChoice;dP=null;document.getElementById('install-banner').style.display='none';}};
+document.getElementById('ib-later').onclick=()=>{document.getElementById('install-banner').style.display='none';};
+window.addEventListener('appinstalled',()=>{document.getElementById('install-banner').style.display='none';});
+
+/* ═══════════════════════════════════════════════════
+   SECTION: BOOT
+═══════════════════════════════════════════════════ */
+spawnEmbers();
+init();
+startWroRotation();
+setInterval(updateWarRoom,1000);
+setInterval(()=>{
+  const fr=document.getElementById('tab-fr');
+  if(fr&&fr.classList.contains('active')) updateFreedom();
+},1000);
+setInterval(()=>{
+  const tt=document.getElementById('tab-tasks');
+  if(tt&&tt.classList.contains('active')) renderTasks();
+},1000);
+</script>
+</body>
+</html>
