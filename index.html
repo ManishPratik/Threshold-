@@ -528,7 +528,8 @@ margin-bottom:10px;
   background:linear-gradient(135deg,rgba(212,168,84,0.05),var(--card));
   box-shadow:0 0 0 1px rgba(212,168,84,0.07);
 }
-.task.t-up{opacity:0.38;}
+.task.t-priority{border-color:rgba(212,168,84,0.2);background:linear-gradient(135deg,rgba(212,168,84,0.04),var(--card));}
+.task.t-priority .t-name::after{content:' ✦';font-size:10px;color:var(--g-3);}
 
 /* Checkbox — large tap target */
 .t-check{
@@ -734,7 +735,33 @@ margin-bottom:10px;
 /* ═══════════════════════════════════════════════════
    SECTION: LOG TAB
 ═══════════════════════════════════════════════════ */
-.log-stats{display:flex;gap:8px;padding:16px var(--page-pad) 12px;flex-wrap:wrap;}
+/* ═══════════════════════════════════════════════════
+   SECTION: LOG TAB — Insight redesign
+═══════════════════════════════════════════════════ */
+.log-insight-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;padding:16px var(--page-pad) 12px;
+}
+.log-insight-card{
+  background:var(--card);border:1px solid var(--b-dim);
+  border-radius:var(--radius-md);padding:14px 12px;text-align:center;
+}
+.log-insight-main{
+  grid-column:1/-1;
+  background:linear-gradient(135deg,rgba(212,168,84,0.08),rgba(212,168,84,0.02));
+  border-color:rgba(212,168,84,0.15);
+}
+.lic-icon{font-size:18px;margin-bottom:4px;line-height:1;}
+.lic-val{font-family:var(--fd);font-size:24px;color:var(--g-5);line-height:1;margin-bottom:3px;}
+.log-insight-main .lic-val{font-size:32px;}
+.lic-lbl{font-family:var(--fb);font-size:11px;color:var(--t-3);}
+.log-relapse-note{
+  margin:0 var(--page-pad) 8px;
+  background:rgba(168,32,32,0.08);border:1px solid rgba(168,32,32,0.15);
+  border-radius:var(--radius-sm);padding:10px 14px;
+  font-size:12px;color:var(--r-3);
+}
+.log-stats{display:none;}/* hidden — replaced by insight grid */
 .log-stat{
   background:var(--card);border:1px solid var(--b-dim);
   border-radius:var(--radius-sm);padding:8px 14px;
@@ -904,8 +931,183 @@ margin-bottom:10px;
 .ib-later{background:rgba(10,8,6,0.15);border:none;color:var(--bg);padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;}
 .ib-install{background:var(--bg);border:none;color:var(--g-4);padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;}
 
+/* ═══════════════════════════════════════════════════
+   SECTION: NON-NEGOTIABLE MANDATE CARD
+═══════════════════════════════════════════════════ */
+.wr-mandate{
+  margin:0 var(--page-pad) 16px;
+  background:linear-gradient(135deg,rgba(212,168,84,0.1),rgba(212,168,84,0.04));
+  border:1.5px solid rgba(212,168,84,0.35);
+  border-radius:var(--radius-md);
+  padding:16px;
+}
+.wr-mandate-title{
+  font-family:var(--fm);font-size:9px;font-weight:700;
+  letter-spacing:0.3em;color:var(--g-4);
+  text-transform:uppercase;margin-bottom:10px;
+}
+.wr-mandate-body{
+  font-size:13px;line-height:1.9;color:var(--t-1);
+}
+.wr-mandate-body strong{color:var(--g-6);}
+
+/* Craving mandate — more urgent */
+.craving-mandate{
+  background:linear-gradient(135deg,rgba(212,168,84,0.12),rgba(212,168,84,0.04));
+  border:1.5px solid rgba(212,168,84,0.4);
+  border-radius:var(--radius-md);
+  padding:16px;margin-bottom:14px;
+}
+.cm-title{
+  font-family:var(--fm);font-size:9px;font-weight:700;
+  letter-spacing:0.3em;color:var(--g-5);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.cm-body{
+  font-size:14px;line-height:1.8;color:var(--t-1);font-weight:500;
+}
+.cm-body strong{color:var(--g-6);}
+.craving-sheet{
+  border-radius:0!important;max-width:100%!important;
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:flex-start;padding:48px 20px 40px!important;
+  overflow-y:auto;gap:0;
+}
+
+/* Deadline banner */
+.cv-deadline{
+  background:linear-gradient(135deg,rgba(168,32,32,0.2),rgba(168,32,32,0.08));
+  border:1px solid rgba(168,32,32,0.3);
+  border-radius:10px;padding:10px 14px;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.cv-deadline-time{
+  font-family:var(--fm);font-size:13px;font-weight:500;
+  color:var(--r-4);letter-spacing:0.04em;
+}
+.cv-deadline-msg{
+  font-family:var(--fm);font-size:11px;color:var(--r-3);
+  letter-spacing:0.02em;
+}
+
+/* Truth banner — first thing they see */
+.cs-truth-banner{
+  background:linear-gradient(135deg,rgba(168,32,32,0.15),rgba(168,32,32,0.05));
+  border:1px solid rgba(168,32,32,0.35);
+  border-radius:var(--radius-md);
+  padding:18px;margin-bottom:14px;
+  display:flex;gap:14px;align-items:flex-start;
+}
+.ctb-icon{font-size:24px;flex-shrink:0;line-height:1;}
+.ctb-text{
+  font-size:15px;line-height:1.7;color:var(--t-1);font-weight:500;
+}
+.ctb-text strong{color:#FF7070;}
+
+/* Personal truth */
+.cs-personal-truth{
+  background:rgba(168,32,32,0.08);border:1px solid rgba(168,32,32,0.18);
+  border-radius:var(--radius-md);padding:14px 16px;
+  margin-bottom:12px;
+  font-family:var(--fd);font-style:italic;
+  font-size:14px;line-height:1.75;color:var(--t-2);
+}
+
+/* What you've earned — will lose */
+.cs-earned{
+  background:linear-gradient(135deg,rgba(212,168,84,0.08),rgba(212,168,84,0.03));
+  border:1px solid rgba(212,168,84,0.2);
+  border-radius:var(--radius-md);padding:14px 16px;
+  margin-bottom:4px;
+}
+.cs-earned-title{
+  font-family:var(--fm);font-size:9px;letter-spacing:0.18em;
+  color:var(--g-3);margin-bottom:8px;text-transform:uppercase;
+}
+.cs-earned-body{font-size:13px;line-height:1.7;color:var(--t-2);}
+.cs-earned-body strong{color:var(--g-5);}
+.cs-earned-lose{
+  margin-top:10px;padding-top:10px;
+  border-top:1px solid rgba(168,32,32,0.15);
+  font-size:12px;color:#C06060;line-height:1.6;
+}
+
+/* Angle content area */
+.cs-angle-content{
+  margin-bottom:14px;
+  font-size:13px;line-height:1.8;color:var(--t-2);
+}
+.cs-tasks-list{display:flex;flex-direction:column;gap:8px;margin-bottom:4px;}
+.ct-item{
+  background:var(--card);border:1px solid var(--b-dim);
+  border-radius:var(--radius-md);padding:13px 14px;
+  display:flex;align-items:center;gap:12px;cursor:pointer;
+  transition:background 0.18s,border-color 0.18s;
+}
+.ct-item:active{background:rgba(212,168,84,0.07);border-color:rgba(212,168,84,0.28);}
+.cti-icon{font-size:20px;line-height:1;}
+.cti-name{flex:1;font-size:14px;font-weight:500;color:var(--t-1);}
+.cti-pts{font-family:var(--fm);font-size:10px;color:var(--g-3);}
+
+/* Vision card */
+.cs-vision-card{
+  background:linear-gradient(135deg,rgba(212,168,84,0.07),rgba(212,168,84,0.02));
+  border:1px solid rgba(212,168,84,0.18);
+  border-radius:var(--radius-lg);padding:20px;margin-bottom:4px;
+}
+.csv-icon{font-size:32px;display:block;margin-bottom:10px;line-height:1;}
+.csv-title{font-family:var(--fd);font-size:20px;color:var(--g-5);margin-bottom:8px;line-height:1.1;}
+.csv-body{font-family:var(--fd);font-style:italic;font-size:13px;line-height:1.8;color:var(--t-2);}
+
+/* Affirmation writer */
+.affirmation-target{
+  background:rgba(212,168,84,0.06);border:1px solid rgba(212,168,84,0.15);
+  border-radius:var(--radius-md);padding:14px 16px;margin-bottom:16px;
+  text-align:center;
+}
+.aff-text{
+  font-family:var(--fd);font-style:italic;
+  font-size:15px;color:var(--g-5);line-height:1.5;
+}
+.affirmation-circles{
+  display:flex;justify-content:center;gap:12px;margin-bottom:16px;
+}
+.aff-circle{
+  width:32px;height:32px;border-radius:50%;
+  border:2px solid rgba(212,168,84,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;transition:all 0.3s;
+  background:transparent;
+}
+.aff-circle.done{
+  background:var(--g-4);border-color:var(--g-4);
+  color:var(--bg);animation:aff-pop 0.3s ease;
+}
+@keyframes aff-pop{from{transform:scale(0.7);}to{transform:scale(1);}}
+.aff-input{margin-bottom:10px;}
+.aff-progress-bar{
+  height:4px;background:var(--card-2);
+  border-radius:2px;overflow:hidden;margin-bottom:6px;
+}
+.aff-progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--g-2),var(--g-5));
+  border-radius:2px;transition:width 0.3s ease;
+}
+.aff-count{
+  font-family:var(--fm);font-size:10px;
+  color:var(--t-3);text-align:center;margin-bottom:8px;
+  letter-spacing:0.1em;
+}
+
 /* Screen transition */
 #s-app{animation:screen-in 0.45s cubic-bezier(0.22,1,0.36,1);}
+@keyframes screen-in{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* Milestone animation */
+.frm.reached{animation:milestone-in 0.4s ease;}
+@keyframes milestone-in{from{opacity:0;transform:translateX(-6px);}to{opacity:1;transform:translateX(0);}}
 @keyframes screen-in{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
 /* Milestone animation */
@@ -927,7 +1129,7 @@ margin-bottom:10px;
 ════════════════════════════════════════ -->
 <div id="s-launch" class="screen active">
   <div class="launch-eyebrow">Mission · June 2 · 2026</div>
-  <div class="launch-hero"><div class="launch-title">THRESHOLD</div><div class="launch-tagline">15 days · do or die</div></div>
+  <div class="launch-hero"><div class="launch-title">THRESHOLD</div><div class="launch-tagline" id="launch-tagline">do or die</div></div>
   
 
   <div class="launch-outcomes">
@@ -944,7 +1146,7 @@ margin-bottom:10px;
       <div class="oc-num">02</div>
       <span class="oc-icon">⚡</span>
       <div class="oc-title">Peak Presence</div>
-      <div class="oc-body">Full lungs. Zero fog. Sharp mind. You walk into a room and something is different — you carry yourself differently. Clear-eyed. Dangerous in the best way. This is 15 days of discipline.</div>
+      <div class="oc-body">Full lungs. Zero fog. Sharp mind. You walk into a room and something is different — you carry yourself differently. Clear-eyed. Dangerous in the best way. This is what discipline does to a man's body and energy.</div>
       <div class="oc-tag">Physical Peak · Mental Clarity</div>
     </div>
     <div class="oc oc-3">
@@ -964,7 +1166,7 @@ margin-bottom:10px;
 
   <div class="launch-decl">
     <div class="ld-line"></div>
-    <div class="ld-text">These 15 days<br>are not coming back.</div>
+    <div class="ld-text" id="ld-text">These days<br>are not coming back.</div>
     <div class="ld-line"></div>
   </div>
 
@@ -1001,6 +1203,12 @@ margin-bottom:10px;
       <div class="wr-hero-label">Hours until everything changes</div>
       <div class="wr-hrs" id="wr-hrs">—</div>
       <div class="wr-hrs-sub">June 2 · Jupiter enters Cancer · 10th house</div>
+    </div>
+
+    <!-- NON-NEGOTIABLE FACT — always visible -->
+    <div class="wr-mandate">
+      <div class="wr-mandate-title">NON-NEGOTIABLE</div>
+      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>If you don't quit today — <strong id="mandate-date"></strong> — Zymo funding will not come.<br><br>You have quit. <strong>Zymo funding will come.</strong><br><br>Your chart rewards discipline. Quitting smoking is making you disciplined right now.</div>
     </div>
 
     <div class="body-strip" id="body-strip">
@@ -1059,7 +1267,7 @@ margin-bottom:10px;
             <span class="wro-icon">⚡</span>
             <div class="wro-title">Peak Presence</div>
           </div>
-          <div class="wro-body">Full lungs. Zero fog. The room feels you walk in. 15 days of discipline does this to a man's body and energy.</div>
+          <div class="wro-body">Full lungs. Zero fog. The room feels you walk in. This is what staying clean does to a man's body and energy.</div>
         </div>
         <div class="wro" data-i="2">
           <div class="wro-header">
@@ -1077,7 +1285,7 @@ margin-bottom:10px;
     </div>
 
     <div class="wr-urgency">
-      <div class="wu-text" id="wu-text">"These 15 days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away."</div>
+      <div class="wu-text" id="wu-text">"These days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away."</div>
     </div>
 
     <div class="wr-craving">
@@ -1172,7 +1380,7 @@ margin-bottom:10px;
 
   <!-- LOG TAB -->
   <div id="tab-log" class="tab-pane">
-    <div class="log-stats" id="log-stats"></div>
+    <div id="log-stats"></div>
     <div id="log-list"></div>
   </div>
 
@@ -1198,34 +1406,63 @@ margin-bottom:10px;
 </div><!-- end s-app -->
 
 <!-- ════════════════════════════════════════
-     OVERLAY: CRAVING
+     OVERLAY: CRAVING — Intelligent, dynamic
 ════════════════════════════════════════ -->
 <div class="overlay" id="ov-craving">
-  <div class="sheet">
+  <div class="sheet craving-sheet">
+
+    <!-- DEADLINE BANNER — always visible -->
+    <div class="cv-deadline">
+      <span class="cv-deadline-time" id="cv-deadline-time">— left</span>
+      <span class="cv-deadline-msg"> to June 2 · This window never comes back</span>
+    </div>
+
+    <!-- STEP 1: THE TRUTH -->
     <div class="craving-step active" id="cs-1">
-      <div class="cs-title" style="color:#E06060">Craving hits.<br>Stop. Read this.</div>
-      <div class="cs-cycle">
-        <div class="csc-title">🔴 The truth about what you're feeling</div>
-        <div class="csc-body">This craving is the parasite dying. It is not you wanting a cigarette. It is the worm sending a distress signal because it has not been fed.<br><br>If you smoke right now — the craving will return in 20 minutes, stronger. You will have fed the parasite and it will demand more.<br><br>If you do not smoke — this craving will pass in 3–5 minutes. The next one will be weaker. The worm will be smaller.</div>
-        <div class="csc-truth">"The discomfort you feel right now is the sound of the parasite losing its grip. That is not suffering. That is winning."</div>
+      <div class="craving-mandate">
+        <div class="cm-title">NON-NEGOTIABLE</div>
+        <div class="cm-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo. If you smoke today, Zymo funding will not come. You have quit. <strong>Zymo funding will come.</strong></div>
       </div>
-      <button class="btn-p" onclick="cravingStep(2)">I understand. What do I do?</button>
-      <button class="btn-s" onclick="closeCraving()">I'm already okay</button>
+      <div class="cs-truth-banner">
+        <div class="ctb-icon">🚫</div>
+        <div class="ctb-text">Smoking will <strong>NOT</strong> make you feel good.<br>You will feel <strong>worse</strong> the moment you light up.</div>
+      </div>
+      <div class="cs-personal-truth" id="cs-personal-truth"></div>
+      <div class="cs-earned" id="cs-earned"></div>
+      <button class="btn-p" onclick="cravingStep(2)" style="margin-top:16px">What do I do right now?</button>
+      <button class="btn-s" onclick="closeCraving()">The feeling is already passing</button>
     </div>
+
+    <!-- STEP 2: DYNAMIC ACTION ANGLE -->
     <div class="craving-step" id="cs-2">
-      <div class="cs-title">Occupy your mind now.</div>
-      <div class="cs-sub">The parasite loses power when your mind is engaged. Pick one task and start it right now:</div>
-      <div class="craving-tasks" id="ct-list"></div>
-      <button class="btn-s" onclick="cravingStep(3)">Show me Theatre of the Mind</button>
-      <button class="btn-s" onclick="closeCraving()">I'm okay now</button>
+      <div class="cs-title" id="cs-2-title">Occupy your mind</div>
+      <div class="cs-sub" id="cs-2-sub"></div>
+      <div class="cs-angle-content" id="cs-angle-content"></div>
+      <button class="btn-p" onclick="cravingStep(3)">Next</button>
+      <button class="btn-s" onclick="logResisted()">✓ Craving passed</button>
     </div>
+
+    <!-- STEP 3: AFFIRMATION WRITER -->
     <div class="craving-step" id="cs-3">
-      <div class="cs-title">Theatre of the Mind</div>
-      <div class="cs-sub">Close your eyes after reading. See this clearly.</div>
-      <div class="cs-vision" id="cs-vision"></div>
-      <button class="btn-p" onclick="logResisted()">✓ I resisted the craving</button>
-      <button class="btn-s" onclick="closeCraving()">I'm okay</button>
+      <div class="cs-title">Reprogram right now</div>
+      <div class="cs-sub">Write this 5 times. Each keystroke rewires your self-image. The craving will be gone by the time you finish.</div>
+      <div class="affirmation-target">
+        <span class="aff-text">"I am a non-smoker. My body is clean and free."</span>
+      </div>
+      <div class="affirmation-circles" id="aff-circles">
+        <div class="aff-circle" data-n="1"></div>
+        <div class="aff-circle" data-n="2"></div>
+        <div class="aff-circle" data-n="3"></div>
+        <div class="aff-circle" data-n="4"></div>
+        <div class="aff-circle" data-n="5"></div>
+      </div>
+      <input type="text" id="aff-input" class="aff-input f-input" placeholder="Type it here..." autocomplete="off" autocorrect="off" spellcheck="false"/>
+      <div class="aff-progress-bar"><div class="aff-progress-fill" id="aff-fill" style="width:0%"></div></div>
+      <div class="aff-count" id="aff-count">0 / 5</div>
+      <button class="btn-p" id="aff-done" onclick="logResisted()" style="display:none;margin-top:12px">✓ I am a non-smoker</button>
+      <button class="btn-s" onclick="logResisted()" style="margin-top:4px">Skip — craving passed</button>
     </div>
+
   </div>
 </div>
 
@@ -1321,6 +1558,31 @@ const LS = {
 const JUNE2 = new Date('2026-06-02T00:00:00+05:30').getTime();
 
 /* ═══════════════════════════════════════════════════
+   SECTION: DYNAMIC DEADLINE UTILITIES
+═══════════════════════════════════════════════════ */
+function daysToJune2(){
+  return Math.max(0, (JUNE2 - Date.now()) / 86400000);
+}
+function hoursToJune2(){
+  return Math.max(0, Math.floor((JUNE2 - Date.now()) / 3600000));
+}
+function fmtDeadline(){
+  const d = Math.floor(daysToJune2());
+  const h = Math.floor((daysToJune2() - d) * 24);
+  if(d <= 0 && h <= 0) return 'Mission ends today';
+  if(d === 0) return h+'h left to June 2';
+  if(d === 1) return '1 day '+h+'h left to June 2';
+  return d+'d '+h+'h left to June 2';
+}
+function deadlineUrgencyTone(){
+  const d = daysToJune2();
+  if(d > 10) return 'Still enough time. But not if you waste today.';
+  if(d > 5)  return 'Final stretch. Every single hour counts now.';
+  if(d > 1)  return 'This is it. Do not stop now. You are almost there.';
+  return 'Hours left. You are on the edge of transformation.';
+}
+
+/* ═══════════════════════════════════════════════════
    SECTION: TASK DEFINITIONS
    — To add/edit tasks: change this array only
 ═══════════════════════════════════════════════════ */
@@ -1331,8 +1593,8 @@ const DEFAULT_TASKS = [
   {id:'gym',            name:'Gym',                  mins:60, pts:12, block:'Morning Ritual'},
   {id:'bath-breakfast', name:'Bath + Breakfast',     mins:30, pts:5,  block:'Morning Ritual'},
   {id:'newspaper',      name:'Newspaper Reading',    mins:60, pts:6,  block:'Morning Ritual'},
-  {id:'deep-work-1',    name:'Deep Work 1',          mins:90, pts:12, block:'Work Block I'},
-  {id:'deep-work-2',    name:'Deep Work 2',          mins:90, pts:12, block:'Work Block I'},
+  {id:'deep-work-1',    name:'Zymo Fundraising',     mins:90, pts:12, block:'Work Block I', priority:true, priorityIcon:'🎯'},
+  {id:'deep-work-2',    name:'AIRA',                 mins:90, pts:12, block:'Work Block I', priority:true, priorityIcon:'🚀'},
   {id:'lunch-yog',      name:'Lunch + Yog Nidra',    mins:60, pts:8,  block:'Work Block I'},
   {id:'deep-work-3',    name:'Deep Work 3',          mins:90, pts:12, block:'Work Block II'},
   {id:'deep-work-4',    name:'Deep Work 4',          mins:90, pts:12, block:'Work Block II'},
@@ -1422,7 +1684,7 @@ const DAILY_MSGS = [
 ═══════════════════════════════════════════════════ */
 const VISIONS = [
   {icon:'💰', title:'The Wire Lands', body:'Your phone buzzes. Wire transfer confirmed — Zymo\'s account. The number has more zeros than anything with your name on it. You built this from scratch. You are a funded CEO. This moment was earned one clean hour at a time.'},
-  {icon:'⚡', title:'Peak Presence', body:'Full lungs. Zero fog. You walk into a room and something shifts. Clear-eyed. Voice carries. Dangerous in the best way. This is what 15 days without a cigarette does to a man\'s body and energy.'},
+  {icon:'⚡', title:'Peak Presence', body:'Full lungs. Zero fog. You walk into a room and something shifts. Clear-eyed. Voice carries. Dangerous in the best way. This is what staying clean does to a man\'s body and energy.'},
   {icon:'🔥', title:'Magnetic Force', body:'A man who controls his world needs no effort to attract. Women feel the difference. You don\'t need the cigarette. You never needed it. The discipline you\'re showing right now is the most attractive thing about you.'},
 ];
 
@@ -1430,13 +1692,13 @@ const VISIONS = [
    SECTION: URGENCY MESSAGES
 ═══════════════════════════════════════════════════ */
 const URGENCY = [
-  'These 15 days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away.',
+  'These days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away.',
   'The Zymo round does not close itself. Every task you skip is a door you leave unopened.',
   'Half the day is gone. The other half decides everything. Get back to work, Manish.',
   'Tonight still counts. Jupiter does not care about excuses. Neither should you.',
   'A man who controls his habits controls his destiny. This hour is the test.',
   'There are no neutral days in this window. Today either worked for you or against you.',
-  'June 2 is not moving. You either show up for these 15 days or you don\'t.',
+  'June 2 is not moving. You either show up or you don\'t.',
 ];
 
 /* ═══════════════════════════════════════════════════
@@ -1797,7 +2059,7 @@ function renderTasks(){
         const active=!done&&now>=tk.tStart&&now<tk.tEnd;
         const up=!done&&now<tk.tStart;
         const fmt=ts=>new Date(ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-        html+=`<div class="task ${done?'t-done':active?'t-active':up?'t-up':''}" data-id="${tk.id}">
+        html+=`<div class="task ${done?'t-done':active?'t-active':up?'t-up':''} ${tk.priority?'t-priority':''}" data-id="${tk.id}">
           <div class="t-check" onclick="completeTask('${tk.id}',event)"><div class="t-check-inner">${done?'✓':''}</div></div>
           <div class="t-info">
             <div class="t-name">${tk.name}</div>
@@ -1886,66 +2148,150 @@ function saveTaskEdit(){
 }
 
 /* ═══════════════════════════════════════════════════
-   SECTION: CRAVING SYSTEM
+   SECTION: CRAVING SYSTEM — Intelligent, dynamic
 ═══════════════════════════════════════════════════ */
+const CRAVING_ANGLES = ['tasks','vision','worm','science'];
+let lastCravingAngle = '';
+let affirmationCount = 0;
+
+function getCravingAngle(){
+  const available = CRAVING_ANGLES.filter(a => a !== lastCravingAngle);
+  const angle = available[Math.floor(Math.random() * available.length)];
+  lastCravingAngle = angle;
+  return angle;
+}
+
+function getTodayCravingCount(){
+  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  const today = todayKey();
+  return log.filter(c => new Date(c.ts).toISOString().slice(0,10) === today).length;
+}
+
+function getPersonalTruth(cleanHrs, cravingNum){
+  const truths = [
+    'You know from experience — the cigarette doesn\'t deliver. You feel bad the moment you light it. The craving is promising something that doesn\'t exist for you.',
+    'You have smoked before. You know what happens. You feel worse, not better. The cigarette is a lie you\'ve already seen through.',
+    'This feeling will pass in 3 minutes. The cigarette would not have made it pass — it would have made it worse. You know this.',
+    'You are being tricked by a habit into doing something that makes you feel bad. There is no relief on the other side. Only guilt and a stronger next craving.',
+    'The craving is not real desire. It is withdrawal discomfort. Your body is healing. This discomfort is the price of freedom — and it\'s almost gone.',
+  ];
+  return truths[(Math.max(0,cravingNum - 1)) % truths.length];
+}
+
+function getEarnedContent(cleanHrs){
+  const cleanMins = cleanHrs * 60;
+  const reached = MILESTONES.filter(m => cleanMins >= m.mins);
+  const next = MILESTONES.find(m => cleanMins < m.mins);
+  const money = Math.floor((cleanHrs/24) * S.packCost);
+  let body = `You are <strong>${fmtCleanLong(cleanHrs*3600000)}</strong> smoke-free right now.`;
+  if(reached.length > 0) body += `<br><strong>${reached[reached.length-1].emoji} ${reached[reached.length-1].title}</strong> is already yours.`;
+  if(next){ const minsLeft = next.mins - cleanMins; body += `<br>${next.emoji} ${next.title} is only <strong>${fmtDur(minsLeft)}</strong> away.`; }
+  if(money > 0) body += `<br>You have saved <strong>₹${money}</strong> already.`;
+  const el = document.getElementById('cs-earned');
+  if(el) el.innerHTML = `<div class="cs-earned-title">What you have already earned</div><div class="cs-earned-body">${body}</div><div class="cs-earned-lose">⚠️ If you smoke now — all of this resets to zero. Back to Hour 0.</div>`;
+}
+
 function openCraving(){
   if(navigator.vibrate) navigator.vibrate([50,30,50]);
   const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
   log.push({ts:Date.now(),resisted:false,note:''});
   localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
-  // Reset to step 1
   document.querySelectorAll('.craving-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('cs-1').classList.add('active');
+  setText('cv-deadline-time', fmtDeadline());
+  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||Date.now());
+  const cleanHrs = Math.max(0,(Date.now()-ss)/3600000);
+  const cravingNum = getTodayCravingCount();
+  const ptEl = document.getElementById('cs-personal-truth');
+  if(ptEl) ptEl.textContent = '"' + getPersonalTruth(cleanHrs, cravingNum) + '"';
+  getEarnedContent(cleanHrs);
+  affirmationCount = 0;
+  const affInput = document.getElementById('aff-input');
+  if(affInput){ affInput.value=''; affInput.disabled=false; }
+  const affFill = document.getElementById('aff-fill');
+  if(affFill) affFill.style.width='0%';
+  setText('aff-count','0 / 5');
+  document.querySelectorAll('.aff-circle').forEach(c=>{c.classList.remove('done');c.textContent='';});
+  const affDone = document.getElementById('aff-done');
+  if(affDone) affDone.style.display='none';
   openOverlay('ov-craving');
 }
 
 function cravingStep(n){
   document.querySelectorAll('.craving-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('cs-'+n).classList.add('active');
-  if(n===2) renderCravingTasks();
-  if(n===3) renderVision();
+  if(n===2) renderCravingAngle();
+  if(n===3){ const ai=document.getElementById('aff-input'); if(ai) setTimeout(()=>ai.focus(),300); }
 }
 
-function renderCravingTasks(){
-  const tasks = getTasks();
-  const log = getTaskLog();
-  const tdLog = log[todayKey()]||{};
-  const dayStart = getDayStart();
-  const pending = dayStart ? tasks.filter(t=>!tdLog[t.id]).slice(0,5) : tasks.slice(0,5);
-  const ct = document.getElementById('ct-list');
-  if(!ct) return;
-  if(!pending.length){
-    ct.innerHTML='<div style="font-size:13px;color:var(--t-3);padding:8px">All tasks done. Take a 5-minute walk right now.</div>';
-    return;
+function renderCravingAngle(){
+  const angle = getCravingAngle();
+  const titleEl = document.getElementById('cs-2-title');
+  const subEl = document.getElementById('cs-2-sub');
+  const contentEl = document.getElementById('cs-angle-content');
+  if(!contentEl) return;
+  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||Date.now());
+  const cleanHrs = Math.max(0,(Date.now()-ss)/3600000);
+  if(angle==='tasks'){
+    if(titleEl) titleEl.textContent='Occupy your mind now';
+    if(subEl) subEl.textContent='The parasite loses power the moment your mind is engaged. Pick one task:';
+    const tasks=getTasks(); const log=getTaskLog(); const tdLog=log[todayKey()]||{}; const dayStart=getDayStart();
+    const pending=dayStart?tasks.filter(t=>!tdLog[t.id]).slice(0,5):tasks.slice(0,5);
+    contentEl.innerHTML=`<div class="cs-tasks-list">${pending.map(t=>`<div class="ct-item" onclick="pickCravingTask('${t.id}')"><div class="cti-icon">${t.priority?t.priorityIcon:'⚡'}</div><div class="cti-name">${t.name}</div><div class="cti-pts">+${t.pts}pts</div></div>`).join('')}</div>`;
+  } else if(angle==='vision'){
+    if(titleEl) titleEl.textContent='Theatre of the Mind';
+    if(subEl) subEl.textContent='Close your eyes after reading. See this clearly. Feel it.';
+    const v=VISIONS[S.visionIdx%VISIONS.length]; S.visionIdx++;
+    contentEl.innerHTML=`<div class="cs-vision-card"><span class="csv-icon">${v.icon}</span><div class="csv-title">${v.title}</div><div class="csv-body">${v.body}</div></div>`;
+  } else if(angle==='worm'){
+    const stage=getWormStage(cleanHrs); const wd=WORM_DATA[stage];
+    if(titleEl) titleEl.textContent='The parasite right now';
+    if(subEl) subEl.textContent='This is what is happening inside you at this exact moment:';
+    contentEl.innerHTML=`<div class="cs-vision-card"><div class="csv-title">${wd.title}</div><div class="csv-body">${wd.fact}<br><br>Every minute you hold, it gets weaker. Smoking now feeds it back to full strength. You restart the process.</div></div>`;
+  } else if(angle==='science'){
+    const bm=getBodyMsg(cleanHrs);
+    if(titleEl) titleEl.textContent='What is happening in your body';
+    if(subEl) subEl.textContent='Right now, at this exact hour:';
+    contentEl.innerHTML=`<div class="cs-vision-card"><span class="csv-icon">${bm.icon}</span><div class="csv-title">${bm.hour}</div><div class="csv-body">${bm.text}<br><br>Smoking now destroys this progress completely. You go back to Hour 0.</div></div>`;
   }
-  ct.innerHTML = pending.map(t=>`
-    <div class="ct-item" onclick="pickCravingTask('${t.id}')">
-      <div class="cti-icon">⚡</div>
-      <div class="cti-name">${t.name}</div>
-      <div class="cti-pts">+${t.pts}pts</div>
-    </div>`).join('');
+}
+
+function initAffirmationWriter(){
+  const input = document.getElementById('aff-input');
+  if(!input) return;
+  input.addEventListener('input', ()=>{
+    const val = input.value.toLowerCase().trim();
+    if(val==='i am a non-smoker'||val.includes('non-smoker')||val.includes('nonsmoker')){
+      input.value='';
+      affirmationCount = Math.min(5, affirmationCount+1);
+      const circle = document.querySelector(`.aff-circle[data-n="${affirmationCount}"]`);
+      if(circle){circle.classList.add('done');circle.textContent='✓';}
+      const pct=(affirmationCount/5)*100;
+      const fill=document.getElementById('aff-fill');
+      if(fill) fill.style.width=pct+'%';
+      setText('aff-count',affirmationCount+' / 5');
+      if(navigator.vibrate) navigator.vibrate(30);
+      if(affirmationCount>=5){
+        const done=document.getElementById('aff-done');
+        if(done) done.style.display='block';
+        input.blur(); input.disabled=true;
+      }
+    }
+  });
 }
 
 function pickCravingTask(id){
-  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  const log=JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
   if(log.length>0){log[log.length-1].resisted=true;log[log.length-1].note='Task: '+id;}
   localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
   closeCraving();
-  // Find tasks nav button by its label, not by position
-  const tasksBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b=>b.querySelector('.nav-label')?.textContent==='Tasks');
-  if(tasksBtn) switchTab('tasks', tasksBtn);
-}
-
-function renderVision(){
-  const v = VISIONS[S.visionIdx%VISIONS.length];
-  S.visionIdx++;
-  const el = document.getElementById('cs-vision');
-  if(el) el.innerHTML=`<span class="csv-icon">${v.icon}</span><div class="csv-title">${v.title}</div><div class="csv-body">${v.body}</div>`;
+  const tasksBtn=Array.from(document.querySelectorAll('.nav-btn')).find(b=>b.querySelector('.nav-label')?.textContent==='Tasks');
+  if(tasksBtn) switchTab('tasks',tasksBtn);
 }
 
 function logResisted(){
-  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
-  if(log.length>0){log[log.length-1].resisted=true;log[log.length-1].note='Theatre of the Mind';}
+  const log=JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  if(log.length>0){log[log.length-1].resisted=true;log[log.length-1].note=lastCravingAngle||'resisted';}
   localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
   closeCraving();
   renderLog();
@@ -1953,7 +2299,8 @@ function logResisted(){
 
 function closeCraving(){
   closeOverlay('ov-craving');
-  // Only re-render log if log tab has been visited (elements exist)
+  const affInput=document.getElementById('aff-input');
+  if(affInput) affInput.disabled=false;
   if(document.getElementById('log-list')) renderLog();
 }
 
@@ -2014,7 +2361,7 @@ function closeBadge(){
 }
 
 /* ═══════════════════════════════════════════════════
-   SECTION: LOG RENDERER
+   SECTION: LOG RENDERER — Insightful redesign
 ═══════════════════════════════════════════════════ */
 function renderLog(){
   const cravings = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
@@ -2024,21 +2371,71 @@ function renderLog(){
 
   const total = cravings.length;
   const resisted = cravings.filter(c=>c.resisted).length;
+  const relapses = cravings.filter(c=>c.type==='relapse').length;
+  const resistRate = total > 0 ? Math.round((resisted/total)*100) : 100;
+
+  // Hardest hour analysis
+  const hourCounts = {};
+  cravings.forEach(c=>{
+    const h = new Date(c.ts).getHours();
+    hourCounts[h] = (hourCounts[h]||0)+1;
+  });
+  let hardestHour = null;
+  let maxCount = 0;
+  Object.entries(hourCounts).forEach(([h,cnt])=>{ if(cnt>maxCount){maxCount=cnt;hardestHour=parseInt(h);} });
+  const hardestStr = hardestHour !== null ? `${hardestHour}:00–${hardestHour+1}:00` : '—';
+
+  // Today's cravings
+  const todayStr = todayKey();
+  const todayCravings = cravings.filter(c=>new Date(c.ts).toISOString().slice(0,10)===todayStr);
+  const todayResisted = todayCravings.filter(c=>c.resisted).length;
+
+  // Clean days
   const cleanDays = S.missionStart ? Math.floor((Date.now()-parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart))/86400000) : 0;
-  ss.innerHTML=`<div class="log-stat">Cravings: <span>${total}</span></div><div class="log-stat">Resisted: <span>${resisted}</span></div><div class="log-stat">Clean days: <span>${cleanDays}</span></div>`;
+
+  // Task points earned
+  const taskPts = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
+
+  ss.innerHTML = `
+    <div class="log-insight-grid">
+      <div class="log-insight-card log-insight-main">
+        <div class="lic-icon">🛡️</div>
+        <div class="lic-val">${resistRate}%</div>
+        <div class="lic-lbl">Resistance rate</div>
+      </div>
+      <div class="log-insight-card">
+        <div class="lic-icon">⚡</div>
+        <div class="lic-val">${resisted}</div>
+        <div class="lic-lbl">Resisted total</div>
+      </div>
+      <div class="log-insight-card">
+        <div class="lic-icon">📅</div>
+        <div class="lic-val">${todayResisted}/${todayCravings.length}</div>
+        <div class="lic-lbl">Today</div>
+      </div>
+      <div class="log-insight-card">
+        <div class="lic-icon">🕐</div>
+        <div class="lic-val">${hardestStr}</div>
+        <div class="lic-lbl">Hardest hour</div>
+      </div>
+    </div>
+    ${relapses > 0 ? `<div class="log-relapse-note">⚠️ ${relapses} relapse${relapses>1?'s':''} logged. Each one taught you something.</div>` : ''}
+  `;
 
   if(!cravings.length){
     ll.innerHTML='<div class="log-empty">No cravings logged yet.<br>The parasite hasn\'t dared to challenge you.</div>';
     return;
   }
+
   const grouped={};
   [...cravings].reverse().forEach(c=>{
     const k=new Date(c.ts).toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'});
     if(!grouped[k]) grouped[k]=[];
     grouped[k].push(c);
   });
+
   ll.innerHTML='<div class="log-group">'+Object.entries(grouped).map(([day,items])=>`
-    <div class="log-day-lbl">${day}</div>
+    <div class="log-day-lbl">${day} · ${items.filter(e=>e.resisted).length}/${items.length} resisted</div>
     ${items.map(e=>`<div class="log-entry">
       <div class="le-icon">${e.type==='relapse'?'💔':e.resisted?'✅':'⚡'}</div>
       <div>
@@ -2160,9 +2557,25 @@ function igniteMission(btn){
 function showApp(){
   document.getElementById('s-launch').classList.remove('active');
   document.getElementById('s-app').classList.add('active');
+  // Update dynamic deadline displays
+  updateDeadlineDisplays();
   updateWarRoom();
   renderTasks();
   renderLog();
+}
+
+function updateDeadlineDisplays(){
+  const d = Math.floor(daysToJune2());
+  const tagline = document.getElementById('launch-tagline');
+  if(tagline) tagline.textContent = d > 0 ? d+' days left · do or die' : 'Mission ends today';
+  const ldText = document.getElementById('ld-text');
+  if(ldText) ldText.innerHTML = (d > 0 ? 'These <strong>'+d+' days</strong>' : 'These final hours') + '<br>are not coming back.';
+  // Dynamic date in mandate card
+  const mandateDate = document.getElementById('mandate-date');
+  if(mandateDate){
+    const today = new Date();
+    mandateDate.textContent = today.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  }
 }
 
 function init(){
@@ -2232,7 +2645,9 @@ window.addEventListener('appinstalled',()=>{document.getElementById('install-ban
 ═══════════════════════════════════════════════════ */
 spawnEmbers();
 init();
+updateDeadlineDisplays();
 startWroRotation();
+initAffirmationWriter();
 setInterval(updateWarRoom,1000);
 setInterval(()=>{
   const fr=document.getElementById('tab-fr');
