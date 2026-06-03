@@ -498,8 +498,16 @@ margin-bottom:10px;
 .dns-icon{font-size:36px;margin-bottom:12px;line-height:1;}
 .dns-text{font-size:14px;color:var(--t-2);line-height:1.65;margin-bottom:20px;}
 
-/* Block headers */
-.blk-head{
+.tasks-achievable-note{
+  margin:0 var(--page-pad) 12px;
+  background:linear-gradient(135deg,rgba(212,168,84,0.08),rgba(212,168,84,0.02));
+  border:1px solid rgba(212,168,84,0.15);
+  border-radius:var(--radius-sm);
+  padding:10px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.tan-count{font-family:var(--fb);font-size:13px;font-weight:600;color:var(--g-5);}
+.tan-sub{font-family:var(--fm);font-size:10px;color:var(--t-3);letter-spacing:0.03em;}
   padding:14px var(--page-pad) 8px;
   display:flex;align-items:center;gap:8px;
 }
@@ -1192,9 +1200,7 @@ margin-bottom:10px;
 <div id="s-app" class="screen">
   <div class="top-bar">
     <div class="tb-word">Threshold</div>
-    <div class="tb-right">
-      <button class="tb-btn" onclick="openSettings()">⚙️</button>
-    </div>
+
   </div>
 
   <!-- WAR ROOM TAB -->
@@ -1208,7 +1214,7 @@ margin-bottom:10px;
     <!-- NON-NEGOTIABLE FACT — always visible -->
     <div class="wr-mandate">
       <div class="wr-mandate-title">NON-NEGOTIABLE</div>
-      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>If you don't quit today — <strong id="mandate-date"></strong> — Zymo funding will not come.<br><br>You have quit. <strong>Zymo funding will come.</strong><br><br>Your chart rewards discipline. Quitting smoking is making you disciplined right now.</div>
+      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>If you don't quit as of <strong id="mandate-date"></strong> — Zymo funding will not come.<br><br>You have quit. <strong>Zymo funding will come.</strong><br><br>Your chart rewards discipline. Quitting smoking is making you disciplined right now.</div>
     </div>
 
     <div class="body-strip" id="body-strip">
@@ -1373,9 +1379,7 @@ margin-bottom:10px;
     <div class="sec-lbl">Health Milestones</div>
     <div class="fr-milestones" id="fr-milestones"></div>
 
-    <div class="fr-relapse">
-      <button class="btn-relapse" onclick="confirmSmoked()">I smoked — reset streak</button>
-    </div>
+
   </div><!-- end tab-fr -->
 
   <!-- LOG TAB -->
@@ -1478,24 +1482,7 @@ margin-bottom:10px;
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     OVERLAY: SETTINGS
-════════════════════════════════════════ -->
-<div class="overlay" id="ov-settings" onclick="closeOverlayOutside(event,'ov-settings')">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
-      <div class="sheet-title" style="margin-bottom:0">Settings</div>
-      <button onclick="closeOverlay('ov-settings')" style="font-size:20px;color:var(--t-3);padding:4px 8px;">✕</button>
-    </div>
-    <div style="margin-bottom:14px">
-      <label class="f-label">Pack Cost per Day (₹)</label>
-      <input type="number" id="set-pack" class="f-input" placeholder="250"/>
-    </div>
-    <button class="btn-p" onclick="saveSettings()">Save Changes</button>
-    <button class="btn-d" onclick="confirmReset()">Reset Mission</button>
-  </div>
-</div>
+
 
 <!-- ════════════════════════════════════════
      OVERLAY: TASK EDIT
@@ -1995,8 +1982,18 @@ function getTasks(){
 }
 function todayKey(){ return new Date().toISOString().slice(0,10); }
 function getTaskLog(){ return JSON.parse(localStorage.getItem(LS.TASK_LOG)||'{}'); }
-function getDayStart(){ return parseInt(localStorage.getItem(LS.DAY_START+todayKey())||'0'); }
+function getDayStart(){
+  const key = LS.DAY_START + todayKey();
+  let start = parseInt(localStorage.getItem(key)||'0');
+  // Auto-start the moment app is opened — no button needed
+  if(!start){
+    start = Date.now();
+    localStorage.setItem(key, start);
+  }
+  return start;
+}
 
+// startDay kept for compatibility but auto-start makes it redundant
 function startDay(){
   localStorage.setItem(LS.DAY_START+todayKey(), Date.now());
   renderTasks();
@@ -2009,34 +2006,50 @@ function renderTasks(){
   const tlw = document.getElementById('task-list-wrap');
   if(!dns||!tlw) return;
 
+  // Always hide the "not started" placeholder — auto-start removes need for it
+  dns.innerHTML = '';
+
   const dateEl = document.getElementById('th-date');
   if(dateEl) dateEl.textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
-
-  const dayStart = getDayStart();
-  if(!dayStart){
-    dns.innerHTML = `<div class="dns"><div class="dns-icon">⏳</div><div class="dns-text">Tap when you're ready to begin your day.<br>The timer starts from this moment.</div><button class="btn-start" onclick="startDay()">Start My Day Now</button></div>`;
-    tlw.innerHTML = '';
-    lastTaskRenderKey = '';
-    return;
-  }
-  dns.innerHTML = '';
 
   const tasks = getTasks();
   const log = getTaskLog();
   const tdKey = todayKey();
   const tdLog = log[tdKey]||{};
   const now = Date.now();
+  const dayStart = getDayStart();
 
-  // Build a render key — only full re-render if completion state changes
-  const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('');
-  const needFullRender = completionKey !== lastTaskRenderKey;
-  lastTaskRenderKey = completionKey;
+  // MIDNIGHT = end of today
+  const midnight = new Date(); midnight.setHours(23,59,59,999);
+  const msUntilMidnight = midnight.getTime() - now;
 
-  // Calc times
-  let t = dayStart;
-  const timed = tasks.map(tk=>{
-    const s=t; t+=tk.mins*60000;
-    return{...tk,tStart:s,tEnd:t};
+  // Calculate which tasks fit from now
+  // Already completed tasks always show
+  // Pending tasks: only show if they fit before midnight
+  let runningMs = dayStart;
+  const timed = tasks.map(tk => {
+    const s = runningMs;
+    runningMs += tk.mins * 60000;
+    return { ...tk, tStart: s, tEnd: runningMs };
+  });
+
+  // Separate: done tasks + tasks that still fit + overflow
+  const doneTasks = timed.filter(tk => tdLog[tk.id]);
+  const pendingTasks = timed.filter(tk => !tdLog[tk.id]);
+
+  // Calculate remaining time available
+  const minsUntilMidnight = msUntilMidnight / 60000;
+  let minsNeeded = 0;
+  const achievable = [];
+  const overflow = [];
+
+  pendingTasks.forEach(tk => {
+    minsNeeded += tk.mins;
+    if(minsNeeded <= minsUntilMidnight + 30){ // 30 min buffer
+      achievable.push(tk);
+    } else {
+      overflow.push(tk);
+    }
   });
 
   // Today pts
@@ -2044,22 +2057,43 @@ function renderTasks(){
   const tpEl = document.getElementById('th-pts');
   if(tpEl) tpEl.textContent = tp;
 
-  if(needFullRender){
-    // Full DOM rebuild
-    const blocks={};
-    timed.forEach(tk=>{ if(!blocks[tk.block]) blocks[tk.block]=[]; blocks[tk.block].push(tk); });
+  // Render key — only full rebuild on completion change or achievable set change
+  const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('') + achievable.length;
+  const needFullRender = completionKey !== lastTaskRenderKey;
+  lastTaskRenderKey = completionKey;
 
-    let html='';
-    for(const [bname,btasks] of Object.entries(blocks)){
+  if(needFullRender){
+    // Show achievable count message if some tasks overflow
+    let headerHtml = '';
+    if(overflow.length > 0){
+      const h = Math.floor(minsUntilMidnight/60);
+      const m = Math.round(minsUntilMidnight%60);
+      headerHtml = `<div class="tasks-achievable-note">
+        <span class="tan-count">${achievable.length} tasks fit today</span>
+        <span class="tan-sub">${h}h ${m}m left · ${overflow.length} move to tomorrow</span>
+      </div>`;
+    }
+
+    // Show all tasks to complete — done + achievable (not overflow)
+    const visibleTasks = [...doneTasks, ...achievable];
+
+    // Group by block
+    const blocks = {};
+    visibleTasks.forEach(tk => {
+      if(!blocks[tk.block]) blocks[tk.block] = [];
+      blocks[tk.block].push(tk);
+    });
+
+    let html = headerHtml;
+    for(const [bname, btasks] of Object.entries(blocks)){
       const bPts = btasks.reduce((s,tk)=>s+tk.pts,0);
       const bDone = btasks.filter(tk=>tdLog[tk.id]).reduce((s,tk)=>s+tk.pts,0);
-      html+=`<div class="blk-head"><span class="blk-icon">${BLOCK_ICONS[bname]||'📋'}</span><span class="blk-name">${bname}</span><span class="blk-pts">${bDone}/${bPts}pts</span></div><div class="task-list">`;
-      btasks.forEach(tk=>{
-        const done=!!tdLog[tk.id];
-        const active=!done&&now>=tk.tStart&&now<tk.tEnd;
-        const up=!done&&now<tk.tStart;
-        const fmt=ts=>new Date(ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-        html+=`<div class="task ${done?'t-done':active?'t-active':up?'t-up':''} ${tk.priority?'t-priority':''}" data-id="${tk.id}">
+      html += `<div class="blk-head"><span class="blk-icon">${BLOCK_ICONS[bname]||'📋'}</span><span class="blk-name">${bname}</span><span class="blk-pts">${bDone}/${bPts}pts</span></div><div class="task-list">`;
+      btasks.forEach(tk => {
+        const done = !!tdLog[tk.id];
+        const active = !done && now >= tk.tStart && now < tk.tEnd;
+        const fmt = ts => new Date(ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+        html += `<div class="task ${done?'t-done':active?'t-active':''} ${tk.priority?'t-priority':''}" data-id="${tk.id}">
           <div class="t-check" onclick="completeTask('${tk.id}',event)"><div class="t-check-inner">${done?'✓':''}</div></div>
           <div class="t-info">
             <div class="t-name">${tk.name}</div>
@@ -2068,18 +2102,18 @@ function renderTasks(){
           <button class="t-edit" onclick="openTaskEdit('${tk.id}')">✏️</button>
         </div>`;
       });
-      html+='</div>';
+      html += '</div>';
     }
     tlw.innerHTML = html;
   }
 
-  // Always update countdowns in-place (fast — no DOM rebuild)
-  tlw.querySelectorAll('.t-countdown').forEach(el=>{
+  // Always update countdowns in-place
+  tlw.querySelectorAll('.t-countdown').forEach(el => {
     const end = parseInt(el.dataset.end);
     const isActive = el.dataset.active === 'true';
     if(isActive && end > now){
-      const rm=Math.floor((end-now)/60000);
-      const rs=Math.floor(((end-now)%60000)/1000);
+      const rm = Math.floor((end-now)/60000);
+      const rs = Math.floor(((end-now)%60000)/1000);
       el.textContent = rm+':'+String(rs).padStart(2,'0')+' left';
       el.dataset.active = (end > Date.now()).toString();
     } else {
@@ -2235,8 +2269,8 @@ function renderCravingAngle(){
   if(angle==='tasks'){
     if(titleEl) titleEl.textContent='Occupy your mind now';
     if(subEl) subEl.textContent='The parasite loses power the moment your mind is engaged. Pick one task:';
-    const tasks=getTasks(); const log=getTaskLog(); const tdLog=log[todayKey()]||{}; const dayStart=getDayStart();
-    const pending=dayStart?tasks.filter(t=>!tdLog[t.id]).slice(0,5):tasks.slice(0,5);
+    const tasks=getTasks(); const log=getTaskLog(); const tdLog=log[todayKey()]||{};
+    const pending=tasks.filter(t=>!tdLog[t.id]).slice(0,5);
     contentEl.innerHTML=`<div class="cs-tasks-list">${pending.map(t=>`<div class="ct-item" onclick="pickCravingTask('${t.id}')"><div class="cti-icon">${t.priority?t.priorityIcon:'⚡'}</div><div class="cti-name">${t.name}</div><div class="cti-pts">+${t.pts}pts</div></div>`).join('')}</div>`;
   } else if(angle==='vision'){
     if(titleEl) titleEl.textContent='Theatre of the Mind';
@@ -2469,15 +2503,13 @@ function confirmSmoked(){
 function openOverlay(id){ document.getElementById(id).classList.add('open'); }
 function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
 function closeOverlayOutside(e,id){ if(e.target===document.getElementById(id)) closeOverlay(id); }
-function openSettings(){ document.getElementById('set-pack').value=S.packCost; openOverlay('ov-settings'); }
+// Settings UI removed — pack cost managed internally
 function saveSettings(){
   const pc=parseFloat(document.getElementById('set-pack').value);
   if(!isNaN(pc)&&pc>0){S.packCost=pc;localStorage.setItem(LS.PACK_COST,pc);}
   closeOverlay('ov-settings');
 }
-function confirmReset(){
-  if(confirm('Reset THRESHOLD? All data will be erased.')){localStorage.clear();location.reload();}
-}
+// Reset removed — quit is permanent
 
 /* ═══════════════════════════════════════════════════
    SECTION: TAB SWITCHER
@@ -2570,11 +2602,11 @@ function updateDeadlineDisplays(){
   if(tagline) tagline.textContent = d > 0 ? d+' days left · do or die' : 'Mission ends today';
   const ldText = document.getElementById('ld-text');
   if(ldText) ldText.innerHTML = (d > 0 ? 'These <strong>'+d+' days</strong>' : 'These final hours') + '<br>are not coming back.';
-  // Dynamic date in mandate card
+  // Quit date+time in mandate — permanent, shows when mission was ignited
   const mandateDate = document.getElementById('mandate-date');
-  if(mandateDate){
-    const today = new Date();
-    mandateDate.textContent = today.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  if(mandateDate && S.missionStart){
+    const qd = new Date(S.missionStart);
+    mandateDate.textContent = qd.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) + ' at ' + qd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   }
 }
 
