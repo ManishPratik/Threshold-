@@ -322,7 +322,8 @@ img{display:block;max-width:100%;}
   font-family:var(--fm);font-size:8px;letter-spacing:0.18em;
   color:var(--g-4);margin-bottom:2px;text-transform:uppercase;
 }
-.bs-text{font-size:12px;line-height:1.45;color:var(--t-2);}
+.bs-feel{font-size:11px;line-height:1.45;color:var(--t-3);margin-top:4px;font-style:italic;}
+.bs-carr{font-size:11px;line-height:1.55;color:var(--g-3);margin-top:6px;font-style:italic;border-top:1px solid var(--b-dim);padding-top:6px;display:none;}
 
 /* Probability Orb — the hero element */
 .wr-orb-wrap{
@@ -940,8 +941,131 @@ margin-bottom:10px;
 .ib-install{background:var(--bg);border:none;color:var(--g-4);padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;}
 
 /* ═══════════════════════════════════════════════════
-   SECTION: NON-NEGOTIABLE MANDATE CARD
+   SECTION: NON-SMOKER PLEDGE CARD
 ═══════════════════════════════════════════════════ */
+.fr-pledge{
+  margin:0 var(--page-pad) 16px;
+  background:linear-gradient(135deg,rgba(168,32,32,0.1),rgba(168,32,32,0.04));
+  border:2px solid rgba(168,32,32,0.4);
+  border-radius:var(--radius-lg);
+  padding:18px;
+  display:flex;gap:14px;align-items:flex-start;
+}
+.frp-icon{font-size:28px;flex-shrink:0;line-height:1;}
+.frp-title{
+  font-family:var(--fm);font-size:12px;font-weight:700;
+  letter-spacing:0.2em;color:var(--t-1);
+  text-transform:uppercase;margin-bottom:10px;
+}
+.frp-body{font-size:13px;line-height:1.85;color:var(--t-2);}
+.frp-body strong{color:var(--t-1);}
+.craving-pledge{
+  background:linear-gradient(135deg,rgba(168,32,32,0.12),rgba(168,32,32,0.04));
+  border:1.5px solid rgba(168,32,32,0.35);
+  border-radius:var(--radius-md);
+  padding:13px 14px;margin-bottom:12px;
+  display:flex;gap:10px;align-items:center;
+}
+.cpg-icon{font-size:20px;flex-shrink:0;line-height:1;}
+.cpg-text{font-size:13px;line-height:1.6;color:var(--t-1);}
+.cpg-text strong{color:#FF8080;}
+.blk-head.tier-1-head{
+  background:linear-gradient(135deg,rgba(212,168,84,0.06),transparent);
+  border-left:3px solid var(--g-4);
+  padding-left:17px;margin-left:0;
+}
+.blk-head.tier-2-head{
+  border-left:3px solid rgba(212,168,84,0.2);
+  padding-left:17px;margin-left:0;
+}
+.tier-1-success{
+  margin:0 var(--page-pad) 8px;
+  background:linear-gradient(135deg,rgba(46,106,58,0.12),transparent);
+  border:1px solid rgba(74,154,90,0.25);
+  border-radius:var(--radius-sm);
+  padding:10px 14px;
+  font-family:var(--fd);font-style:italic;
+  font-size:13px;color:var(--gr-4);
+  display:none;
+}
+.tier-1-success.show{display:block;}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: WAR ROOM ANCHOR CARD
+═══════════════════════════════════════════════════ */
+.wr-anchors{
+  margin:0 var(--page-pad) 16px;
+  background:var(--card);
+  border:1px solid var(--b-act);
+  border-radius:var(--radius-lg);
+  padding:16px;
+}
+.wra-header{
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:10px;
+}
+.wra-title{
+  font-family:var(--fb);font-size:13px;font-weight:600;
+  color:var(--t-1);letter-spacing:0.01em;
+}
+.wra-score{
+  font-family:var(--fm);font-size:13px;
+  color:var(--g-5);letter-spacing:0.05em;
+}
+.wra-bar-bg{
+  height:4px;background:var(--card-2);
+  border-radius:2px;overflow:hidden;margin-bottom:14px;
+}
+.wra-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--g-2),var(--g-5));
+  border-radius:2px;
+  transition:width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+.wra-tasks{
+  display:flex;flex-direction:column;gap:7px;
+}
+.wra-task{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:var(--radius-sm);
+  background:var(--bg-2);
+  transition:background 0.2s;
+}
+.wra-task.wt-done{
+  background:rgba(46,106,58,0.12);
+}
+.wra-check{
+  width:18px;height:18px;border-radius:50%;
+  border:1.5px solid var(--b-act);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;flex-shrink:0;
+  transition:all 0.2s;
+}
+.wra-task.wt-done .wra-check{
+  background:var(--gr-4);border-color:var(--gr-4);color:white;
+}
+.wra-task.wt-priority .wra-check{
+  border-color:var(--g-4);
+}
+.wra-name{
+  flex:1;font-size:12px;font-weight:500;color:var(--t-2);
+}
+.wra-task.wt-done .wra-name{
+  color:var(--t-4);text-decoration:line-through;
+}
+.wra-task.wt-priority .wra-name{
+  color:var(--g-5);
+}
+.wra-pts{
+  font-family:var(--fm);font-size:9px;
+  color:var(--t-4);letter-spacing:0.04em;
+}
+.wra-task.wt-done .wra-pts{color:var(--gr-3);}
+.wra-pct{
+  font-family:var(--fd);font-size:13px;
+  color:var(--g-4);font-style:italic;
+  text-align:center;margin-top:10px;
+}
 .wr-mandate{
   margin:0 var(--page-pad) 16px;
   background:linear-gradient(135deg,rgba(212,168,84,0.1),rgba(212,168,84,0.04));
@@ -1014,6 +1138,16 @@ margin-bottom:10px;
 .ctb-text strong{color:#FF7070;}
 
 /* Personal truth */
+.cs-carr-box{
+  background:linear-gradient(135deg,rgba(212,168,84,0.06),rgba(212,168,84,0.02));
+  border-left:3px solid var(--g-3);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  padding:12px 14px;margin-bottom:12px;
+}
+.ccb-carr{
+  font-family:var(--fd);font-style:italic;
+  font-size:13px;line-height:1.8;color:var(--t-2);
+}
 .cs-personal-truth{
   background:rgba(168,32,32,0.08);border:1px solid rgba(168,32,32,0.18);
   border-radius:var(--radius-md);padding:14px 16px;
@@ -1180,7 +1314,7 @@ margin-bottom:10px;
 
   <div class="launch-form">
     <div>
-      <label class="f-label">Mission Start — Set to right now when you're ready</label>
+      <label class="f-label">Your Quit Date & Time — entered once, locked forever</label>
       <div style="display:flex;gap:8px;align-items:center;">
         <input type="datetime-local" id="in-quit" class="f-input" style="flex:1"/>
         <button onclick="setNow()" class="btn-now">Now</button>
@@ -1222,7 +1356,21 @@ margin-bottom:10px;
       <div class="bs-content">
         <div class="bs-hour" id="bs-hour">Body Right Now</div>
         <div class="bs-text" id="bs-text">Mission not yet started</div>
+        <div class="bs-feel" id="bs-feel"></div>
+        <div class="bs-carr" id="bs-carr"></div>
       </div>
+    </div>
+
+    <!-- ANCHOR PROGRESS — tasks as hero -->
+    <div class="wr-anchors" id="wr-anchors">
+      <div class="wra-header">
+        <div class="wra-title">Today's Anchors</div>
+        <div class="wra-score" id="wra-score">0 / 8</div>
+      </div>
+      <div class="wra-bar-bg">
+        <div class="wra-bar-fill" id="wra-bar" style="width:0%"></div>
+      </div>
+      <div class="wra-tasks" id="wra-tasks"></div>
     </div>
 
     <div class="wr-orb-wrap">
@@ -1370,6 +1518,15 @@ margin-bottom:10px;
       </div>
     </div>
 
+    <!-- NON-SMOKER PLEDGE — permanent, prominent -->
+    <div class="fr-pledge">
+      <div class="frp-icon">🚭</div>
+      <div class="frp-content">
+        <div class="frp-title">I AM A NON-SMOKER</div>
+        <div class="frp-body">I have taken a pledge that I will never smoke again from <strong id="pledge-date">5th June 2026.</strong><br><br>Smoking raises blood pressure. <strong>Smoking causes heart attacks.</strong><br><br>This is not a choice. This is survival.</div>
+      </div>
+    </div>
+
     <div class="fr-dopamine">
       <div class="fd-title">⚠️ The Dopamine Trap — Science</div>
       <div class="fd-body">Nicotine does not give your brain pleasure. It <strong>hijacks your natural dopamine system</strong>, lowers your baseline, then charges you a cigarette every 45 minutes to feel normal again.<br><br>Between cigarettes, you feel <strong>worse than a non-smoker</strong>. The "relief" from smoking is just returning to the baseline a non-smoker has for free — all the time.</div>
@@ -1418,7 +1575,7 @@ margin-bottom:10px;
     <!-- DEADLINE BANNER — always visible -->
     <div class="cv-deadline">
       <span class="cv-deadline-time" id="cv-deadline-time">— left</span>
-      <span class="cv-deadline-msg"> to June 2 · This window never comes back</span>
+      <span class="cv-deadline-msg" id="cv-deadline-msg"> · Jupiter is active. Execute now.</span>
     </div>
 
     <!-- STEP 1: THE TRUTH -->
@@ -1427,11 +1584,18 @@ margin-bottom:10px;
         <div class="cm-title">NON-NEGOTIABLE</div>
         <div class="cm-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo. If you smoke today, Zymo funding will not come. You have quit. <strong>Zymo funding will come.</strong></div>
       </div>
+      <div class="craving-pledge">
+        <div class="cpg-icon">🚭</div>
+        <div class="cpg-text"><strong>I AM A NON-SMOKER.</strong> Smoking causes heart attacks. I took this pledge on <span id="pledge-date-craving">5th June 2026</span>. This is survival — not a choice.</div>
+      </div>
       <div class="cs-truth-banner">
         <div class="ctb-icon">🚫</div>
         <div class="ctb-text">Smoking will <strong>NOT</strong> make you feel good.<br>You will feel <strong>worse</strong> the moment you light up.</div>
       </div>
       <div class="cs-personal-truth" id="cs-personal-truth"></div>
+      <div class="cs-carr-box">
+        <div class="ccb-carr">"Ask yourself what actual pain you are suffering. Any inconvenience you feel right now is not because you stopped smoking — it is because you started. This discomfort did not begin when you extinguished your last cigarette. This is what smokers suffer throughout their entire smoking lives."</div>
+      </div>
       <div class="cs-earned" id="cs-earned"></div>
       <button class="btn-p" onclick="cravingStep(2)" style="margin-top:16px">What do I do right now?</button>
       <button class="btn-s" onclick="closeCraving()">The feeling is already passing</button>
@@ -1574,24 +1738,25 @@ function deadlineUrgencyTone(){
    — To add/edit tasks: change this array only
 ═══════════════════════════════════════════════════ */
 const DEFAULT_TASKS = [
-  {id:'warm-water',     name:'Warm Water',          mins:5,  pts:4,  block:'Morning Ritual'},
-  {id:'get-fresh',      name:'Get Fresh',            mins:15, pts:4,  block:'Morning Ritual'},
-  {id:'morning-viz',    name:'Morning Visualization',mins:45, pts:15, block:'Morning Ritual'},
-  {id:'gym',            name:'Gym',                  mins:60, pts:12, block:'Morning Ritual'},
-  {id:'bath-breakfast', name:'Bath + Breakfast',     mins:30, pts:5,  block:'Morning Ritual'},
-  {id:'newspaper',      name:'Newspaper Reading',    mins:60, pts:6,  block:'Morning Ritual'},
-  {id:'deep-work-1',    name:'Zymo Fundraising',     mins:90, pts:12, block:'Work Block I', priority:true, priorityIcon:'🎯'},
-  {id:'deep-work-2',    name:'AIRA',                 mins:90, pts:12, block:'Work Block I', priority:true, priorityIcon:'🚀'},
-  {id:'lunch-yog',      name:'Lunch + Yog Nidra',    mins:60, pts:8,  block:'Work Block I'},
-  {id:'deep-work-3',    name:'Deep Work 3',          mins:90, pts:12, block:'Work Block II'},
-  {id:'deep-work-4',    name:'Deep Work 4',          mins:90, pts:12, block:'Work Block II'},
-  {id:'reading',        name:'Reading',              mins:60, pts:8,  block:'Work Block II'},
-  {id:'deep-work-5',    name:'Deep Work 5',          mins:90, pts:12, block:'Work Block III'},
-  {id:'deep-work-6',    name:'Deep Work 6',          mins:90, pts:12, block:'Work Block III'},
-  {id:'night-viz',      name:'Night Visualization',  mins:20, pts:15, block:'Night Ritual'},
+  // TIER 1 — Non-negotiable anchors
+  {id:'morning-body',     name:'Morning Body',          mins:60, pts:10, block:'Tier 1 — Non-Negotiable', tier:1},
+  {id:'morning-viz',      name:'Morning Visualization', mins:45, pts:15, block:'Tier 1 — Non-Negotiable', tier:1},
+  {id:'zymo-fundraising', name:'Zymo Fundraising',      mins:90, pts:20, block:'Tier 1 — Non-Negotiable', tier:1, priority:true, priorityIcon:'🎯'},
+  {id:'zymo-growth',      name:'Zymo Growth',           mins:90, pts:15, block:'Tier 1 — Non-Negotiable', tier:1, priority:true, priorityIcon:'🚀'},
+  {id:'night-viz',        name:'Night Visualization',   mins:30, pts:15, block:'Tier 1 — Non-Negotiable', tier:1},
+  // TIER 2 — Fill the day, keep mind occupied
+  {id:'newspaper',        name:'Newspaper Reading',     mins:60, pts:6,  block:'Tier 2 — Fill The Day',   tier:2},
+  {id:'aira',             name:'AIRA',                  mins:90, pts:12, block:'Tier 2 — Fill The Day',   tier:2, priority:true, priorityIcon:'✨'},
+  {id:'night-reading',    name:'Night Reading',         mins:30, pts:8,  block:'Tier 2 — Fill The Day',   tier:2},
+  {id:'walk-break',       name:'Walk / Break',          mins:20, pts:4,  block:'Tier 2 — Fill The Day',   tier:2},
+  {id:'admin-ops',        name:'Admin / Operations',    mins:60, pts:6,  block:'Tier 2 — Fill The Day',   tier:2},
 ];
-const BLOCK_ICONS = {'Morning Ritual':'🌅','Work Block I':'⚡','Work Block II':'🔥','Work Block III':'💎','Night Ritual':'🌙'};
-const MAX_TASK_PER_DAY = DEFAULT_TASKS.reduce((s,t)=>s+t.pts,0);
+const BLOCK_ICONS = {
+  'Tier 1 — Non-Negotiable': '🔥',
+  'Tier 2 — Fill The Day':   '⚡',
+};
+const TIER1_MAX = 75;  // pts from tier 1 only
+const MAX_TASK_PER_DAY = DEFAULT_TASKS.reduce((s,t)=>s+t.pts,0); // 111 pts total
 
 /* ═══════════════════════════════════════════════════
    SECTION: HEALTH MILESTONES
@@ -1615,55 +1780,168 @@ const MILESTONES = [
    — Days 1-7: per hour. After: per day.
 ═══════════════════════════════════════════════════ */
 const HOURLY_MSGS = {
-  0:  {icon:'🚀', hour:'Hour 0', text:'Mission ignited. The parasite\'s food supply just got cut off.'},
-  1:  {icon:'⏱️', hour:'Hour 1', text:'Nicotine half-life has begun. It starts losing strength from this moment.'},
-  2:  {icon:'🩸', hour:'Hour 2', text:'50% of nicotine already gone from your blood. The worm is half-starved.'},
-  3:  {icon:'💪', hour:'Hour 3', text:'Blood pressure dropping toward normal. Heart working easier.'},
-  4:  {icon:'⚡', hour:'Hour 4', text:'Withdrawal starting. This discomfort is the worm fighting back. It means you\'re winning.'},
-  5:  {icon:'🧠', hour:'Hour 5', text:'Brain oxygen levels rising. Nicotine fog beginning to lift.'},
-  6:  {icon:'❤️', hour:'Hour 6', text:'Heart rate stabilizing. Blood pressure closer to normal than it\'s been in years.'},
-  7:  {icon:'🌊', hour:'Hour 7', text:'Blood circulation improving. Hands and feet warming up.'},
-  8:  {icon:'🫁', hour:'Hour 8', text:'Carbon monoxide leaving your blood. Pure oxygen replacing it. Brain getting cleaner fuel.'},
-  9:  {icon:'✨', hour:'Hour 9', text:'Nerve cells beginning to recover from nicotine\'s chemical grip.'},
-  10: {icon:'💧', hour:'Hour 10', text:'Body detoxing. The worm\'s toxins being flushed out.'},
-  11: {icon:'🌅', hour:'Hour 11', text:'Almost half a day clean. The parasite is visibly weakening.'},
-  12: {icon:'🩺', hour:'Hour 12', text:'Nicotine nearly fully cleared from bloodstream. Milestone approaching.'},
-  13: {icon:'🎯', hour:'Hour 13', text:'Dopamine receptors beginning to recalibrate toward natural production.'},
-  14: {icon:'⚡', hour:'Hour 14', text:'Physical energy beginning to return as body stops compensating for nicotine.'},
-  15: {icon:'🧬', hour:'Hour 15', text:'Cellular repair processes accelerating throughout the body.'},
-  16: {icon:'❤️', hour:'Hour 16', text:'Heart beating more efficiently. Every pump doing more useful work.'},
-  17: {icon:'🌙', hour:'Hour 17', text:'Sleep quality will improve tonight. Nicotine disrupts deep sleep cycles.'},
-  18: {icon:'🧠', hour:'Hour 18', text:'Brain clarity measurably improving. Fog that felt normal was nicotine all along.'},
-  19: {icon:'💪', hour:'Hour 19', text:'Physical withdrawal symptoms beginning to peak. This is the hardest stretch. Hold.'},
-  20: {icon:'🌟', hour:'Hour 20', text:'Brain oxygen at highest level since you started smoking. It shows.'},
-  21: {icon:'🫁', hour:'Hour 21', text:'Lungs beginning to clear. Small airways relaxing and opening.'},
-  22: {icon:'⏳', hour:'Hour 22', text:'22 hours. Less than 2 hours to the first major milestone. Stay.'},
-  23: {icon:'🔥', hour:'Hour 23', text:'Nicotine almost entirely gone. The worm is gasping. One more hour.'},
-  24: {icon:'🎖️', hour:'Hour 24', text:'MILESTONE: Nicotine cleared from blood. Taste and smell returning. One full day.'},
-  30: {icon:'🧬', hour:'Hour 30', text:'Nerve endings beginning to regenerate. Body rebuilding what nicotine damaged.'},
-  36: {icon:'🌊', hour:'Hour 36', text:'Dopamine receptors actively recalibrating. Your natural good feeling is rising.'},
-  48: {icon:'⚡', hour:'Hour 48', text:'MILESTONE: Nicotine byproducts clearing. Nerve regeneration underway. 2 days.'},
-  54: {icon:'🫁', hour:'Hour 54', text:'Carbon monoxide fully replaced by oxygen throughout body.'},
-  60: {icon:'🌬️', hour:'Hour 60', text:'Lungs actively clearing mucus. Each breath carries more oxygen.'},
-  72: {icon:'🏆', hour:'Hour 72', text:'MILESTONE: Peak withdrawal passed. The absolute worst is behind you. 3 days.'},
-  84: {icon:'✨', hour:'Hour 84', text:'Energy returning. Brain fog lifting. The real you is emerging.'},
-  96: {icon:'🫁', hour:'Hour 96', text:'Cilia in lungs regenerating. Breathing becoming noticeably easier.'},
-  108:{icon:'💪', hour:'Hour 108', text:'Physical symptoms fading. Body has largely stabilized without nicotine.'},
-  120:{icon:'🌟', hour:'Hour 120', text:'5 days. Circulation improving significantly. Worm is nearly dead.'},
-  132:{icon:'🧠', hour:'Hour 132', text:'Lung capacity measurably increasing with every hour.'},
-  144:{icon:'🎯', hour:'Hour 144', text:'6 days. Brain reward system actively recalibrating toward natural dopamine.'},
-  168:{icon:'🏆', hour:'Hour 168', text:'MILESTONE: 7 DAYS. The hardest week of your life is done. The worm is dying.'},
+  // ─── DAY 1: HOUR BY HOUR ───
+  0:  {icon:'🚀', hour:'Hour 0 — Ignition',
+       text:'You just cut off the parasite\'s food supply. Your body begins healing this second.',
+       feel:'You may feel nothing yet. The first cravings arrive within 2 hours.'},
+  1:  {icon:'⏱️', hour:'Hour 1',
+       text:'Nicotine half-life has begun. Every 2 hours, half of what remains is eliminated.',
+       feel:'Still relatively comfortable. Enjoy this window.'},
+  2:  {icon:'🩸', hour:'Hour 2 — First Battle',
+       text:'50% of nicotine already gone from your blood. Heart rate and blood pressure dropping.',
+       feel:'First real cravings arriving now. This is normal. Each one lasts 3–5 minutes maximum.'},
+  3:  {icon:'❤️', hour:'Hour 3',
+       text:'Blood pressure dropping toward levels it hasn\'t seen in years. Heart working easier.',
+       feel:'May feel restless or irritable. Your brain is noticing the drop in nicotine.'},
+  4:  {icon:'🧠', hour:'Hour 4 — Brain Shift',
+       text:'Nicotine receptors in your brain drop 33% activity. The rewiring has begun.',
+       feel:'Cravings intensifying. Possible anxiety or fidgeting. This is the worm fighting back — it means you\'re winning.'},
+  5:  {icon:'🌊', hour:'Hour 5',
+       text:'Blood circulation improving to hands and feet. Your extremities warming up.',
+       feel:'Tingling in fingers or toes is normal — that\'s circulation returning. Not distress. Recovery.'},
+  6:  {icon:'💧', hour:'Hour 6',
+       text:'Blood sugar adjusting as body recalibrates without nicotine\'s metabolic interference.',
+       feel:'Possible hunger or lightheadedness. Drink water. Eat something light. Your metabolism is resetting.'},
+  7:  {icon:'🫁', hour:'Hour 7',
+       text:'Airways beginning to relax. Bronchial tubes less constricted than an hour ago.',
+       feel:'Each breath is slightly fuller than the last. You may not notice yet — but it\'s happening.'},
+  8:  {icon:'🫀', hour:'Hour 8 — Oxygen Milestone',
+       text:'Carbon monoxide in blood drops by HALF. Oxygen levels returning to normal. Brain getting cleaner fuel.',
+       feel:'Possible headache as blood vessels dilate with more oxygen. This is healing — not harm.'},
+  9:  {icon:'✨', hour:'Hour 9',
+       text:'Nerve cells beginning to recover from nicotine\'s chemical grip.',
+       feel:'Still uncomfortable? Good. Discomfort means the addiction is losing. Comfort would mean nothing was changing.'},
+  10: {icon:'⚡', hour:'Hour 10',
+       text:'10 hours. Your body has been healing for 10 consecutive hours without pause.',
+       feel:'Energy may dip — blood sugar still adjusting. Not weakness. Recalibration.'},
+  11: {icon:'🌅', hour:'Hour 11',
+       text:'Almost half a day. The parasite has been starving for 11 hours straight.',
+       feel:'Cravings may feel random and sudden. They are. The brain is firing old patterns. Each one you resist weakens the pattern permanently.'},
+  12: {icon:'🩺', hour:'Hour 12 — Carbon Monoxide Clear',
+       text:'Carbon monoxide FULLY normalized. Your blood is now carrying its full designed oxygen load.',
+       feel:'A subtle but real shift in how your head feels. The fog was always there — you just couldn\'t see it from inside.'},
+  13: {icon:'🎯', hour:'Hour 13',
+       text:'Dopamine receptors beginning slow recalibration toward natural production.',
+       feel:'May feel flat or low mood. Your brain\'s reward system is resetting. This passes.'},
+  14: {icon:'💪', hour:'Hour 14',
+       text:'Physical energy beginning to return. Body no longer spending resources managing nicotine.',
+       feel:'Small windows of feeling genuinely okay. These will grow longer every day.'},
+  15: {icon:'🧬', hour:'Hour 15',
+       text:'Cellular repair accelerating. The body prioritizes healing when the toxin supply stops.',
+       feel:'Possible coughing — lungs beginning to clear debris. This is good. This is healing.'},
+  16: {icon:'❤️', hour:'Hour 16',
+       text:'Heart beating more efficiently. Less strain. Better output. Your cardiovascular system is relieved.',
+       feel:'Blood pressure measurably lower right now than when you were smoking.'},
+  17: {icon:'🌙', hour:'Hour 17',
+       text:'Sleep quality will improve tonight. Nicotine disrupts REM sleep — that disruption is ending.',
+       feel:'You may sleep more deeply tonight than you have in years. Let yourself rest.'},
+  18: {icon:'🧠', hour:'Hour 18',
+       text:'Brain clarity measurably improving. The fog that felt normal — wasn\'t normal. That was nicotine.',
+       feel:'Mood may swing. Irritability is peak withdrawal. It is temporary and means the chemical hold is breaking.'},
+  19: {icon:'💪', hour:'Hour 19',
+       text:'Physical withdrawal approaching peak. The next few hours are the hardest. Hold.',
+       feel:'Intense craving possible. Use the craving button. This is the final push before Hour 24 changes everything.'},
+  20: {icon:'🌟', hour:'Hour 20',
+       text:'Brain oxygen at its highest level since you started smoking.',
+       feel:'Almost there. 4 more hours to Day 1 complete.'},
+  21: {icon:'🫁', hour:'Hour 21',
+       text:'Small airways in lungs relaxing and opening. Each breath reaching deeper.',
+       feel:'Possible tight chest or cough — mucus clearing. Your lungs are cleaning house.'},
+  22: {icon:'⏳', hour:'Hour 22',
+       text:'The body has been repairing itself for 22 consecutive hours.',
+       feel:'2 hours to Day 1. You are almost at the first major psychological milestone.'},
+  23: {icon:'🔥', hour:'Hour 23',
+       text:'Nicotine almost entirely gone. The worm is gasping for what it cannot have.',
+       feel:'One more hour. After this, everything gets easier. This is a scientific fact.'},
+  24: {icon:'🎖️', hour:'Day 1 Complete — MILESTONE',
+       text:'Nicotine cleared from bloodstream. Blood pressure at normal level. Lungs clearing mucus. Taste and smell beginning to return.',
+       feel:'You may feel proud — you should. Day 1 is where most people fail. You didn\'t.'},
+
+  // ─── DAY 2: NERVE ENDINGS REGENERATE ───
+  26: {icon:'👃', hour:'Day 2 — Hour 26',
+       text:'Nerve endings damaged by smoking beginning to regrow.',
+       feel:'Food may smell different. More vivid. This is your olfactory nerves coming back online.'},
+  30: {icon:'🧬', hour:'Day 2 — Hour 30',
+       text:'Taste receptors regenerating. Sense of smell sharpening hour by hour.',
+       feel:'You might notice smells you forgot existed. This will keep improving for weeks.'},
+  36: {icon:'🌊', hour:'Day 2 — Hour 36',
+       text:'Dopamine receptors actively recalibrating. Natural pleasure systems rebuilding.',
+       feel:'Mood may feel unstable — up and down. This is the reward system resetting. It is temporary.'},
+  42: {icon:'⚡', hour:'Day 2 — Hour 42',
+       text:'Circulation continuing to improve. Oxygen delivery to every organ increasing.',
+       feel:'Physical cravings still present but changing character — less physical demand, more habit-based.'},
+  48: {icon:'✨', hour:'Day 2 Complete — MILESTONE',
+       text:'48 hours. Nerve endings regrowing. Nicotine byproducts clearing. Taste and smell significantly sharper.',
+       feel:'The hardest 48 hours of quitting are complete. What remains gets progressively easier.'},
+
+  // ─── DAY 3: THE PEAK AND THE TURN ───
+  54: {icon:'🫁', hour:'Day 3 — Hour 54',
+       text:'Bronchial tubes relaxing further. Breathing becomes measurably easier.',
+       feel:'Day 3 is peak withdrawal. You may feel the worst today. This is the turn — after today, it gets easier every single hour.'},
+  60: {icon:'🌬️', hour:'Day 3 — Hour 60',
+       text:'Lungs actively clearing mucus built up over years of smoking.',
+       feel:'Coughing may increase today — this is not sickness. This is your lungs doing what they couldn\'t do while you smoked.'},
+  66: {icon:'💪', hour:'Day 3 — Hour 66',
+       text:'Energy levels beginning a real recovery as body stops compensating for nicotine withdrawal.',
+       feel:'Headaches, irritability, intense cravings — all peak today. All of them will be weaker tomorrow. Science guarantees this.'},
+  72: {icon:'🏆', hour:'Day 3 Complete — MILESTONE',
+       text:'72 hours. Nicotine FULLY eliminated from body. Peak withdrawal passed. The absolute worst is behind you.',
+       feel:'If you feel terrible right now — this is the peak. It does not get worse than this. Only better from here.'},
+
+  // ─── DAY 4: THE BODY STABILIZES ───
+  78: {icon:'🧠', hour:'Day 4 — Hour 78',
+       text:'Brain chemistry stabilizing. Nicotine receptors beginning to normalize.',
+       feel:'Noticeable improvement from yesterday. The cliff of withdrawal is behind you. Now it is a gradual slope.'},
+  84: {icon:'✨', hour:'Day 4 — Hour 84',
+       text:'Energy returning. Lung capacity increasing. Brain fog lifting.',
+       feel:'First real moments of genuine clarity. This is what your brain feels like without a chemical handicap.'},
+  90: {icon:'🌟', hour:'Day 4 — Hour 90',
+       text:'Circulation significantly improved. Exercise capacity noticeably better.',
+       feel:'Cravings still come but shorter duration. Notice how quickly they pass when you don\'t act on them.'},
+  96: {icon:'🫁', hour:'Day 4 Complete — MILESTONE',
+       text:'4 days. Cilia in lungs regenerating. Breathing becoming easier. Nicotine receptor activity normalizing.',
+       feel:'The physical addiction is broken. What remains is habit and pattern. These are manageable.'},
+
+  // ─── DAY 5: THE NEW BASELINE ───
+  102:{icon:'💪', hour:'Day 5 — Hour 102',
+       text:'Physical symptoms largely gone. The body has accepted its new chemistry.',
+       feel:'You may feel surprisingly normal today. This is not a trick. This is who you are without nicotine.'},
+  108:{icon:'❤️', hour:'Day 5 — Hour 108',
+       text:'Blood pressure stable at healthier levels. Heart attack risk already measurably lower than Day 1.',
+       feel:'Remember why you did this. Your BP. Your heart. This is working.'},
+  114:{icon:'🧠', hour:'Day 5 — Hour 114',
+       text:'Dopamine system recalibrating. Natural rewards beginning to feel rewarding again.',
+       feel:'Small pleasures — food, music, conversation — may feel more vivid. This is your reward system coming back.'},
+  120:{icon:'🏆', hour:'Day 5 Complete — MILESTONE',
+       text:'5 DAYS. Circulation improved. Lungs clearing. Cravings manageable. You are past the hardest phase. The worm is dying.',
+       feel:'5 days smoke-free. This is the version of you that closes Zymo\'s round. This is the version investors meet.'},
+
+  // ─── DAYS 6-7 ───
+  132:{icon:'🧬', hour:'Day 6',
+       text:'Lung function measurably increasing. Cilia repair accelerating.',
+       feel:'Physical cravings now rare. Remaining urges are psychological — habit patterns, not chemical need.'},
+  144:{icon:'🎯', hour:'Day 6 — Evening',
+       text:'Brain reward system actively recalibrating toward natural dopamine production.',
+       feel:'Notice how the day feels more even. Less peaks and valleys. This is your natural brain chemistry.'},
+  156:{icon:'🌟', hour:'Day 7 — Morning',
+       text:'One week approaching. Lung function up significantly. Taste and smell fully restored.',
+       feel:'One week is the first major milestone most people celebrate. You are almost there.'},
+  168:{icon:'🏆', hour:'Day 7 Complete — MILESTONE',
+       text:'7 DAYS. One full week smoke-free. The hardest week of your life is done. The worm is dying.',
+       feel:'Statistically, making it 7 days means you are 9x more likely to succeed long-term. You are in the winning group.'},
 };
 
 const DAILY_MSGS = [
-  {icon:'🌬️', text:'Day 8. Lungs clearing faster. Breathing easier every morning.'},
-  {icon:'⚡',  text:'Day 9. Energy levels rising as body fully adjusts to no nicotine.'},
-  {icon:'🧠',  text:'Day 10. Mental clarity noticeably sharper. Focus improving daily.'},
-  {icon:'💪',  text:'Day 11. Physical stamina returning. The body is reclaiming itself.'},
-  {icon:'🌟',  text:'Day 12. Dopamine baseline rising. Natural joy returning without effort.'},
-  {icon:'🎯',  text:'Day 13. Cravings becoming infrequent. Each one shorter than the last.'},
-  {icon:'🏆',  text:'Day 14. Two weeks. Lung function improved by over 30%. Keep going.'},
-  {icon:'🚀',  text:'Day 15+. You did it. The parasite is dead. This is the new baseline.'},
+  {icon:'🌬️', hour:'Day 8',  text:'Lungs clearing faster. Breathing easier every morning. Cilia regenerating.',     feel:'Cravings now habit-based not chemical. Noticeably easier to resist.'},
+  {icon:'⚡',  hour:'Day 9',  text:'Energy levels rising as body fully adjusts to life without nicotine.',            feel:'You may feel more capable than you have in years. This is your baseline now.'},
+  {icon:'🧠',  hour:'Day 10', text:'Nicotine receptors briefly overshoot — 26% above baseline. Unexpected cravings possible.', feel:'If cravings feel suddenly strong today — this is the overshoot. It passes by Day 14.'},
+  {icon:'💪',  hour:'Day 11', text:'Physical stamina measurably better. Cardiovascular efficiency improving.',          feel:'Exercise feels different. Lungs are working properly for the first time in years.'},
+  {icon:'🌟',  hour:'Day 12', text:'Dopamine baseline rising. Natural joy returning without chemical assistance.',      feel:'Notice moments of genuine good mood. Not manufactured by nicotine. Real.'},
+  {icon:'🎯',  hour:'Day 13', text:'Cravings becoming infrequent. Each one shorter and weaker than the last.',         feel:'The pattern is clear now — every day is easier than the one before.'},
+  {icon:'🏆',  hour:'Day 14', text:'2 weeks. Circulation at peak recovery. Lung function up 10-30%.',                  feel:'Two weeks is when most people start to feel genuinely good. Not just less bad. Good.'},
+  {icon:'🧬',  hour:'Day 21', text:'Nicotine receptors FULLY normalized. Brain chemistry is now that of a non-smoker.',feel:'Day 21 is the brain reset milestone. The physical architecture of addiction has been dismantled.'},
+  {icon:'🫁',  hour:'Day 30', text:'1 month. Lung function up 10%. Coughing and shortness of breath significantly reduced.', feel:'The lungs you have now are healthier than any you\'ve had since you started smoking.'},
+  {icon:'🚀',  hour:'Day 30+', text:'You have done it. The parasite is dead. This is your new permanent baseline.',    feel:'Everything from here is compounding. Health, clarity, energy — all of it keeps improving.'},
 ];
 
 /* ═══════════════════════════════════════════════════
@@ -1821,19 +2099,19 @@ const WORM_DATA = {
    SECTION: BODY STRIP UPDATER
 ═══════════════════════════════════════════════════ */
 function getBodyMsg(cleanHrs){
-  if(!S.missionStart) return {icon:'⏳',hour:'BODY RIGHT NOW',text:'Mission not yet started.'};
+  if(!S.missionStart) return {icon:'⏳', hour:'BODY RIGHT NOW', text:'Mission not yet started.', feel:''};
   const h = Math.floor(cleanHrs);
-  // Days 1-7: hourly
+
   if(h <= 168){
-    // Find closest hour
     const keys = Object.keys(HOURLY_MSGS).map(Number).sort((a,b)=>a-b);
     let best = 0;
     for(const k of keys){ if(k<=h) best=k; }
     return HOURLY_MSGS[best] || HOURLY_MSGS[0];
   }
-  // After day 7: daily
+  // After day 7 — daily
   const dayIdx = Math.min(Math.floor(h/24)-7, DAILY_MSGS.length-1);
-  return {icon:DAILY_MSGS[dayIdx].icon, hour:`Day ${Math.floor(h/24)}`, text:DAILY_MSGS[dayIdx].text};
+  const dm = DAILY_MSGS[Math.max(0,dayIdx)];
+  return {icon:dm.icon, hour:dm.hour||`Day ${Math.floor(h/24)}`, text:dm.text, feel:dm.feel||''};
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1848,8 +2126,9 @@ function updateWarRoom(){
   const hrsLeft = Math.floor(msLeft/3600000);
   setText('wr-hrs', hrsLeft.toLocaleString());
 
-  // Clean time
-  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart);
+  // Clean time — from actual quit date
+  const quitTs = parseInt(localStorage.getItem(LS.QUIT_TIME)||localStorage.getItem(LS.SMOKING_START)||S.missionStart||now);
+  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||quitTs);
   const cleanMs = Math.max(0,now-ss);
   const cleanHrs = cleanMs/3600000;
   setText('wr-clean', fmtClean(cleanMs));
@@ -1867,6 +2146,9 @@ function updateWarRoom(){
   const tLog = getTaskLog();
   const doneCnt = tLog[tdKey] ? Object.keys(tLog[tdKey]).filter(k=>tLog[tdKey][k]).length : 0;
   setText('wr-today-done', doneCnt+' done today');
+
+  // Anchor card — task summary on War Room
+  updateAnchorCard(tLog[tdKey]||{});
 
   // Probability + orb
   const prob = calcProb();
@@ -1889,6 +2171,18 @@ function updateWarRoom(){
   setText('bs-icon', bm.icon);
   setText('bs-hour', bm.hour);
   setText('bs-text', bm.text);
+  const feelEl = document.getElementById('bs-feel');
+  if(feelEl) feelEl.textContent = bm.feel || '';
+  // Allen Carr reframe — show during Days 1-7 when discomfort is highest
+  const carrEl = document.getElementById('bs-carr');
+  if(carrEl){
+    if(cleanHrs <= 168 && cleanHrs > 0){
+      carrEl.textContent = '"Any inconvenience you feel right now is not because you stopped smoking — it is because you started. This is what smokers suffer throughout their entire smoking lives."';
+      carrEl.style.display = 'block';
+    } else {
+      carrEl.style.display = 'none';
+    }
+  }
 
   // Progress bar — guard against negative total
   const total = Math.max(1, JUNE2 - S.missionStart);
@@ -1974,8 +2268,45 @@ function updateFreedom(){
 }
 
 /* ═══════════════════════════════════════════════════
-   SECTION: TASKS ENGINE
+   SECTION: ANCHOR CARD UPDATER
 ═══════════════════════════════════════════════════ */
+let lastAnchorKey = '';
+
+function updateAnchorCard(tdLog){
+  const tasks = getTasks();
+  const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('');
+  if(completionKey === lastAnchorKey) return; // no change
+  lastAnchorKey = completionKey;
+
+  const done = tasks.filter(t=>tdLog[t.id]).length;
+  const total = tasks.length;
+  const tier1Tasks = tasks.filter(t=>t.tier===1);
+  const tier1Done = tier1Tasks.filter(t=>tdLog[t.id]).length;
+  const tier1Complete = tier1Done === tier1Tasks.length;
+  const pct = Math.round((done/total)*100);
+
+  const scoreText = tier1Complete
+    ? `✓ Day won · ${done}/${total} total`
+    : `${tier1Done}/${tier1Tasks.length} core · ${done-tier1Done} bonus`;
+  setText('wra-score', scoreText);
+  const bar = document.getElementById('wra-bar');
+  if(bar) bar.style.width = pct+'%';
+
+  const container = document.getElementById('wra-tasks');
+  if(!container) return;
+
+  container.innerHTML = tasks.map(t=>{
+    const isDone = !!tdLog[t.id];
+    const isTier1 = t.tier === 1;
+    return `<div class="wra-task ${isDone?'wt-done':''} ${t.priority?'wt-priority':''}" style="${!isTier1&&!isDone?'opacity:0.55':''}">
+      <div class="wra-check">${isDone?'✓':''}</div>
+      <div class="wra-name">${t.priority&&t.priorityIcon?t.priorityIcon+' ':isTier1?'◆ ':''} ${t.name}</div>
+      <div class="wra-pts">${isDone?'+'+t.pts:'pts:'+t.pts}</div>
+    </div>`;
+  }).join('') + (tier1Complete ? `<div class="wra-pct" style="color:var(--gr-4)">✓ Core mission complete. Everything else is bonus.</div>` : pct > 0 ? `<div class="wra-pct">${tier1Done}/${tier1Tasks.length} core anchors done</div>` : '');
+}
+
+
 function getTasks(){
   const custom = JSON.parse(localStorage.getItem(LS.TASKS_CUSTOM)||'{}');
   return DEFAULT_TASKS.map(t=>({...t, name:custom[t.id]?.name||t.name, mins:custom[t.id]?.mins||t.mins}));
@@ -2085,10 +2416,25 @@ function renderTasks(){
     });
 
     let html = headerHtml;
+    // Check Tier 1 completion
+    const tier1Tasks = tasks.filter(t=>t.tier===1);
+    const tier1Done = tier1Tasks.filter(t=>tdLog[t.id]).length;
+    const tier1Complete = tier1Done === tier1Tasks.length;
+
     for(const [bname, btasks] of Object.entries(blocks)){
+      const isTier1 = bname.includes('Tier 1');
       const bPts = btasks.reduce((s,tk)=>s+tk.pts,0);
       const bDone = btasks.filter(tk=>tdLog[tk.id]).reduce((s,tk)=>s+tk.pts,0);
-      html += `<div class="blk-head"><span class="blk-icon">${BLOCK_ICONS[bname]||'📋'}</span><span class="blk-name">${bname}</span><span class="blk-pts">${bDone}/${bPts}pts</span></div><div class="task-list">`;
+      html += `<div class="blk-head ${isTier1?'tier-1-head':'tier-2-head'}">
+        <span class="blk-icon">${BLOCK_ICONS[bname]||'📋'}</span>
+        <span class="blk-name">${bname}</span>
+        <span class="blk-pts">${bDone}/${bPts}pts</span>
+      </div>`;
+      // Show tier 1 success banner when all tier 1 done
+      if(isTier1 && tier1Complete){
+        html += `<div class="tier-1-success show" style="margin:4px 20px 8px">✓ Day is a success. Tier 1 complete. Tier 2 is bonus.</div>`;
+      }
+      html += `<div class="task-list">`;
       btasks.forEach(tk => {
         const done = !!tdLog[tk.id];
         const active = !done && now >= tk.tStart && now < tk.tEnd;
@@ -2233,6 +2579,13 @@ function openCraving(){
   document.querySelectorAll('.craving-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('cs-1').classList.add('active');
   setText('cv-deadline-time', fmtDeadline());
+  const cvMsg = document.getElementById('cv-deadline-msg');
+  if(cvMsg){
+    const d = Math.floor(daysToJune2());
+    cvMsg.textContent = d > 0
+      ? ' to June 2 · This window never comes back'
+      : ' · Jupiter is in your 10th house. Execute today.';
+  }
   const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||Date.now());
   const cleanHrs = Math.max(0,(Date.now()-ss)/3600000);
   const cravingNum = getTodayCravingCount();
@@ -2503,13 +2856,7 @@ function confirmSmoked(){
 function openOverlay(id){ document.getElementById(id).classList.add('open'); }
 function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
 function closeOverlayOutside(e,id){ if(e.target===document.getElementById(id)) closeOverlay(id); }
-// Settings UI removed — pack cost managed internally
-function saveSettings(){
-  const pc=parseFloat(document.getElementById('set-pack').value);
-  if(!isNaN(pc)&&pc>0){S.packCost=pc;localStorage.setItem(LS.PACK_COST,pc);}
-  closeOverlay('ov-settings');
-}
-// Reset removed — quit is permanent
+// Settings and reset removed — quit is permanent
 
 /* ═══════════════════════════════════════════════════
    SECTION: TAB SWITCHER
@@ -2526,6 +2873,7 @@ function switchTab(name, el){
   el.classList.add('active');
   if(name==='tasks') renderTasks();
   if(name==='fr'){
+    updateDeadlineDisplays();
     updateFreedom();
     const ss2 = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||Date.now());
     const stage = getWormStage((Date.now()-ss2)/3600000);
@@ -2560,36 +2908,41 @@ function setNow(){
 }
 
 function igniteMission(btn){
-  const qt=document.getElementById('in-quit').value;
-  const pc=document.getElementById('in-pack').value;
-  if(!qt){alert('Tap "Now" to set your mission start time, then Ignite.');return;}
-  // Visual feedback — disable button, show loading
+  const qt = document.getElementById('in-quit').value;
+  const pc = document.getElementById('in-pack').value;
+  if(!qt){ alert('Enter your quit date and time first.'); return; }
+
+  // Visual feedback
   btn.disabled = true;
   btn.textContent = '🔥 IGNITING...';
-  // Ripple
-  const r=document.createElement('div');
-  r.className='btn-ignite-ripple';
+  const r = document.createElement('div');
+  r.className = 'btn-ignite-ripple';
   btn.appendChild(r);
-  setTimeout(()=>r.remove(),600);
+  setTimeout(()=>r.remove(), 600);
 
-  const ts=new Date(qt).getTime();
-  S.missionStart=ts;
-  S.packCost=pc?parseFloat(pc):250;
-  localStorage.setItem(LS.MISSION_START,ts);
-  localStorage.setItem(LS.QUIT_TIME,ts);
-  localStorage.setItem(LS.PACK_COST,S.packCost);
-  localStorage.setItem(LS.SMOKING_START,ts);
-  localStorage.setItem(LS.TASK_PTS_TOTAL,'0');
-  localStorage.setItem(LS.CRAVING_LOG,'[]');
-  localStorage.setItem(LS.BADGES_SHOWN,'[]');
-  localStorage.setItem(LS.TASK_LOG,'{}');
+  const quitTs = new Date(qt).getTime();
+  const missionTs = Date.now(); // mission starts NOW regardless of quit date
+
+  S.missionStart = missionTs;
+  S.packCost = pc ? parseFloat(pc) : 250;
+
+  // Frozen keys — quit date is permanent, never overwritten
+  localStorage.setItem(LS.MISSION_START,  missionTs);
+  localStorage.setItem(LS.QUIT_TIME,      quitTs);    // quit date = entered date, permanent
+  localStorage.setItem(LS.SMOKING_START,  quitTs);    // smoking counter from quit date
+  localStorage.setItem(LS.PACK_COST,      S.packCost);
+  localStorage.setItem(LS.TASK_PTS_TOTAL, '0');
+  localStorage.setItem(LS.CRAVING_LOG,    '[]');
+  localStorage.setItem(LS.BADGES_SHOWN,   '[]');
+  localStorage.setItem(LS.TASK_LOG,       '{}');
+  localStorage.setItem('th_quit_locked',  '1'); // permanent lock flag
+
   setTimeout(showApp, 400);
 }
 
 function showApp(){
   document.getElementById('s-launch').classList.remove('active');
   document.getElementById('s-app').classList.add('active');
-  // Update dynamic deadline displays
   updateDeadlineDisplays();
   updateWarRoom();
   renderTasks();
@@ -2599,26 +2952,39 @@ function showApp(){
 function updateDeadlineDisplays(){
   const d = Math.floor(daysToJune2());
   const tagline = document.getElementById('launch-tagline');
-  if(tagline) tagline.textContent = d > 0 ? d+' days left · do or die' : 'Mission ends today';
+  if(tagline) tagline.textContent = d > 0 ? d+' days left · do or die' : 'Jupiter is active. Execute.';
   const ldText = document.getElementById('ld-text');
-  if(ldText) ldText.innerHTML = (d > 0 ? 'These <strong>'+d+' days</strong>' : 'These final hours') + '<br>are not coming back.';
-  // Quit date+time in mandate — permanent, shows when mission was ignited
+  if(ldText) ldText.innerHTML = d > 0 ? 'These <strong>'+d+' days</strong><br>are not coming back.' : 'Jupiter is in your 10th house.<br>Execute every day.';
+  // Quit date+time in mandate — permanent, from actual quit date
+  const quitTs = parseInt(localStorage.getItem(LS.QUIT_TIME)||S.missionStart||Date.now());
   const mandateDate = document.getElementById('mandate-date');
-  if(mandateDate && S.missionStart){
-    const qd = new Date(S.missionStart);
+  if(mandateDate){
+    const qd = new Date(quitTs);
     mandateDate.textContent = qd.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) + ' at ' + qd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   }
+  // Pledge date — shows actual quit date+time from one-time entry
+  const quitTs2 = parseInt(localStorage.getItem(LS.QUIT_TIME)||S.missionStart||Date.now());
+  const qd2 = new Date(quitTs2);
+  const pledgeDateStr = qd2.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) + ' at ' + qd2.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const pd1 = document.getElementById('pledge-date');
+  if(pd1) pd1.textContent = pledgeDateStr;
+  const pd2 = document.getElementById('pledge-date-craving');
+  if(pd2) pd2.textContent = pledgeDateStr;
 }
 
 function init(){
-  const ms=localStorage.getItem(LS.MISSION_START);
-  S.packCost=parseFloat(localStorage.getItem(LS.PACK_COST)||'250');
-  S.shownBadges=JSON.parse(localStorage.getItem(LS.BADGES_SHOWN)||'[]');
-  // No pre-fill — user sets the exact moment they commit
-  document.getElementById('in-pack').value=S.packCost;
-  if(ms){
-    S.missionStart=parseInt(ms);
+  const ms = localStorage.getItem(LS.MISSION_START);
+  const locked = localStorage.getItem('th_quit_locked');
+  S.packCost = parseFloat(localStorage.getItem(LS.PACK_COST)||'250');
+  S.shownBadges = JSON.parse(localStorage.getItem(LS.BADGES_SHOWN)||'[]');
+
+  if(ms && locked){
+    // Mission already ignited and quit date locked — go straight to app
+    S.missionStart = parseInt(ms);
     showApp();
+  } else {
+    // Show launch screen — pre-fill pack cost only, no time pre-fill
+    document.getElementById('in-pack').value = S.packCost;
   }
 }
 
