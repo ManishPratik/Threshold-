@@ -745,8 +745,51 @@ margin-bottom:10px;
    SECTION: LOG TAB
 ═══════════════════════════════════════════════════ */
 /* ═══════════════════════════════════════════════════
-   SECTION: LOG TAB — Insight redesign
+   SECTION: ANALYTICS TAB
 ═══════════════════════════════════════════════════ */
+.analytics-wrap{padding:0 var(--page-pad);}
+.an-card{
+  background:var(--card);border:1px solid var(--b-dim);
+  border-radius:var(--radius-md);padding:14px;margin-bottom:10px;
+}
+.an-card-title{
+  font-family:var(--fb);font-size:11px;font-weight:600;
+  color:var(--t-3);text-transform:uppercase;letter-spacing:0.06em;
+  margin-bottom:12px;
+}
+/* 7-day bar chart */
+.an-chart{
+  display:flex;align-items:flex-end;gap:6px;
+  height:60px;margin-bottom:6px;
+}
+.an-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.an-bar-outer{width:100%;background:var(--card-2);border-radius:3px;overflow:hidden;height:52px;display:flex;flex-direction:column;justify-content:flex-end;}
+.an-bar-t1{background:linear-gradient(180deg,var(--g-5),var(--g-2));border-radius:3px 3px 0 0;transition:height 0.6s ease;}
+.an-bar-t2{background:rgba(212,168,84,0.25);border-radius:0;transition:height 0.6s ease;}
+.an-chart-labels{display:flex;gap:6px;}
+.an-chart-lbl{flex:1;text-align:center;font-family:var(--fm);font-size:9px;color:var(--t-4);}
+.an-chart-lbl.today{color:var(--g-4);}
+/* Stats grid */
+.an-stats-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin-bottom:10px;
+}
+.an-stat{
+  background:var(--card);border:1px solid var(--b-dim);
+  border-radius:var(--radius-md);padding:14px;text-align:center;
+}
+.an-stat-val{font-family:var(--fd);font-size:24px;color:var(--g-5);line-height:1;margin-bottom:4px;}
+.an-stat-lbl{font-family:var(--fb);font-size:11px;color:var(--t-3);}
+/* Tier bars */
+.an-tier-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.an-tier-lbl{font-size:12px;color:var(--t-2);min-width:120px;}
+.an-tier-bar-bg{flex:1;height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;}
+.an-tier-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+.an-t1-fill{background:linear-gradient(90deg,var(--g-2),var(--g-5));}
+.an-t2-fill{background:rgba(212,168,84,0.4);}
+.an-tier-val{font-family:var(--fm);font-size:11px;color:var(--g-3);min-width:32px;text-align:right;}
+/* Craving content */
+.an-craving-content{font-size:13px;color:var(--t-2);line-height:1.7;}
 .log-insight-grid{
   display:grid;grid-template-columns:1fr 1fr;
   gap:10px;padding:16px var(--page-pad) 12px;
@@ -829,28 +872,17 @@ margin-bottom:10px;
   display:flex;flex-direction:column;justify-content:center;
   padding:52px var(--page-pad) 40px;overflow-y:auto;
 }
-.craving-step{display:none;flex-direction:column;}
-.craving-step.active{display:flex;}
+
+
 .cs-title{
   font-family:var(--fd);font-size:32px;font-weight:700;
   margin-bottom:14px;line-height:1.05;color:var(--t-1);
 }
 .cs-sub{font-size:14px;color:var(--t-2);line-height:1.7;margin-bottom:20px;}
-.cs-cycle{
-  background:linear-gradient(135deg,rgba(168,32,32,0.14),transparent);
-  border:1px solid rgba(168,32,32,0.28);
-  border-radius:var(--radius-md);padding:18px;margin-bottom:20px;
-}
-.csc-title{
-  font-family:var(--fm);font-size:9px;letter-spacing:0.2em;
-  color:var(--r-3);margin-bottom:10px;text-transform:uppercase;
-}
-.csc-body{font-size:13px;line-height:1.8;color:var(--t-2);}
-.csc-truth{
-  margin-top:12px;font-family:var(--fd);font-style:italic;
-  font-size:14px;color:var(--t-1);line-height:1.6;
-  border-top:1px solid rgba(168,32,32,0.18);padding-top:12px;
-}
+
+
+
+
 .craving-tasks{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
 .ct-item{
   background:var(--card);border:1px solid var(--b-dim);
@@ -867,7 +899,7 @@ margin-bottom:10px;
   border:1px solid rgba(212,168,84,0.18);
   border-radius:var(--radius-lg);padding:22px;margin-bottom:20px;
 }
-.csv-icon{font-size:36px;display:block;margin-bottom:12px;line-height:1;}
+
 .csv-title{font-family:var(--fd);font-size:22px;color:var(--g-5);margin-bottom:10px;line-height:1.1;}
 .csv-body{font-family:var(--fd);font-style:italic;font-size:14px;line-height:1.8;color:var(--t-2);}
 
@@ -959,15 +991,9 @@ margin-bottom:10px;
 }
 .frp-body{font-size:13px;line-height:1.85;color:var(--t-2);}
 .frp-body strong{color:var(--t-1);}
-.craving-pledge{
-  background:linear-gradient(135deg,rgba(168,32,32,0.12),rgba(168,32,32,0.04));
-  border:1.5px solid rgba(168,32,32,0.35);
-  border-radius:var(--radius-md);
-  padding:13px 14px;margin-bottom:12px;
-  display:flex;gap:10px;align-items:center;
-}
-.cpg-icon{font-size:20px;flex-shrink:0;line-height:1;}
-.cpg-text{font-size:13px;line-height:1.6;color:var(--t-1);}
+
+
+
 .cpg-text strong{color:#FF8080;}
 .blk-head.tier-1-head{
   background:linear-gradient(135deg,rgba(212,168,84,0.06),transparent);
@@ -1014,14 +1040,21 @@ margin-bottom:10px;
 }
 .wra-bar-bg{
   height:4px;background:var(--card-2);
-  border-radius:2px;overflow:hidden;margin-bottom:14px;
+  border-radius:2px;overflow:hidden;
 }
 .wra-bar-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--g-2),var(--g-5));
-  border-radius:2px;
+  height:100%;border-radius:2px;
   transition:width 0.8s cubic-bezier(0.4,0,0.2,1);
 }
+.wra-tier-row{margin-bottom:10px;}
+.wra-tier-lbl{
+  font-family:var(--fb);font-size:11px;color:var(--t-3);
+  display:flex;justify-content:space-between;margin-bottom:5px;
+}
+.wra-tier-pct{font-family:var(--fm);font-size:10px;color:var(--g-4);}
+.wra-tier-pct-2{color:var(--t-3);}
+.wra-bar-fill.wra-bar-t1{background:linear-gradient(90deg,var(--g-2),var(--g-5));}
+.wra-bar-fill.wra-bar-t2{background:linear-gradient(90deg,rgba(212,168,84,0.3),rgba(212,168,84,0.5));}
 .wra-tasks{
   display:flex;flex-direction:column;gap:7px;
 }
@@ -1099,21 +1132,10 @@ margin-bottom:10px;
   font-size:14px;line-height:1.8;color:var(--t-1);font-weight:500;
 }
 .cm-body strong{color:var(--g-6);}
-.craving-sheet{
-  border-radius:0!important;max-width:100%!important;
-  min-height:100vh;display:flex;flex-direction:column;
-  justify-content:flex-start;padding:48px 20px 40px!important;
-  overflow-y:auto;gap:0;
-}
+
 
 /* Deadline banner */
-.cv-deadline{
-  background:linear-gradient(135deg,rgba(168,32,32,0.2),rgba(168,32,32,0.08));
-  border:1px solid rgba(168,32,32,0.3);
-  border-radius:10px;padding:10px 14px;
-  margin-bottom:16px;
-  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
-}
+
 .cv-deadline-time{
   font-family:var(--fm);font-size:13px;font-weight:500;
   color:var(--r-4);letter-spacing:0.04em;
@@ -1124,13 +1146,7 @@ margin-bottom:10px;
 }
 
 /* Truth banner — first thing they see */
-.cs-truth-banner{
-  background:linear-gradient(135deg,rgba(168,32,32,0.15),rgba(168,32,32,0.05));
-  border:1px solid rgba(168,32,32,0.35);
-  border-radius:var(--radius-md);
-  padding:18px;margin-bottom:14px;
-  display:flex;gap:14px;align-items:flex-start;
-}
+
 .ctb-icon{font-size:24px;flex-shrink:0;line-height:1;}
 .ctb-text{
   font-size:15px;line-height:1.7;color:var(--t-1);font-weight:500;
@@ -1138,49 +1154,20 @@ margin-bottom:10px;
 .ctb-text strong{color:#FF7070;}
 
 /* Personal truth */
-.cs-carr-box{
-  background:linear-gradient(135deg,rgba(212,168,84,0.06),rgba(212,168,84,0.02));
-  border-left:3px solid var(--g-3);
-  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
-  padding:12px 14px;margin-bottom:12px;
-}
-.ccb-carr{
-  font-family:var(--fd);font-style:italic;
-  font-size:13px;line-height:1.8;color:var(--t-2);
-}
-.cs-personal-truth{
-  background:rgba(168,32,32,0.08);border:1px solid rgba(168,32,32,0.18);
-  border-radius:var(--radius-md);padding:14px 16px;
-  margin-bottom:12px;
-  font-family:var(--fd);font-style:italic;
-  font-size:14px;line-height:1.75;color:var(--t-2);
-}
+
+
+
 
 /* What you've earned — will lose */
-.cs-earned{
-  background:linear-gradient(135deg,rgba(212,168,84,0.08),rgba(212,168,84,0.03));
-  border:1px solid rgba(212,168,84,0.2);
-  border-radius:var(--radius-md);padding:14px 16px;
-  margin-bottom:4px;
-}
-.cs-earned-title{
-  font-family:var(--fm);font-size:9px;letter-spacing:0.18em;
-  color:var(--g-3);margin-bottom:8px;text-transform:uppercase;
-}
-.cs-earned-body{font-size:13px;line-height:1.7;color:var(--t-2);}
+
+
+
 .cs-earned-body strong{color:var(--g-5);}
-.cs-earned-lose{
-  margin-top:10px;padding-top:10px;
-  border-top:1px solid rgba(168,32,32,0.15);
-  font-size:12px;color:#C06060;line-height:1.6;
-}
+
 
 /* Angle content area */
-.cs-angle-content{
-  margin-bottom:14px;
-  font-size:13px;line-height:1.8;color:var(--t-2);
-}
-.cs-tasks-list{display:flex;flex-direction:column;gap:8px;margin-bottom:4px;}
+
+
 .ct-item{
   background:var(--card);border:1px solid var(--b-dim);
   border-radius:var(--radius-md);padding:13px 14px;
@@ -1193,55 +1180,25 @@ margin-bottom:10px;
 .cti-pts{font-family:var(--fm);font-size:10px;color:var(--g-3);}
 
 /* Vision card */
-.cs-vision-card{
-  background:linear-gradient(135deg,rgba(212,168,84,0.07),rgba(212,168,84,0.02));
-  border:1px solid rgba(212,168,84,0.18);
-  border-radius:var(--radius-lg);padding:20px;margin-bottom:4px;
-}
-.csv-icon{font-size:32px;display:block;margin-bottom:10px;line-height:1;}
+
+
 .csv-title{font-family:var(--fd);font-size:20px;color:var(--g-5);margin-bottom:8px;line-height:1.1;}
 .csv-body{font-family:var(--fd);font-style:italic;font-size:13px;line-height:1.8;color:var(--t-2);}
 
 /* Affirmation writer */
-.affirmation-target{
-  background:rgba(212,168,84,0.06);border:1px solid rgba(212,168,84,0.15);
-  border-radius:var(--radius-md);padding:14px 16px;margin-bottom:16px;
-  text-align:center;
-}
-.aff-text{
-  font-family:var(--fd);font-style:italic;
-  font-size:15px;color:var(--g-5);line-height:1.5;
-}
-.affirmation-circles{
-  display:flex;justify-content:center;gap:12px;margin-bottom:16px;
-}
-.aff-circle{
-  width:32px;height:32px;border-radius:50%;
-  border:2px solid rgba(212,168,84,0.25);
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;transition:all 0.3s;
-  background:transparent;
-}
+
+
+
+
 .aff-circle.done{
   background:var(--g-4);border-color:var(--g-4);
   color:var(--bg);animation:aff-pop 0.3s ease;
 }
-@keyframes aff-pop{from{transform:scale(0.7);}to{transform:scale(1);}}
-.aff-input{margin-bottom:10px;}
-.aff-progress-bar{
-  height:4px;background:var(--card-2);
-  border-radius:2px;overflow:hidden;margin-bottom:6px;
-}
-.aff-progress-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--g-2),var(--g-5));
-  border-radius:2px;transition:width 0.3s ease;
-}
-.aff-count{
-  font-family:var(--fm);font-size:10px;
-  color:var(--t-3);text-align:center;margin-bottom:8px;
-  letter-spacing:0.1em;
-}
+to{transform:scale(1);}}
+
+
+
+
 
 /* Screen transition */
 #s-app{animation:screen-in 0.45s cubic-bezier(0.22,1,0.36,1);}
@@ -1270,7 +1227,7 @@ margin-bottom:10px;
      SCREEN: LAUNCH
 ════════════════════════════════════════ -->
 <div id="s-launch" class="screen active">
-  <div class="launch-eyebrow">Mission · June 2 · 2026</div>
+  <div class="launch-eyebrow">Jupiter in Cancer · 10th House · Execute Now</div>
   <div class="launch-hero"><div class="launch-title">THRESHOLD</div><div class="launch-tagline" id="launch-tagline">do or die</div></div>
   
 
@@ -1313,6 +1270,7 @@ margin-bottom:10px;
   </div>
 
   <div class="launch-form">
+
     <div>
       <label class="f-label">Your Quit Date & Time — entered once, locked forever</label>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -1348,7 +1306,7 @@ margin-bottom:10px;
     <!-- NON-NEGOTIABLE FACT — always visible -->
     <div class="wr-mandate">
       <div class="wr-mandate-title">NON-NEGOTIABLE</div>
-      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>If you don't quit as of <strong id="mandate-date"></strong> — Zymo funding will not come.<br><br>You have quit. <strong>Zymo funding will come.</strong><br><br>Your chart rewards discipline. Quitting smoking is making you disciplined right now.</div>
+      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>Quit date: <strong>6th June 2026, 12:00 AM.</strong> Zymo funding will come.<br><br>You have quit. <strong>Zymo funding will come.</strong><br><br>Your chart rewards discipline. Quitting smoking is making you disciplined right now.</div>
     </div>
 
     <div class="body-strip" id="body-strip">
@@ -1364,11 +1322,11 @@ margin-bottom:10px;
     <!-- ANCHOR PROGRESS — tasks as hero -->
     <div class="wr-anchors" id="wr-anchors">
       <div class="wra-header">
-        <div class="wra-title">Today's Anchors</div>
-        <div class="wra-score" id="wra-score">0 / 8</div>
+        <div class="wra-title">Today's Tasks</div>
+        <div class="wra-score" id="wra-score">0 / 15</div>
       </div>
-      <div class="wra-bar-bg">
-        <div class="wra-bar-fill" id="wra-bar" style="width:0%"></div>
+      <div class="wra-bar-bg" style="margin-bottom:14px">
+        <div class="wra-bar-fill wra-bar-t1" id="wra-bar-main" style="width:0%"></div>
       </div>
       <div class="wra-tasks" id="wra-tasks"></div>
     </div>
@@ -1442,13 +1400,7 @@ margin-bottom:10px;
       <div class="wu-text" id="wu-text">"These days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away."</div>
     </div>
 
-    <div class="wr-craving">
-      <button class="craving-btn" onclick="openCraving()">
-        <div class="cb-dot"></div>
-        <div class="cb-text">
-          <div class="cb-title">I'm having a craving</div>
-          <div class="cb-sub">Tap — your battle plan is ready</div>
-        </div>
+    
         <div class="cb-arrow">→</div>
       </button>
     </div>
@@ -1523,7 +1475,7 @@ margin-bottom:10px;
       <div class="frp-icon">🚭</div>
       <div class="frp-content">
         <div class="frp-title">I AM A NON-SMOKER</div>
-        <div class="frp-body">I have taken a pledge that I will never smoke again from <strong id="pledge-date">5th June 2026.</strong><br><br>Smoking raises blood pressure. <strong>Smoking causes heart attacks.</strong><br><br>This is not a choice. This is survival.</div>
+        <div class="frp-body">I have taken a pledge that I will never smoke again from <strong id="pledge-date-display">6th June 2026 at 12:00 AM</strong>.<br><br>Smoking raises blood pressure. <strong>Smoking causes heart attacks.</strong><br><br>This is not a choice. This is survival.</div>
       </div>
     </div>
 
@@ -1539,10 +1491,67 @@ margin-bottom:10px;
 
   </div><!-- end tab-fr -->
 
-  <!-- LOG TAB -->
+  <!-- LOG / ANALYTICS TAB -->
   <div id="tab-log" class="tab-pane">
-    <div id="log-stats"></div>
-    <div id="log-list"></div>
+    <!-- Analytics section -->
+    <div class="analytics-wrap">
+      <div class="sec-lbl" style="padding-top:16px">Analytics</div>
+
+      <!-- 7-day chart -->
+      <div class="an-card">
+        <div class="an-card-title">7-Day Score</div>
+        <div class="an-chart" id="an-chart"></div>
+  
+      </div>
+
+      <!-- Stats grid -->
+      <div class="an-stats-grid">
+        <div class="an-stat">
+          <div class="an-stat-val" id="an-streak">0</div>
+          <div class="an-stat-lbl">Day streak</div>
+        </div>
+        <div class="an-stat">
+          <div class="an-stat-val" id="an-best">0%</div>
+          <div class="an-stat-lbl">Best day</div>
+        </div>
+        <div class="an-stat">
+          <div class="an-stat-val" id="an-avg">0%</div>
+          <div class="an-stat-lbl">7-day avg</div>
+        </div>
+        <div class="an-stat">
+          <div class="an-stat-val" id="an-t1-avg">0%</div>
+          <div class="an-stat-lbl">Daily tasks avg</div>
+        </div>
+      </div>
+
+      <!-- Task completion breakdown -->
+      <div class="an-card">
+        <div class="an-card-title">7-Day Completion</div>
+        <div class="an-tier-row">
+          <div class="an-tier-lbl">⚡ Zymo Fundraising</div>
+          <div class="an-tier-bar-bg">
+            <div class="an-tier-bar-fill an-t1-fill" id="an-t1-bar" style="width:0%"></div>
+          </div>
+          <div class="an-tier-val" id="an-t1-val">0%</div>
+        </div>
+        <div class="an-tier-row">
+          <div class="an-tier-lbl">✨ AIRA</div>
+          <div class="an-tier-bar-bg">
+            <div class="an-tier-bar-fill an-t2-fill" id="an-t2-bar" style="width:0%"></div>
+          </div>
+          <div class="an-tier-val" id="an-t2-val">0%</div>
+        </div>
+      </div>
+
+      <!-- Craving pattern -->
+      <div class="an-card" id="an-craving-card">
+        <div class="an-card-title">Craving Pattern</div>
+        <div class="an-craving-content" id="an-craving-content"></div>
+      </div>
+    </div>
+
+    <div id="log-stats" style="display:none"></div>
+    <div id="log-list" style="display:none"></div>
   </div>
 
   <!-- BOTTOM NAV -->
@@ -1564,77 +1573,7 @@ margin-bottom:10px;
       <div class="nav-label">Log</div>
     </button>
   </nav>
-</div><!-- end s-app -->
-
-<!-- ════════════════════════════════════════
-     OVERLAY: CRAVING — Intelligent, dynamic
-════════════════════════════════════════ -->
-<div class="overlay" id="ov-craving">
-  <div class="sheet craving-sheet">
-
-    <!-- DEADLINE BANNER — always visible -->
-    <div class="cv-deadline">
-      <span class="cv-deadline-time" id="cv-deadline-time">— left</span>
-      <span class="cv-deadline-msg" id="cv-deadline-msg"> · Jupiter is active. Execute now.</span>
-    </div>
-
-    <!-- STEP 1: THE TRUTH -->
-    <div class="craving-step active" id="cs-1">
-      <div class="craving-mandate">
-        <div class="cm-title">NON-NEGOTIABLE</div>
-        <div class="cm-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo. If you smoke today, Zymo funding will not come. You have quit. <strong>Zymo funding will come.</strong></div>
-      </div>
-      <div class="craving-pledge">
-        <div class="cpg-icon">🚭</div>
-        <div class="cpg-text"><strong>I AM A NON-SMOKER.</strong> Smoking causes heart attacks. I took this pledge on <span id="pledge-date-craving">5th June 2026</span>. This is survival — not a choice.</div>
-      </div>
-      <div class="cs-truth-banner">
-        <div class="ctb-icon">🚫</div>
-        <div class="ctb-text">Smoking will <strong>NOT</strong> make you feel good.<br>You will feel <strong>worse</strong> the moment you light up.</div>
-      </div>
-      <div class="cs-personal-truth" id="cs-personal-truth"></div>
-      <div class="cs-carr-box">
-        <div class="ccb-carr">"Ask yourself what actual pain you are suffering. Any inconvenience you feel right now is not because you stopped smoking — it is because you started. This discomfort did not begin when you extinguished your last cigarette. This is what smokers suffer throughout their entire smoking lives."</div>
-      </div>
-      <div class="cs-earned" id="cs-earned"></div>
-      <button class="btn-p" onclick="cravingStep(2)" style="margin-top:16px">What do I do right now?</button>
-      <button class="btn-s" onclick="closeCraving()">The feeling is already passing</button>
-    </div>
-
-    <!-- STEP 2: DYNAMIC ACTION ANGLE -->
-    <div class="craving-step" id="cs-2">
-      <div class="cs-title" id="cs-2-title">Occupy your mind</div>
-      <div class="cs-sub" id="cs-2-sub"></div>
-      <div class="cs-angle-content" id="cs-angle-content"></div>
-      <button class="btn-p" onclick="cravingStep(3)">Next</button>
-      <button class="btn-s" onclick="logResisted()">✓ Craving passed</button>
-    </div>
-
-    <!-- STEP 3: AFFIRMATION WRITER -->
-    <div class="craving-step" id="cs-3">
-      <div class="cs-title">Reprogram right now</div>
-      <div class="cs-sub">Write this 5 times. Each keystroke rewires your self-image. The craving will be gone by the time you finish.</div>
-      <div class="affirmation-target">
-        <span class="aff-text">"I am a non-smoker. My body is clean and free."</span>
-      </div>
-      <div class="affirmation-circles" id="aff-circles">
-        <div class="aff-circle" data-n="1"></div>
-        <div class="aff-circle" data-n="2"></div>
-        <div class="aff-circle" data-n="3"></div>
-        <div class="aff-circle" data-n="4"></div>
-        <div class="aff-circle" data-n="5"></div>
-      </div>
-      <input type="text" id="aff-input" class="aff-input f-input" placeholder="Type it here..." autocomplete="off" autocorrect="off" spellcheck="false"/>
-      <div class="aff-progress-bar"><div class="aff-progress-fill" id="aff-fill" style="width:0%"></div></div>
-      <div class="aff-count" id="aff-count">0 / 5</div>
-      <button class="btn-p" id="aff-done" onclick="logResisted()" style="display:none;margin-top:12px">✓ I am a non-smoker</button>
-      <button class="btn-s" onclick="logResisted()" style="margin-top:4px">Skip — craving passed</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════
+</div><!-- ════════════════════════════════════════
      OVERLAY: BADGE
 ════════════════════════════════════════ -->
 <div class="overlay" id="ov-badge" onclick="closeBadge()">
@@ -1711,6 +1650,12 @@ const JUNE2 = new Date('2026-06-02T00:00:00+05:30').getTime();
 /* ═══════════════════════════════════════════════════
    SECTION: DYNAMIC DEADLINE UTILITIES
 ═══════════════════════════════════════════════════ */
+function getQuitTs(){
+  // Returns locked quit timestamp — from localStorage or fallback to 6th June 2026
+  const stored = parseInt(localStorage.getItem(LS.QUIT_TIME)||'0');
+  return stored || new Date('2026-06-06T00:00:00+05:30').getTime();
+}
+
 function daysToJune2(){
   return Math.max(0, (JUNE2 - Date.now()) / 86400000);
 }
@@ -1738,25 +1683,24 @@ function deadlineUrgencyTone(){
    — To add/edit tasks: change this array only
 ═══════════════════════════════════════════════════ */
 const DEFAULT_TASKS = [
-  // TIER 1 — Non-negotiable anchors
-  {id:'morning-body',     name:'Morning Body',          mins:60, pts:10, block:'Tier 1 — Non-Negotiable', tier:1},
-  {id:'morning-viz',      name:'Morning Visualization', mins:45, pts:15, block:'Tier 1 — Non-Negotiable', tier:1},
-  {id:'zymo-fundraising', name:'Zymo Fundraising',      mins:90, pts:20, block:'Tier 1 — Non-Negotiable', tier:1, priority:true, priorityIcon:'🎯'},
-  {id:'zymo-growth',      name:'Zymo Growth',           mins:90, pts:15, block:'Tier 1 — Non-Negotiable', tier:1, priority:true, priorityIcon:'🚀'},
-  {id:'night-viz',        name:'Night Visualization',   mins:30, pts:15, block:'Tier 1 — Non-Negotiable', tier:1},
-  // TIER 2 — Fill the day, keep mind occupied
-  {id:'newspaper',        name:'Newspaper Reading',     mins:60, pts:6,  block:'Tier 2 — Fill The Day',   tier:2},
-  {id:'aira',             name:'AIRA',                  mins:90, pts:12, block:'Tier 2 — Fill The Day',   tier:2, priority:true, priorityIcon:'✨'},
-  {id:'night-reading',    name:'Night Reading',         mins:30, pts:8,  block:'Tier 2 — Fill The Day',   tier:2},
-  {id:'walk-break',       name:'Walk / Break',          mins:20, pts:4,  block:'Tier 2 — Fill The Day',   tier:2},
-  {id:'admin-ops',        name:'Admin / Operations',    mins:60, pts:6,  block:'Tier 2 — Fill The Day',   tier:2},
+  {id:'warm-water',     name:'Warm Water',           mins:5,  pts:3,  block:'Morning'},
+  {id:'get-fresh',      name:'Get Fresh',             mins:15, pts:3,  block:'Morning'},
+  {id:'morning-viz',    name:'Morning Visualization', mins:45, pts:10, block:'Morning'},
+  {id:'gym',            name:'Gym',                   mins:60, pts:10, block:'Morning'},
+  {id:'bath-breakfast', name:'Bath + Breakfast',      mins:30, pts:4,  block:'Morning'},
+  {id:'newspaper',      name:'Newspaper Reading',     mins:60, pts:5,  block:'Morning'},
+  {id:'zymo-fundraising',name:'Zymo Fundraising',     mins:90, pts:15, block:'Deep Work', priority:true, priorityIcon:'🎯'},
+  {id:'deep-work-2',    name:'Deep Work 2',           mins:90, pts:8,  block:'Deep Work'},
+  {id:'lunch-yog',      name:'Lunch + Yog Nidra',     mins:60, pts:5,  block:'Deep Work'},
+  {id:'deep-work-3',    name:'Deep Work 3',           mins:90, pts:8,  block:'Deep Work'},
+  {id:'deep-work-4',    name:'Deep Work 4',           mins:90, pts:8,  block:'Deep Work'},
+  {id:'aira',           name:'AIRA',                  mins:90, pts:10, block:'Deep Work', priority:true, priorityIcon:'✨'},
+  {id:'deep-work-5',    name:'Deep Work 5',           mins:90, pts:8,  block:'Deep Work'},
+  {id:'night-reading',  name:'Night Reading',         mins:30, pts:5,  block:'Night'},
+  {id:'night-viz',      name:'Night Visualization',   mins:30, pts:8,  block:'Night'},
 ];
-const BLOCK_ICONS = {
-  'Tier 1 — Non-Negotiable': '🔥',
-  'Tier 2 — Fill The Day':   '⚡',
-};
-const TIER1_MAX = 75;  // pts from tier 1 only
-const MAX_TASK_PER_DAY = DEFAULT_TASKS.reduce((s,t)=>s+t.pts,0); // 111 pts total
+const BLOCK_ICONS = {'Morning':'🌅','Deep Work':'⚡','Night':'🌙'};
+const MAX_TASK_PER_DAY = DEFAULT_TASKS.reduce((s,t)=>s+t.pts,0);
 
 /* ═══════════════════════════════════════════════════
    SECTION: HEALTH MILESTONES
@@ -2006,7 +1950,7 @@ function calcMaxPts(){
 
 function calcProb(){
   const now = Date.now();
-  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||now);
+  const ss = getQuitTs();
   const sp = calcSmokePts(ss);
   const tp = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
 
@@ -2127,8 +2071,8 @@ function updateWarRoom(){
   setText('wr-hrs', hrsLeft.toLocaleString());
 
   // Clean time — from actual quit date
-  const quitTs = parseInt(localStorage.getItem(LS.QUIT_TIME)||localStorage.getItem(LS.SMOKING_START)||S.missionStart||now);
-  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||quitTs);
+  const quitTs = getQuitTs(); // Locked quit date: 6th June 2026
+  const ss = getQuitTs(); // Always use locked quit date
   const cleanMs = Math.max(0,now-ss);
   const cleanHrs = cleanMs/3600000;
   setText('wr-clean', fmtClean(cleanMs));
@@ -2213,7 +2157,7 @@ function updateWarRoom(){
 function updateFreedom(){
   if(!S.missionStart) return;
   const now = Date.now();
-  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart);
+  const ss = getQuitTs();
   const cleanMs = Math.max(0,now-ss);
   const cleanHrs = cleanMs/3600000;
   const cleanDays = cleanMs/86400000;
@@ -2275,35 +2219,28 @@ let lastAnchorKey = '';
 function updateAnchorCard(tdLog){
   const tasks = getTasks();
   const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('');
-  if(completionKey === lastAnchorKey) return; // no change
+  if(completionKey === lastAnchorKey) return;
   lastAnchorKey = completionKey;
 
   const done = tasks.filter(t=>tdLog[t.id]).length;
   const total = tasks.length;
-  const tier1Tasks = tasks.filter(t=>t.tier===1);
-  const tier1Done = tier1Tasks.filter(t=>tdLog[t.id]).length;
-  const tier1Complete = tier1Done === tier1Tasks.length;
-  const pct = Math.round((done/total)*100);
+  const pts = tasks.filter(t=>tdLog[t.id]).reduce((s,t)=>s+t.pts,0);
+  const pct = Math.round((pts/MAX_TASK_PER_DAY)*100);
 
-  const scoreText = tier1Complete
-    ? `✓ Day won · ${done}/${total} total`
-    : `${tier1Done}/${tier1Tasks.length} core · ${done-tier1Done} bonus`;
-  setText('wra-score', scoreText);
-  const bar = document.getElementById('wra-bar');
+  setText('wra-score', done+' / '+total);
+  const bar = document.getElementById('wra-bar-main');
   if(bar) bar.style.width = pct+'%';
 
   const container = document.getElementById('wra-tasks');
   if(!container) return;
-
   container.innerHTML = tasks.map(t=>{
     const isDone = !!tdLog[t.id];
-    const isTier1 = t.tier === 1;
-    return `<div class="wra-task ${isDone?'wt-done':''} ${t.priority?'wt-priority':''}" style="${!isTier1&&!isDone?'opacity:0.55':''}">
+    return `<div class="wra-task ${isDone?'wt-done':''} ${t.priority?'wt-priority':''}">
       <div class="wra-check">${isDone?'✓':''}</div>
-      <div class="wra-name">${t.priority&&t.priorityIcon?t.priorityIcon+' ':isTier1?'◆ ':''} ${t.name}</div>
-      <div class="wra-pts">${isDone?'+'+t.pts:'pts:'+t.pts}</div>
+      <div class="wra-name">${t.priority&&t.priorityIcon?t.priorityIcon+' ':''} ${t.name}</div>
+      <div class="wra-pts">${isDone?'+'+t.pts:t.pts+'pts'}</div>
     </div>`;
-  }).join('') + (tier1Complete ? `<div class="wra-pct" style="color:var(--gr-4)">✓ Core mission complete. Everything else is bonus.</div>` : pct > 0 ? `<div class="wra-pct">${tier1Done}/${tier1Tasks.length} core anchors done</div>` : '');
+  }).join('') + (pct>0?`<div class="wra-pct">${pct}% complete today</div>`:'');
 }
 
 
@@ -2416,24 +2353,14 @@ function renderTasks(){
     });
 
     let html = headerHtml;
-    // Check Tier 1 completion
-    const tier1Tasks = tasks.filter(t=>t.tier===1);
-    const tier1Done = tier1Tasks.filter(t=>tdLog[t.id]).length;
-    const tier1Complete = tier1Done === tier1Tasks.length;
-
     for(const [bname, btasks] of Object.entries(blocks)){
-      const isTier1 = bname.includes('Tier 1');
       const bPts = btasks.reduce((s,tk)=>s+tk.pts,0);
       const bDone = btasks.filter(tk=>tdLog[tk.id]).reduce((s,tk)=>s+tk.pts,0);
-      html += `<div class="blk-head ${isTier1?'tier-1-head':'tier-2-head'}">
+      html += `<div class="blk-head">
         <span class="blk-icon">${BLOCK_ICONS[bname]||'📋'}</span>
         <span class="blk-name">${bname}</span>
         <span class="blk-pts">${bDone}/${bPts}pts</span>
       </div>`;
-      // Show tier 1 success banner when all tier 1 done
-      if(isTier1 && tier1Complete){
-        html += `<div class="tier-1-success show" style="margin:4px 20px 8px">✓ Day is a success. Tier 1 complete. Tier 2 is bonus.</div>`;
-      }
       html += `<div class="task-list">`;
       btasks.forEach(tk => {
         const done = !!tdLog[tk.id];
@@ -2528,170 +2455,6 @@ function saveTaskEdit(){
 }
 
 /* ═══════════════════════════════════════════════════
-   SECTION: CRAVING SYSTEM — Intelligent, dynamic
-═══════════════════════════════════════════════════ */
-const CRAVING_ANGLES = ['tasks','vision','worm','science'];
-let lastCravingAngle = '';
-let affirmationCount = 0;
-
-function getCravingAngle(){
-  const available = CRAVING_ANGLES.filter(a => a !== lastCravingAngle);
-  const angle = available[Math.floor(Math.random() * available.length)];
-  lastCravingAngle = angle;
-  return angle;
-}
-
-function getTodayCravingCount(){
-  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
-  const today = todayKey();
-  return log.filter(c => new Date(c.ts).toISOString().slice(0,10) === today).length;
-}
-
-function getPersonalTruth(cleanHrs, cravingNum){
-  const truths = [
-    'You know from experience — the cigarette doesn\'t deliver. You feel bad the moment you light it. The craving is promising something that doesn\'t exist for you.',
-    'You have smoked before. You know what happens. You feel worse, not better. The cigarette is a lie you\'ve already seen through.',
-    'This feeling will pass in 3 minutes. The cigarette would not have made it pass — it would have made it worse. You know this.',
-    'You are being tricked by a habit into doing something that makes you feel bad. There is no relief on the other side. Only guilt and a stronger next craving.',
-    'The craving is not real desire. It is withdrawal discomfort. Your body is healing. This discomfort is the price of freedom — and it\'s almost gone.',
-  ];
-  return truths[(Math.max(0,cravingNum - 1)) % truths.length];
-}
-
-function getEarnedContent(cleanHrs){
-  const cleanMins = cleanHrs * 60;
-  const reached = MILESTONES.filter(m => cleanMins >= m.mins);
-  const next = MILESTONES.find(m => cleanMins < m.mins);
-  const money = Math.floor((cleanHrs/24) * S.packCost);
-  let body = `You are <strong>${fmtCleanLong(cleanHrs*3600000)}</strong> smoke-free right now.`;
-  if(reached.length > 0) body += `<br><strong>${reached[reached.length-1].emoji} ${reached[reached.length-1].title}</strong> is already yours.`;
-  if(next){ const minsLeft = next.mins - cleanMins; body += `<br>${next.emoji} ${next.title} is only <strong>${fmtDur(minsLeft)}</strong> away.`; }
-  if(money > 0) body += `<br>You have saved <strong>₹${money}</strong> already.`;
-  const el = document.getElementById('cs-earned');
-  if(el) el.innerHTML = `<div class="cs-earned-title">What you have already earned</div><div class="cs-earned-body">${body}</div><div class="cs-earned-lose">⚠️ If you smoke now — all of this resets to zero. Back to Hour 0.</div>`;
-}
-
-function openCraving(){
-  if(navigator.vibrate) navigator.vibrate([50,30,50]);
-  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
-  log.push({ts:Date.now(),resisted:false,note:''});
-  localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
-  document.querySelectorAll('.craving-step').forEach(s=>s.classList.remove('active'));
-  document.getElementById('cs-1').classList.add('active');
-  setText('cv-deadline-time', fmtDeadline());
-  const cvMsg = document.getElementById('cv-deadline-msg');
-  if(cvMsg){
-    const d = Math.floor(daysToJune2());
-    cvMsg.textContent = d > 0
-      ? ' to June 2 · This window never comes back'
-      : ' · Jupiter is in your 10th house. Execute today.';
-  }
-  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||Date.now());
-  const cleanHrs = Math.max(0,(Date.now()-ss)/3600000);
-  const cravingNum = getTodayCravingCount();
-  const ptEl = document.getElementById('cs-personal-truth');
-  if(ptEl) ptEl.textContent = '"' + getPersonalTruth(cleanHrs, cravingNum) + '"';
-  getEarnedContent(cleanHrs);
-  affirmationCount = 0;
-  const affInput = document.getElementById('aff-input');
-  if(affInput){ affInput.value=''; affInput.disabled=false; }
-  const affFill = document.getElementById('aff-fill');
-  if(affFill) affFill.style.width='0%';
-  setText('aff-count','0 / 5');
-  document.querySelectorAll('.aff-circle').forEach(c=>{c.classList.remove('done');c.textContent='';});
-  const affDone = document.getElementById('aff-done');
-  if(affDone) affDone.style.display='none';
-  openOverlay('ov-craving');
-}
-
-function cravingStep(n){
-  document.querySelectorAll('.craving-step').forEach(s=>s.classList.remove('active'));
-  document.getElementById('cs-'+n).classList.add('active');
-  if(n===2) renderCravingAngle();
-  if(n===3){ const ai=document.getElementById('aff-input'); if(ai) setTimeout(()=>ai.focus(),300); }
-}
-
-function renderCravingAngle(){
-  const angle = getCravingAngle();
-  const titleEl = document.getElementById('cs-2-title');
-  const subEl = document.getElementById('cs-2-sub');
-  const contentEl = document.getElementById('cs-angle-content');
-  if(!contentEl) return;
-  const ss = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||Date.now());
-  const cleanHrs = Math.max(0,(Date.now()-ss)/3600000);
-  if(angle==='tasks'){
-    if(titleEl) titleEl.textContent='Occupy your mind now';
-    if(subEl) subEl.textContent='The parasite loses power the moment your mind is engaged. Pick one task:';
-    const tasks=getTasks(); const log=getTaskLog(); const tdLog=log[todayKey()]||{};
-    const pending=tasks.filter(t=>!tdLog[t.id]).slice(0,5);
-    contentEl.innerHTML=`<div class="cs-tasks-list">${pending.map(t=>`<div class="ct-item" onclick="pickCravingTask('${t.id}')"><div class="cti-icon">${t.priority?t.priorityIcon:'⚡'}</div><div class="cti-name">${t.name}</div><div class="cti-pts">+${t.pts}pts</div></div>`).join('')}</div>`;
-  } else if(angle==='vision'){
-    if(titleEl) titleEl.textContent='Theatre of the Mind';
-    if(subEl) subEl.textContent='Close your eyes after reading. See this clearly. Feel it.';
-    const v=VISIONS[S.visionIdx%VISIONS.length]; S.visionIdx++;
-    contentEl.innerHTML=`<div class="cs-vision-card"><span class="csv-icon">${v.icon}</span><div class="csv-title">${v.title}</div><div class="csv-body">${v.body}</div></div>`;
-  } else if(angle==='worm'){
-    const stage=getWormStage(cleanHrs); const wd=WORM_DATA[stage];
-    if(titleEl) titleEl.textContent='The parasite right now';
-    if(subEl) subEl.textContent='This is what is happening inside you at this exact moment:';
-    contentEl.innerHTML=`<div class="cs-vision-card"><div class="csv-title">${wd.title}</div><div class="csv-body">${wd.fact}<br><br>Every minute you hold, it gets weaker. Smoking now feeds it back to full strength. You restart the process.</div></div>`;
-  } else if(angle==='science'){
-    const bm=getBodyMsg(cleanHrs);
-    if(titleEl) titleEl.textContent='What is happening in your body';
-    if(subEl) subEl.textContent='Right now, at this exact hour:';
-    contentEl.innerHTML=`<div class="cs-vision-card"><span class="csv-icon">${bm.icon}</span><div class="csv-title">${bm.hour}</div><div class="csv-body">${bm.text}<br><br>Smoking now destroys this progress completely. You go back to Hour 0.</div></div>`;
-  }
-}
-
-function initAffirmationWriter(){
-  const input = document.getElementById('aff-input');
-  if(!input) return;
-  input.addEventListener('input', ()=>{
-    const val = input.value.toLowerCase().trim();
-    if(val==='i am a non-smoker'||val.includes('non-smoker')||val.includes('nonsmoker')){
-      input.value='';
-      affirmationCount = Math.min(5, affirmationCount+1);
-      const circle = document.querySelector(`.aff-circle[data-n="${affirmationCount}"]`);
-      if(circle){circle.classList.add('done');circle.textContent='✓';}
-      const pct=(affirmationCount/5)*100;
-      const fill=document.getElementById('aff-fill');
-      if(fill) fill.style.width=pct+'%';
-      setText('aff-count',affirmationCount+' / 5');
-      if(navigator.vibrate) navigator.vibrate(30);
-      if(affirmationCount>=5){
-        const done=document.getElementById('aff-done');
-        if(done) done.style.display='block';
-        input.blur(); input.disabled=true;
-      }
-    }
-  });
-}
-
-function pickCravingTask(id){
-  const log=JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
-  if(log.length>0){log[log.length-1].resisted=true;log[log.length-1].note='Task: '+id;}
-  localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
-  closeCraving();
-  const tasksBtn=Array.from(document.querySelectorAll('.nav-btn')).find(b=>b.querySelector('.nav-label')?.textContent==='Tasks');
-  if(tasksBtn) switchTab('tasks',tasksBtn);
-}
-
-function logResisted(){
-  const log=JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
-  if(log.length>0){log[log.length-1].resisted=true;log[log.length-1].note=lastCravingAngle||'resisted';}
-  localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
-  closeCraving();
-  renderLog();
-}
-
-function closeCraving(){
-  closeOverlay('ov-craving');
-  const affInput=document.getElementById('aff-input');
-  if(affInput) affInput.disabled=false;
-  if(document.getElementById('log-list')) renderLog();
-}
-
-/* ═══════════════════════════════════════════════════
    SECTION: MILESTONE BADGES
 ═══════════════════════════════════════════════════ */
 function checkBadges(cleanHrs){
@@ -2748,6 +2511,97 @@ function closeBadge(){
 }
 
 /* ═══════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════
+   SECTION: ANALYTICS ENGINE
+═══════════════════════════════════════════════════ */
+function renderAnalytics(){
+  const taskLog = getTaskLog();
+  const cravings = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  const tasks = getTasks();
+  // Build last 7 days data
+  const days = [];
+  for(let i=6; i>=0; i--){
+    const d = new Date();
+    d.setDate(d.getDate()-i);
+    const key = d.toISOString().slice(0,10);
+    const dayLog = taskLog[key]||{};
+    const totalPts = tasks.filter(t=>dayLog[t.id]).reduce((s,t)=>s+t.pts,0);
+    const doneCnt = tasks.filter(t=>dayLog[t.id]).length;
+    const totalPct = Math.round((totalPts/MAX_TASK_PER_DAY)*100);
+    days.push({key, date:d, totalPct, totalPts, doneCnt, isToday:i===0});
+  }
+
+  // 7-day bar chart
+  const chart = document.getElementById('an-chart');
+  const labels = null; // labels now inline
+  if(chart){
+    chart.innerHTML = days.map(d=>{
+      const h = Math.round((d.totalPct/100)*52);
+      const col = d.totalPct>=80?'var(--g-5)':d.totalPct>=50?'var(--g-3)':'var(--g-1)';
+      return `<div class="an-bar-wrap">
+        <div class="an-bar-outer">
+          <div style="height:${h}px;background:${col};border-radius:3px 3px 0 0;transition:height 0.6s ease;"></div>
+        </div>
+        <div style="font-family:var(--fm);font-size:9px;color:${d.isToday?'var(--g-4)':'var(--t-4)'};text-align:center;margin-top:3px;">${d.isToday?'Today':d.date.toLocaleDateString('en-IN',{weekday:'short'})}</div>
+      </div>`;
+    }).join('');
+  }
+  if(labels){
+    labels.innerHTML = days.map(d=>{
+      const lbl = d.isToday ? 'Today' : d.date.toLocaleDateString('en-IN',{weekday:'short'});
+      return `<div class="an-chart-lbl ${d.isToday?'today':''}">${lbl}</div>`;
+    }).join('');
+  }
+
+  // Stats
+  const activeDays = days.filter(d=>d.totalPct>0);
+  const avg7 = activeDays.length ? Math.round(activeDays.reduce((s,d)=>s+d.totalPct,0)/activeDays.length) : 0;
+  const best = activeDays.length ? Math.max(...activeDays.map(d=>d.totalPct)) : 0;
+  const t1avg = activeDays.length ? Math.round(activeDays.reduce((s,d)=>s+d.doneCnt,0)/activeDays.length) : 0;
+
+  // Streak — consecutive days with any Tier 1 completion
+  let streak = 0;
+  for(let i=days.length-1; i>=0; i--){
+    if(days[i].totalPts > 0) streak++;
+    else if(i < days.length-1) break; // gap in streak
+  }
+
+  setText('an-streak', streak);
+  setText('an-best', best+'%');
+  setText('an-avg', avg7+'%');
+  setText('an-t1-avg', Math.round(activeDays.reduce((s,d)=>s+(d.doneCnt||0),0)/(activeDays.length||1))+' tasks');
+
+  // Key task completion rates over 7 days
+  let zymoCount = 0, airaCount = 0;
+  days.forEach(d=>{ const dl=taskLog[d.key]||{}; if(dl['zymo-fundraising']) zymoCount++; if(dl['aira']) airaCount++; });
+  const zymoPct = Math.round((zymoCount/7)*100);
+  const airaPct = Math.round((airaCount/7)*100);
+  const b1 = document.getElementById('an-t1-bar');
+  const b2 = document.getElementById('an-t2-bar');
+  if(b1) b1.style.width = zymoPct+'%';
+  if(b2) b2.style.width = airaPct+'%';
+  setText('an-t1-val', zymoPct+'%');
+  setText('an-t2-val', airaPct+'%');
+
+  // Craving pattern
+  const cc = document.getElementById('an-craving-content');
+  if(cc){
+    if(!cravings.length){
+      cc.textContent = 'No cravings logged yet.';
+    } else {
+      const hourCounts = {};
+      cravings.forEach(c=>{ const h=new Date(c.ts).getHours(); hourCounts[h]=(hourCounts[h]||0)+1; });
+      const hardestH = Object.entries(hourCounts).sort((a,b)=>b[1]-a[1])[0];
+      const total = cravings.length;
+      const resisted = cravings.filter(c=>c.resisted).length;
+      const rate = Math.round((resisted/total)*100);
+      const period = hardestH ? (parseInt(hardestH[0])<12?'morning':parseInt(hardestH[0])<17?'afternoon':parseInt(hardestH[0])<20?'evening':'night') : '—';
+      cc.innerHTML = `<strong>${rate}%</strong> resistance rate (${resisted}/${total})<br>Hardest time: <strong>${period}</strong> (${hardestH?hardestH[0]+':00':'—'})<br>Total cravings logged: <strong>${total}</strong>`;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════
    SECTION: LOG RENDERER — Insightful redesign
 ═══════════════════════════════════════════════════ */
 function renderLog(){
@@ -2778,7 +2632,7 @@ function renderLog(){
   const todayResisted = todayCravings.filter(c=>c.resisted).length;
 
   // Clean days
-  const cleanDays = S.missionStart ? Math.floor((Date.now()-parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart))/86400000) : 0;
+  const cleanDays = S.missionStart ? Math.floor((Date.now()-getQuitTs())/86400000) : 0;
 
   // Task points earned
   const taskPts = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
@@ -2875,11 +2729,11 @@ function switchTab(name, el){
   if(name==='fr'){
     updateDeadlineDisplays();
     updateFreedom();
-    const ss2 = parseInt(localStorage.getItem(LS.SMOKING_START)||S.missionStart||Date.now());
+    const ss2 = getQuitTs();
     const stage = getWormStage((Date.now()-ss2)/3600000);
     if(stage !== S.lastWormStage){ S.lastWormStage=stage; renderWorm(stage); }
   }
-  if(name==='log') renderLog();
+  if(name==='log'){ renderLog(); renderAnalytics(); }
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2910,7 +2764,7 @@ function setNow(){
 function igniteMission(btn){
   const qt = document.getElementById('in-quit').value;
   const pc = document.getElementById('in-pack').value;
-  if(!qt){ alert('Enter your quit date and time first.'); return; }
+  if(!qt){ alert('Please set your quit date and time first.'); return; }
 
   // Visual feedback
   btn.disabled = true;
@@ -2920,7 +2774,7 @@ function igniteMission(btn){
   btn.appendChild(r);
   setTimeout(()=>r.remove(), 600);
 
-  const quitTs = new Date(qt).getTime();
+  const quitTs = new Date(qt).getTime(); // From user input — locked permanently after this
   const missionTs = Date.now(); // mission starts NOW regardless of quit date
 
   S.missionStart = missionTs;
@@ -2962,14 +2816,7 @@ function updateDeadlineDisplays(){
     const qd = new Date(quitTs);
     mandateDate.textContent = qd.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) + ' at ' + qd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   }
-  // Pledge date — shows actual quit date+time from one-time entry
-  const quitTs2 = parseInt(localStorage.getItem(LS.QUIT_TIME)||S.missionStart||Date.now());
-  const qd2 = new Date(quitTs2);
-  const pledgeDateStr = qd2.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) + ' at ' + qd2.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  const pd1 = document.getElementById('pledge-date');
-  if(pd1) pd1.textContent = pledgeDateStr;
-  const pd2 = document.getElementById('pledge-date-craving');
-  if(pd2) pd2.textContent = pledgeDateStr;
+
 }
 
 function init(){
@@ -2978,13 +2825,22 @@ function init(){
   S.packCost = parseFloat(localStorage.getItem(LS.PACK_COST)||'250');
   S.shownBadges = JSON.parse(localStorage.getItem(LS.BADGES_SHOWN)||'[]');
 
-  if(ms && locked){
-    // Mission already ignited and quit date locked — go straight to app
+  if(ms && localStorage.getItem(LS.QUIT_TIME)){
+    // Mission ignited and quit time locked — go straight to app
+    S.missionStart = parseInt(ms);
+    if(!locked) localStorage.setItem('th_quit_locked','1');
+    showApp();
+  } else if(ms) {
+    // Mission start exists but no quit time — show app anyway (legacy data)
     S.missionStart = parseInt(ms);
     showApp();
   } else {
-    // Show launch screen — pre-fill pack cost only, no time pre-fill
+    // Fresh install — show launch screen
     document.getElementById('in-pack').value = S.packCost;
+    // Pre-fill with 6th June 2026 as default
+    const d = new Date('2026-06-06T00:00:00+05:30');
+    const p = n=>String(n).padStart(2,'0');
+    document.getElementById('in-quit').value = d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
   }
 }
 
@@ -3045,7 +2901,6 @@ spawnEmbers();
 init();
 updateDeadlineDisplays();
 startWroRotation();
-initAffirmationWriter();
 setInterval(updateWarRoom,1000);
 setInterval(()=>{
   const fr=document.getElementById('tab-fr');
