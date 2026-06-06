@@ -873,35 +873,19 @@ margin-bottom:10px;
   padding:52px var(--page-pad) 40px;overflow-y:auto;
 }
 
-
 .cs-title{
   font-family:var(--fd);font-size:32px;font-weight:700;
   margin-bottom:14px;line-height:1.05;color:var(--t-1);
 }
 .cs-sub{font-size:14px;color:var(--t-2);line-height:1.7;margin-bottom:20px;}
 
-
-
-
 .craving-tasks{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
-.ct-item{
-  background:var(--card);border:1px solid var(--b-dim);
-  border-radius:var(--radius-md);padding:14px;
-  display:flex;align-items:center;gap:12px;cursor:pointer;
-  transition:background 0.18s,border-color 0.18s;
-}
-.ct-item:active{background:rgba(212,168,84,0.07);border-color:rgba(212,168,84,0.28);}
-.cti-icon{font-size:20px;line-height:1;}
-.cti-name{flex:1;font-size:14px;font-weight:500;color:var(--t-1);}
-.cti-pts{font-family:var(--fm);font-size:10px;color:var(--g-3);}
+
 .cs-vision{
   background:linear-gradient(135deg,rgba(212,168,84,0.07),rgba(212,168,84,0.02));
   border:1px solid rgba(212,168,84,0.18);
   border-radius:var(--radius-lg);padding:22px;margin-bottom:20px;
 }
-
-.csv-title{font-family:var(--fd);font-size:22px;color:var(--g-5);margin-bottom:10px;line-height:1.1;}
-.csv-body{font-family:var(--fd);font-style:italic;font-size:14px;line-height:1.8;color:var(--t-2);}
 
 /* Buttons */
 .btn-p{
@@ -991,8 +975,6 @@ margin-bottom:10px;
 }
 .frp-body{font-size:13px;line-height:1.85;color:var(--t-2);}
 .frp-body strong{color:var(--t-1);}
-
-
 
 .cpg-text strong{color:#FF8080;}
 .blk-head.tier-1-head{
@@ -1116,103 +1098,13 @@ margin-bottom:10px;
 }
 .wr-mandate-body strong{color:var(--g-6);}
 
-/* Craving mandate — more urgent */
-.craving-mandate{
-  background:linear-gradient(135deg,rgba(212,168,84,0.12),rgba(212,168,84,0.04));
-  border:1.5px solid rgba(212,168,84,0.4);
-  border-radius:var(--radius-md);
-  padding:16px;margin-bottom:14px;
-}
-.cm-title{
-  font-family:var(--fm);font-size:9px;font-weight:700;
-  letter-spacing:0.3em;color:var(--g-5);
-  text-transform:uppercase;margin-bottom:8px;
-}
-.cm-body{
-  font-size:14px;line-height:1.8;color:var(--t-1);font-weight:500;
-}
-.cm-body strong{color:var(--g-6);}
-
-
-/* Deadline banner */
-
-.cv-deadline-time{
-  font-family:var(--fm);font-size:13px;font-weight:500;
-  color:var(--r-4);letter-spacing:0.04em;
-}
-.cv-deadline-msg{
-  font-family:var(--fm);font-size:11px;color:var(--r-3);
-  letter-spacing:0.02em;
-}
-
-/* Truth banner — first thing they see */
-
-.ctb-icon{font-size:24px;flex-shrink:0;line-height:1;}
-.ctb-text{
-  font-size:15px;line-height:1.7;color:var(--t-1);font-weight:500;
-}
-.ctb-text strong{color:#FF7070;}
-
-/* Personal truth */
-
-
-
-
-/* What you've earned — will lose */
-
-
-
-.cs-earned-body strong{color:var(--g-5);}
-
-
-/* Angle content area */
-
-
-.ct-item{
-  background:var(--card);border:1px solid var(--b-dim);
-  border-radius:var(--radius-md);padding:13px 14px;
-  display:flex;align-items:center;gap:12px;cursor:pointer;
-  transition:background 0.18s,border-color 0.18s;
-}
-.ct-item:active{background:rgba(212,168,84,0.07);border-color:rgba(212,168,84,0.28);}
-.cti-icon{font-size:20px;line-height:1;}
-.cti-name{flex:1;font-size:14px;font-weight:500;color:var(--t-1);}
-.cti-pts{font-family:var(--fm);font-size:10px;color:var(--g-3);}
-
-/* Vision card */
-
-
-.csv-title{font-family:var(--fd);font-size:20px;color:var(--g-5);margin-bottom:8px;line-height:1.1;}
-.csv-body{font-family:var(--fd);font-style:italic;font-size:13px;line-height:1.8;color:var(--t-2);}
-
-/* Affirmation writer */
-
-
-
-
-.aff-circle.done{
-  background:var(--g-4);border-color:var(--g-4);
-  color:var(--bg);animation:aff-pop 0.3s ease;
-}
-to{transform:scale(1);}}
-
-
-
-
-
 /* Screen transition */
 #s-app{animation:screen-in 0.45s cubic-bezier(0.22,1,0.36,1);}
 @keyframes screen-in{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
 /* Milestone animation */
-.frm.reached{animation:milestone-in 0.4s ease;}
 @keyframes milestone-in{from{opacity:0;transform:translateX(-6px);}to{opacity:1;transform:translateX(0);}}
-@keyframes screen-in{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
-/* Milestone animation */
-.frm.reached{animation:milestone-in 0.4s ease;}
-@keyframes milestone-in{from{opacity:0;transform:translateX(-6px);}to{opacity:1;transform:translateX(0);}}
-</style>
 </head>
 <body>
 
@@ -1260,7 +1152,7 @@ to{transform:scale(1);}}
 
   <div class="launch-astro">
     <div class="la-icon">🪐</div>
-    <div class="la-text">Jupiter enters Cancer on June 2 — exalted in your 10th house. This transit happens once in 12 years. Everything is aligned. The only variable is you.</div>
+    <div class="la-text">Jupiter is now in Cancer — exalted in your 10th house. This is the most powerful career transit you will see for 12 years. It is active right now. The only variable is what you do today.</div>
   </div>
 
   <div class="launch-decl">
@@ -1298,15 +1190,15 @@ to{transform:scale(1);}}
   <!-- WAR ROOM TAB -->
   <div id="tab-wr" class="tab-pane active">
     <div class="wr-hero">
-      <div class="wr-hero-label">Hours until everything changes</div>
+      <div class="wr-hero-label">Hours of Jupiter's transit</div>
       <div class="wr-hrs" id="wr-hrs">—</div>
-      <div class="wr-hrs-sub">June 2 · Jupiter enters Cancer · 10th house</div>
+      <div class="wr-hrs-sub">Jupiter in Cancer · 10th House · Active Now</div>
     </div>
 
     <!-- NON-NEGOTIABLE FACT — always visible -->
     <div class="wr-mandate">
       <div class="wr-mandate-title">NON-NEGOTIABLE</div>
-      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>Quit date: <strong>6th June 2026, 12:00 AM.</strong> Zymo funding will come.<br><br>You have quit. <strong>Zymo funding will come.</strong><br><br>Your chart rewards discipline. Quitting smoking is making you disciplined right now.</div>
+      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>You have quit as of <strong>6th June 2026, 12:00 AM.</strong><br><br><strong>Zymo funding will come.</strong> Your chart rewards discipline. Disciplined founders get funded.</div>
     </div>
 
     <div class="body-strip" id="body-strip">
@@ -1317,18 +1209,6 @@ to{transform:scale(1);}}
         <div class="bs-feel" id="bs-feel"></div>
         <div class="bs-carr" id="bs-carr"></div>
       </div>
-    </div>
-
-    <!-- ANCHOR PROGRESS — tasks as hero -->
-    <div class="wr-anchors" id="wr-anchors">
-      <div class="wra-header">
-        <div class="wra-title">Today's Tasks</div>
-        <div class="wra-score" id="wra-score">0 / 15</div>
-      </div>
-      <div class="wra-bar-bg" style="margin-bottom:14px">
-        <div class="wra-bar-fill wra-bar-t1" id="wra-bar-main" style="width:0%"></div>
-      </div>
-      <div class="wra-tasks" id="wra-tasks"></div>
     </div>
 
     <div class="wr-orb-wrap">
@@ -1348,6 +1228,18 @@ to{transform:scale(1);}}
         </div>
       </div>
       <div class="orb-caption" id="orb-caption">Your outcomes are waiting. Earn them.</div>
+    </div>
+
+    <!-- ANCHOR PROGRESS — tasks as hero -->
+    <div class="wr-anchors" id="wr-anchors">
+      <div class="wra-header">
+        <div class="wra-title">Today's Tasks</div>
+        <div class="wra-score" id="wra-score">0 / 15</div>
+      </div>
+      <div class="wra-bar-bg" style="margin-bottom:14px">
+        <div class="wra-bar-fill wra-bar-t1" id="wra-bar-main" style="width:0%"></div>
+      </div>
+      <div class="wra-tasks" id="wra-tasks"></div>
     </div>
 
     <div class="wr-stats">
@@ -1398,11 +1290,6 @@ to{transform:scale(1);}}
 
     <div class="wr-urgency">
       <div class="wu-text" id="wu-text">"These days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away."</div>
-    </div>
-
-    
-        <div class="cb-arrow">→</div>
-      </button>
     </div>
 
     <div class="wr-progress">
@@ -1488,7 +1375,6 @@ to{transform:scale(1);}}
     <div class="sec-lbl">Health Milestones</div>
     <div class="fr-milestones" id="fr-milestones"></div>
 
-
   </div><!-- end tab-fr -->
 
   <!-- LOG / ANALYTICS TAB -->
@@ -1543,10 +1429,10 @@ to{transform:scale(1);}}
         </div>
       </div>
 
-      <!-- Craving pattern -->
-      <div class="an-card" id="an-craving-card">
-        <div class="an-card-title">Craving Pattern</div>
-        <div class="an-craving-content" id="an-craving-content"></div>
+      <!-- Task pattern -->
+      <div class="an-card">
+        <div class="an-card-title">Most Productive Hour</div>
+        <div class="an-craving-content" id="an-craving-content">Complete tasks to see your most productive time of day.</div>
       </div>
     </div>
 
@@ -1584,8 +1470,6 @@ to{transform:scale(1);}}
     <div class="bb-close">Tap anywhere to continue</div>
   </div>
 </div>
-
-
 
 <!-- ════════════════════════════════════════
      OVERLAY: TASK EDIT
@@ -2243,7 +2127,6 @@ function updateAnchorCard(tdLog){
   }).join('') + (pct>0?`<div class="wra-pct">${pct}% complete today</div>`:'');
 }
 
-
 function getTasks(){
   const custom = JSON.parse(localStorage.getItem(LS.TASKS_CUSTOM)||'{}');
   return DEFAULT_TASKS.map(t=>({...t, name:custom[t.id]?.name||t.name, mins:custom[t.id]?.mins||t.mins}));
@@ -2583,22 +2466,28 @@ function renderAnalytics(){
   setText('an-t1-val', zymoPct+'%');
   setText('an-t2-val', airaPct+'%');
 
-  // Craving pattern
+  // Most productive hour
   const cc = document.getElementById('an-craving-content');
   if(cc){
-    if(!cravings.length){
-      cc.textContent = 'No cravings logged yet.';
+    const hourCounts = {};
+    Object.values(taskLog).forEach(dayLog=>{
+      Object.values(dayLog).forEach(ts=>{
+        if(ts && typeof ts === 'number'){
+          const h = new Date(ts).getHours();
+          hourCounts[h] = (hourCounts[h]||0)+1;
+        }
+      });
+    });
+    if(!Object.keys(hourCounts).length){
+      cc.textContent = 'Complete tasks to see your most productive time of day.';
     } else {
-      const hourCounts = {};
-      cravings.forEach(c=>{ const h=new Date(c.ts).getHours(); hourCounts[h]=(hourCounts[h]||0)+1; });
-      const hardestH = Object.entries(hourCounts).sort((a,b)=>b[1]-a[1])[0];
-      const total = cravings.length;
-      const resisted = cravings.filter(c=>c.resisted).length;
-      const rate = Math.round((resisted/total)*100);
-      const period = hardestH ? (parseInt(hardestH[0])<12?'morning':parseInt(hardestH[0])<17?'afternoon':parseInt(hardestH[0])<20?'evening':'night') : '—';
-      cc.innerHTML = `<strong>${rate}%</strong> resistance rate (${resisted}/${total})<br>Hardest time: <strong>${period}</strong> (${hardestH?hardestH[0]+':00':'—'})<br>Total cravings logged: <strong>${total}</strong>`;
+      const topH = Object.entries(hourCounts).sort((a,b)=>b[1]-a[1])[0];
+      const h = parseInt(topH[0]);
+      const period = h<6?'early morning':h<12?'morning':h<17?'afternoon':h<20?'evening':'night';
+      cc.innerHTML = `Most tasks completed in <strong>${period}</strong> (${h}:00–${h+1}:00)<br>Total completions: <strong>${Object.values(hourCounts).reduce((s,v)=>s+v,0)}</strong>`;
     }
   }
+
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2801,6 +2690,7 @@ function showApp(){
   updateWarRoom();
   renderTasks();
   renderLog();
+  renderAnalytics();
 }
 
 function updateDeadlineDisplays(){
@@ -2809,14 +2699,11 @@ function updateDeadlineDisplays(){
   if(tagline) tagline.textContent = d > 0 ? d+' days left · do or die' : 'Jupiter is active. Execute.';
   const ldText = document.getElementById('ld-text');
   if(ldText) ldText.innerHTML = d > 0 ? 'These <strong>'+d+' days</strong><br>are not coming back.' : 'Jupiter is in your 10th house.<br>Execute every day.';
-  // Quit date+time in mandate — permanent, from actual quit date
-  const quitTs = parseInt(localStorage.getItem(LS.QUIT_TIME)||S.missionStart||Date.now());
-  const mandateDate = document.getElementById('mandate-date');
-  if(mandateDate){
-    const qd = new Date(quitTs);
-    mandateDate.textContent = qd.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) + ' at ' + qd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  }
-
+  // Update pledge date display
+  const qd2 = new Date(getQuitTs());
+  const pledgeStr = qd2.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' at '+qd2.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const pd1 = document.getElementById('pledge-date-display');
+  if(pd1) pd1.textContent = pledgeStr;
 }
 
 function init(){
