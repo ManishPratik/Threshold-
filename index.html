@@ -226,7 +226,7 @@ img{display:block;max-width:100%;}
    SECTION: APP SHELL — Top bar
 ═══════════════════════════════════════════════════ */
 .top-bar{
-  padding:52px var(--page-pad) 0;
+  padding:calc(env(safe-area-inset-top, 20px) + 16px) var(--page-pad) 0;
   display:flex;justify-content:space-between;align-items:center;
   margin-bottom:4px;
 }
@@ -1012,6 +1012,7 @@ margin-bottom:10px;
   display:flex;justify-content:space-between;
   align-items:center;margin-bottom:10px;
 }
+.wra-expand{font-size:12px;color:var(--g-3);margin-left:4px;}
 .wra-title{
   font-family:var(--fb);font-size:13px;font-weight:600;
   color:var(--t-1);letter-spacing:0.01em;
@@ -1191,7 +1192,7 @@ margin-bottom:10px;
   <!-- WAR ROOM TAB -->
   <div id="tab-wr" class="tab-pane active">
     <div class="wr-hero">
-      <div class="wr-hero-label">Hours of Jupiter's transit</div>
+      <div class="wr-hero-label">Hours Smoke-Free</div>
       <div class="wr-hrs" id="wr-hrs">—</div>
       <div class="wr-hrs-sub">Jupiter in Cancer · 10th House · Active Now</div>
     </div>
@@ -1214,14 +1215,14 @@ margin-bottom:10px;
 
     <div class="wr-orb-wrap">
       <div class="orb-outer">
+        <div class="orb-rings-outer">
+          <div class="orb-ring orb-ring-1"></div>
+          <div class="orb-ring orb-ring-2"></div>
+          <div class="orb-ring orb-ring-3"></div>
+        </div>
         <div class="orb-sphere" id="orb-sphere">
           <div class="orb-liquid" id="orb-liquid" style="height:0%"></div>
           <div class="orb-shine"></div>
-          <div class="orb-rings">
-            <div class="orb-ring orb-ring-1"></div>
-            <div class="orb-ring orb-ring-2"></div>
-            <div class="orb-ring orb-ring-3"></div>
-          </div>
           <div class="orb-inner">
             <div class="orb-pct" id="orb-pct">0%</div>
             <div class="orb-lbl">probability</div>
@@ -1231,16 +1232,16 @@ margin-bottom:10px;
       <div class="orb-caption" id="orb-caption">Your outcomes are waiting. Earn them.</div>
     </div>
 
-    <!-- ANCHOR PROGRESS — tasks as hero -->
+    <!-- ANCHOR PROGRESS — collapsible task summary -->
     <div class="wr-anchors" id="wr-anchors">
-      <div class="wra-header">
-        <div class="wra-title">Today's Tasks</div>
+      <div class="wra-header" onclick="toggleAnchor()" style="cursor:pointer">
+        <div class="wra-title">Today's Tasks <span class="wra-expand" id="wra-expand">▾</span></div>
         <div class="wra-score" id="wra-score">0 / 15</div>
       </div>
-      <div class="wra-bar-bg" style="margin-bottom:14px">
+      <div class="wra-bar-bg" style="margin-bottom:8px">
         <div class="wra-bar-fill wra-bar-t1" id="wra-bar-main" style="width:0%"></div>
       </div>
-      <div class="wra-tasks" id="wra-tasks"></div>
+      <div class="wra-tasks" id="wra-tasks" style="display:none"></div>
     </div>
 
     <div class="wr-stats">
@@ -1363,7 +1364,7 @@ margin-bottom:10px;
       <div class="frp-icon">🚭</div>
       <div class="frp-content">
         <div class="frp-title">I AM A NON-SMOKER</div>
-        <div class="frp-body">I have taken a pledge that I will never smoke again from <strong id="pledge-date-display">6th June 2026 at 12:00 AM</strong>.<br><br>Smoking raises blood pressure. <strong>Smoking causes heart attacks.</strong><br><br>This is not a choice. This is survival.</div>
+        <div class="frp-body">I have taken a pledge that I will never smoke again from <strong>6th June 2026 at 12:00 AM.</strong><br><br>Smoking raises blood pressure. <strong>Smoking causes heart attacks.</strong><br><br>This is not a choice. This is survival.</div>
       </div>
     </div>
 
@@ -1834,21 +1835,22 @@ function calcMaxPts(){
 }
 
 function calcProb(){
-  const now = Date.now();
   const ss = getQuitTs();
-  const sp = calcSmokePts(ss);
+  const cleanHrs = Math.max(0,(Date.now()-ss)/3600000);
+  const cleanDays = cleanHrs/24;
   const tp = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
 
-  // Time-based base — every second of the mission window counts
-  const totalMissionMs = Math.max(1, JUNE2 - parseInt(S.missionStart||now));
-  const elapsedMs = Math.max(0, now - parseInt(S.missionStart||now));
-  const timePct = (elapsedMs / totalMissionMs) * 20; // max 20% from time alone
+  // Clean days component — 30 days = 40% probability from discipline alone
+  const daysPct = Math.min(40, (cleanDays/30)*40);
 
-  // Points-based probability
-  const pointsPct = ((sp + tp) / calcMaxPts()) * 75; // max 75% from points
+  // Task points component — max 106pts/day, 30 days = 3180pts = 45%
+  const maxTaskPts = MAX_TASK_PER_DAY * 30;
+  const taskPct = Math.min(45, (tp/maxTaskPts)*45);
 
-  const total = Math.min(95, timePct + pointsPct);
-  return Math.max(0, total);
+  // Smoke-free hours bonus — first 72 hours = 10%
+  const hourPct = Math.min(10, (cleanHrs/72)*10);
+
+  return Math.min(95, Math.max(0, daysPct + taskPct + hourPct));
 }
 
 function fmtProb(p){
@@ -1950,10 +1952,9 @@ function updateWarRoom(){
   if(!S.missionStart) return;
   const now = Date.now();
 
-  // Hours to June 2
-  const msLeft = Math.max(0,JUNE2-now);
-  const hrsLeft = Math.floor(msLeft/3600000);
-  setText('wr-hrs', hrsLeft.toLocaleString());
+  // Hours smoke-free — the meaningful climbing number
+  const cleanHrsDisplay = Math.floor(cleanHrs);
+  setText('wr-hrs', cleanHrsDisplay.toLocaleString());
 
   // Clean time — from actual quit date
   const quitTs = getQuitTs(); // Locked quit date: 6th June 2026
@@ -2101,6 +2102,15 @@ function updateFreedom(){
 ═══════════════════════════════════════════════════ */
 let lastAnchorKey = '';
 
+
+function toggleAnchor(){
+  const tasks = document.getElementById('wra-tasks');
+  const arrow = document.getElementById('wra-expand');
+  if(!tasks) return;
+  const isOpen = tasks.style.display !== 'none';
+  tasks.style.display = isOpen ? 'none' : 'block';
+  if(arrow) arrow.textContent = isOpen ? '▾' : '▴';
+}
 function updateAnchorCard(tdLog){
   const tasks = getTasks();
   const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('');
@@ -2172,61 +2182,28 @@ function renderTasks(){
   const dayStart = getDayStart();
 
   // MIDNIGHT = end of today
-  const midnight = new Date(); midnight.setHours(23,59,59,999);
-  const msUntilMidnight = midnight.getTime() - now;
-
-  // Calculate which tasks fit from now
-  // Already completed tasks always show
-  // Pending tasks: only show if they fit before midnight
-  let runningMs = dayStart;
-  const timed = tasks.map(tk => {
-    const s = runningMs;
-    runningMs += tk.mins * 60000;
-    return { ...tk, tStart: s, tEnd: runningMs };
-  });
-
-  // Separate: done tasks + tasks that still fit + overflow
+  // Show ALL tasks always — no hiding based on time
+  // Completed tasks show as done, pending show as pending
+  const timed = tasks.map(tk => ({ ...tk }));
   const doneTasks = timed.filter(tk => tdLog[tk.id]);
-  const pendingTasks = timed.filter(tk => !tdLog[tk.id]);
-
-  // Calculate remaining time available
-  const minsUntilMidnight = msUntilMidnight / 60000;
-  let minsNeeded = 0;
-  const achievable = [];
+  const achievable = timed.filter(tk => !tdLog[tk.id]);
   const overflow = [];
-
-  pendingTasks.forEach(tk => {
-    minsNeeded += tk.mins;
-    if(minsNeeded <= minsUntilMidnight + 30){ // 30 min buffer
-      achievable.push(tk);
-    } else {
-      overflow.push(tk);
-    }
-  });
+  const minsUntilMidnight = (new Date().setHours(23,59,59,999) - now) / 60000;
 
   // Today pts
   const tp = tasks.filter(tk=>tdLog[tk.id]).reduce((s,tk)=>s+tk.pts,0);
   const tpEl = document.getElementById('th-pts');
   if(tpEl) tpEl.textContent = tp;
 
-  // Render key — only full rebuild on completion change or achievable set change
-  const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('') + achievable.length;
+  // Render key — full rebuild on any completion change
+  const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('');
   const needFullRender = completionKey !== lastTaskRenderKey;
   lastTaskRenderKey = completionKey;
 
   if(needFullRender){
-    // Show achievable count message if some tasks overflow
     let headerHtml = '';
-    if(overflow.length > 0){
-      const h = Math.floor(minsUntilMidnight/60);
-      const m = Math.round(minsUntilMidnight%60);
-      headerHtml = `<div class="tasks-achievable-note">
-        <span class="tan-count">${achievable.length} tasks fit today</span>
-        <span class="tan-sub">${h}h ${m}m left · ${overflow.length} move to tomorrow</span>
-      </div>`;
-    }
 
-    // Show all tasks to complete — done + achievable (not overflow)
+    // Show ALL tasks — done + remaining
     const visibleTasks = [...doneTasks, ...achievable];
 
     // Group by block
@@ -2249,12 +2226,11 @@ function renderTasks(){
       btasks.forEach(tk => {
         const done = !!tdLog[tk.id];
         const active = !done && now >= tk.tStart && now < tk.tEnd;
-        const fmt = ts => new Date(ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
         html += `<div class="task ${done?'t-done':active?'t-active':''} ${tk.priority?'t-priority':''}" data-id="${tk.id}">
           <div class="t-check" onclick="completeTask('${tk.id}',event)"><div class="t-check-inner">${done?'✓':''}</div></div>
           <div class="t-info">
             <div class="t-name">${tk.name}</div>
-            <div class="t-meta"><span class="t-time">${fmt(tk.tStart)} · ${tk.mins}m</span><span class="t-pts">+${tk.pts}pts</span><span class="t-countdown" data-end="${tk.tEnd}" data-active="${active&&!done}"></span></div>
+            <div class="t-meta"><span class="t-time">${tk.mins}m</span><span class="t-pts">+${tk.pts}pts</span></div>
           </div>
           <button class="t-edit" onclick="openTaskEdit('${tk.id}')">✏️</button>
         </div>`;
@@ -2264,19 +2240,7 @@ function renderTasks(){
     tlw.innerHTML = html;
   }
 
-  // Always update countdowns in-place
-  tlw.querySelectorAll('.t-countdown').forEach(el => {
-    const end = parseInt(el.dataset.end);
-    const isActive = el.dataset.active === 'true';
-    if(isActive && end > now){
-      const rm = Math.floor((end-now)/60000);
-      const rs = Math.floor(((end-now)%60000)/1000);
-      el.textContent = rm+':'+String(rs).padStart(2,'0')+' left';
-      el.dataset.active = (end > Date.now()).toString();
-    } else {
-      el.textContent = '';
-    }
-  });
+  // No countdown timers — duration only display
 }
 
 function completeTask(id, evt){
