@@ -295,7 +295,7 @@ img{display:block;max-width:100%;}
   color:var(--t-4);text-transform:uppercase;margin-bottom:6px;
 }
 .wr-hrs{
-  font-family:var(--fm);font-size:76px;font-weight:300;
+  font-family:var(--fm);font-size:56px;font-weight:300;
   line-height:0.95;letter-spacing:-0.03em;
   background:linear-gradient(175deg,var(--g-7) 0%,var(--g-5) 40%,var(--g-3) 80%,var(--g-1) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
@@ -332,7 +332,7 @@ img{display:block;max-width:100%;}
 }
 .orb-outer{
   position:relative;
-  width:220px;height:220px;
+  width:180px;height:180px;
 margin-bottom:10px;
 }
 .orb-rings-outer{
@@ -343,15 +343,15 @@ margin-bottom:10px;
   border:1px solid rgba(212,168,84,0.07);
   animation:orb-ring-pulse 5s ease-in-out infinite;
 }
-.orb-ring-1{inset:-14px;animation-delay:0s;}
-.orb-ring-2{inset:-28px;animation-delay:1.2s;opacity:0.5;}
-.orb-ring-3{inset:-44px;animation-delay:2.4s;opacity:0.25;}
+.orb-ring-1{inset:-12px;animation-delay:0s;}
+.orb-ring-2{inset:-22px;animation-delay:1.2s;opacity:0.5;}
+.orb-ring-3{inset:-34px;animation-delay:2.4s;opacity:0.25;}
 @keyframes orb-ring-pulse{
   0%,100%{opacity:0.25;transform:scale(1);}
   50%{opacity:0.55;transform:scale(1.01);}
 }
 .orb-sphere{
-  width:220px;height:220px;border-radius:50%;
+  width:180px;height:180px;border-radius:50%;
   position:relative;display:flex;align-items:center;
   justify-content:center;
   border:1px solid rgba(212,168,84,0.18);
@@ -374,7 +374,7 @@ margin-bottom:10px;
 }
 .orb-inner{position:relative;z-index:2;text-align:center;padding:8px;}
 .orb-pct{
-  font-family:var(--fd);font-size:46px;font-weight:400;
+  font-family:var(--fd);font-size:38px;font-weight:400;
   line-height:1;color:var(--t-1);
   text-shadow:0 0 30px rgba(212,168,84,0.3);
 }
@@ -2672,24 +2672,25 @@ function updateDeadlineDisplays(){
 }
 
 function init(){
-  const ms = localStorage.getItem(LS.MISSION_START);
-  const locked = localStorage.getItem('th_quit_locked');
   S.packCost = parseFloat(localStorage.getItem(LS.PACK_COST)||'250');
   S.shownBadges = JSON.parse(localStorage.getItem(LS.BADGES_SHOWN)||'[]');
 
-  if(ms && localStorage.getItem(LS.QUIT_TIME)){
-    // Mission ignited and quit time locked — go straight to app
+  const ms = localStorage.getItem(LS.MISSION_START);
+
+  if(ms){
+    // Mission already started — go straight to app
     S.missionStart = parseInt(ms);
-    if(!locked) localStorage.setItem('th_quit_locked','1');
-    showApp();
-  } else if(ms) {
-    // Mission start exists but no quit time — show app anyway (legacy data)
-    S.missionStart = parseInt(ms);
+    // Ensure quit time defaults to 6th June if missing
+    if(!localStorage.getItem(LS.QUIT_TIME)){
+      localStorage.setItem(LS.QUIT_TIME, new Date('2026-06-06T00:00:00+05:30').getTime().toString());
+      localStorage.setItem(LS.SMOKING_START, new Date('2026-06-06T00:00:00+05:30').getTime().toString());
+    }
+    localStorage.setItem('th_quit_locked','1');
     showApp();
   } else {
-    // Fresh install — show launch screen
+    // Show launch screen — user sets quit date once and ignites
     document.getElementById('in-pack').value = S.packCost;
-    // Pre-fill with 6th June 2026 as default
+    // Pre-fill quit date as 6th June 2026
     const d = new Date('2026-06-06T00:00:00+05:30');
     const p = n=>String(n).padStart(2,'0');
     document.getElementById('in-quit').value = d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
