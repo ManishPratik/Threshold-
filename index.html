@@ -1270,9 +1270,10 @@ margin-bottom:10px;
     <div>
       <label class="f-label">Your Quit Date & Time — entered once, locked forever</label>
       <div style="display:flex;gap:8px;align-items:center;">
-        <input type="datetime-local" id="in-quit" class="f-input" style="flex:1"/>
+        <input type="datetime-local" id="in-quit" class="f-input" style="flex:1" oninput="updateCyclePreview()"/>
         <button onclick="setNow()" class="btn-now">Now</button>
       </div>
+      <div id="cycle-preview" style="margin-top:8px;font-family:var(--fm);font-size:11px;color:var(--g-4);letter-spacing:0.04em;display:none;"></div>
     </div>
     <div>
       <label class="f-label">Daily Pack Cost (₹)</label>
@@ -1325,7 +1326,7 @@ margin-bottom:10px;
     <!-- NON-NEGOTIABLE FACT — always visible -->
     <div class="wr-mandate">
       <div class="wr-mandate-title">NON-NEGOTIABLE</div>
-      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>You have quit as of <strong>6th June 2026, 12:00 AM.</strong><br><br><strong>Zymo funding will come.</strong> Your chart rewards discipline. Disciplined founders get funded.</div>
+      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>You have quit as of <strong id="mandate-quit-date">—</strong><br><br><strong>Zymo funding will come.</strong> Your chart rewards discipline. Disciplined founders get funded.</div>
     </div>
 
     <div class="body-strip" id="body-strip">
@@ -1495,7 +1496,7 @@ margin-bottom:10px;
       <div class="frp-icon">🚭</div>
       <div class="frp-content">
         <div class="frp-title">I AM A NON-SMOKER</div>
-        <div class="frp-body">I have taken a pledge that I will never smoke again from <strong>6th June 2026 at 12:00 AM.</strong><br><br>Smoking raises blood pressure. <strong>Smoking causes heart attacks.</strong><br><br>This is not a choice. This is survival.</div>
+        <div class="frp-body">I have taken a pledge that I will never smoke again from <strong id="pledge-quit-date">—</strong>.<br><br>Smoking raises blood pressure. <strong>Smoking causes heart attacks.</strong><br><br>This is not a choice. This is survival.</div>
       </div>
     </div>
 
@@ -2951,10 +2952,26 @@ function startWroRotation(){
 /* ═══════════════════════════════════════════════════
    SECTION: LAUNCH & INIT
 ═══════════════════════════════════════════════════ */
+
+function updateCyclePreview(){
+  const inp = document.getElementById('in-quit');
+  const preview = document.getElementById('cycle-preview');
+  if(!inp || !preview || !inp.value) return;
+  const startTs = new Date(inp.value).getTime();
+  if(isNaN(startTs)) return;
+  const endTs = startTs + (21 * 86400000);
+  const endDate = new Date(endTs);
+  const opts = {weekday:'long', day:'numeric', month:'long', year:'numeric'};
+  const endStr = endDate.toLocaleDateString('en-IN', opts);
+  preview.textContent = '✦ Your 21-day cycle completes on ' + endStr;
+  preview.style.display = 'block';
+}
+
 function setNow(){
   const now=new Date();
   const p=n=>String(n).padStart(2,'0');
   document.getElementById('in-quit').value=`${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}T${p(now.getHours())}:${p(now.getMinutes())}`;
+  updateCyclePreview();
 }
 
 function igniteMission(btn){
@@ -3007,11 +3024,13 @@ function updateDeadlineDisplays(){
   if(tagline) tagline.textContent = d > 0 ? d+' days left · do or die' : 'Jupiter is active. Execute.';
   const ldText = document.getElementById('ld-text');
   if(ldText) ldText.innerHTML = d > 0 ? 'These <strong>'+d+' days</strong><br>are not coming back.' : 'Jupiter is in your 10th house.<br>Execute every day.';
-  // Update pledge date display
-  const qd2 = new Date(getQuitTs());
-  const pledgeStr = qd2.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' at '+qd2.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  const pd1 = document.getElementById('pledge-date-display');
-  if(pd1) pd1.textContent = pledgeStr;
+  // Update mandate and pledge dates dynamically from stored quit time
+  const qd = new Date(getQuitTs());
+  const dateStr = qd.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' at '+qd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const mqd = document.getElementById('mandate-quit-date');
+  if(mqd) mqd.textContent = dateStr;
+  const pqd = document.getElementById('pledge-quit-date');
+  if(pqd) pqd.textContent = dateStr;
 }
 
 function init(){
@@ -3019,24 +3038,24 @@ function init(){
   S.shownBadges = JSON.parse(localStorage.getItem(LS.BADGES_SHOWN)||'[]');
 
   const ms = localStorage.getItem(LS.MISSION_START);
+  const locked = localStorage.getItem('th_quit_locked');
 
-  if(ms){
-    // Mission already started — go straight to app
+  if(ms && locked){
+    // Properly ignited mission — go straight to app
     S.missionStart = parseInt(ms);
-    // Ensure quit time defaults to 6th June if missing
-    if(!localStorage.getItem(LS.QUIT_TIME)){
-      localStorage.setItem(LS.QUIT_TIME, new Date('2026-06-06T00:00:00+05:30').getTime().toString());
-      localStorage.setItem(LS.SMOKING_START, new Date('2026-06-06T00:00:00+05:30').getTime().toString());
-    }
-    localStorage.setItem('th_quit_locked','1');
     showApp();
   } else {
-    // Show launch screen — user sets quit date once and ignites
+    // No mission or old incomplete data — clear and show launch screen fresh
+    if(ms && !locked){
+      // Old session data exists but was never properly locked — clear it
+      localStorage.removeItem(LS.MISSION_START);
+      localStorage.removeItem(LS.QUIT_TIME);
+      localStorage.removeItem(LS.SMOKING_START);
+    }
+    // Show launch screen — user ignites properly
     document.getElementById('in-pack').value = S.packCost;
-    // Pre-fill quit date as 6th June 2026
-    const d = new Date('2026-06-06T00:00:00+05:30');
-    const p = n=>String(n).padStart(2,'0');
-    document.getElementById('in-quit').value = d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
+    // Pre-fill quit date as 6th June 2026 00:00
+    // No pre-fill — user enters their own quit date
   }
 }
 
