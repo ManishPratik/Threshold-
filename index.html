@@ -709,8 +709,68 @@ margin-bottom:10px;
 .btn-relapse:active{background:rgba(168,32,32,0.15);}
 
 /* ═══════════════════════════════════════════════════
-   SECTION: WORM ANIMATIONS
+   SECTION: DIFFICULTY CURVE + HOURLY TIMELINE
 ═══════════════════════════════════════════════════ */
+.diff-card{
+  margin:0 var(--page-pad) 16px;
+  background:var(--card);border:1px solid var(--b-dim);
+  border-radius:var(--radius-lg);padding:16px;
+}
+.diff-title{
+  font-family:var(--fb);font-size:11px;font-weight:600;
+  color:var(--t-3);text-transform:uppercase;letter-spacing:0.06em;
+  margin-bottom:4px;
+}
+.diff-subtitle{
+  font-family:var(--fm);font-size:10px;color:var(--t-4);
+  margin-bottom:14px;letter-spacing:0.04em;
+}
+.diff-chart-wrap{position:relative;width:100%;height:120px;margin-bottom:8px;}
+.diff-svg{width:100%;height:100%;}
+.diff-you-here{
+  font-family:var(--fm);font-size:9px;color:var(--g-5);
+  letter-spacing:0.1em;text-align:center;margin-top:4px;
+}
+.diff-zones{
+  display:flex;gap:0;margin-top:8px;border-radius:4px;overflow:hidden;
+}
+.diff-zone{
+  flex:1;padding:4px 2px;text-align:center;
+  font-family:var(--fm);font-size:8px;letter-spacing:0.05em;
+}
+
+/* Hourly timeline */
+.hr-timeline{
+  margin:0 var(--page-pad) 16px;
+}
+.hr-timeline-title{
+  font-family:var(--fm);font-size:9px;letter-spacing:0.22em;
+  color:var(--t-4);text-transform:uppercase;
+  padding:4px 0 10px;display:block;
+}
+.hr-group{margin-bottom:12px;}
+.hr-group-lbl{
+  font-family:var(--fb);font-size:11px;font-weight:600;
+  color:var(--t-4);text-transform:uppercase;letter-spacing:0.05em;
+  padding:8px 0 6px;
+}
+.hr-entry{
+  background:var(--card);border:1px solid var(--b-dim);
+  border-radius:var(--radius-md);padding:11px 13px;
+  margin-bottom:6px;display:flex;gap:10px;align-items:flex-start;
+}
+.hr-entry.hr-current{
+  border-color:rgba(212,168,84,0.3);
+  background:linear-gradient(135deg,rgba(212,168,84,0.05),var(--card));
+}
+.hr-icon{font-size:16px;flex-shrink:0;line-height:1;margin-top:1px;}
+.hr-content{flex:1;}
+.hr-label{
+  font-family:var(--fm);font-size:9px;letter-spacing:0.12em;
+  color:var(--g-3);margin-bottom:3px;text-transform:uppercase;
+}
+.hr-text{font-size:12px;line-height:1.6;color:var(--t-1);}
+.hr-feel{font-size:11px;line-height:1.5;color:var(--t-3);font-style:italic;margin-top:3px;}
 @keyframes wriggle-fast{
   0%,100%{transform:translateX(0) rotate(-12deg) scaleY(1.05);}
   25%{transform:translateX(2px) rotate(12deg) scaleY(0.92);}
@@ -1509,6 +1569,28 @@ margin-bottom:10px;
     <div class="sec-lbl">Health Milestones</div>
     <div class="fr-milestones" id="fr-milestones"></div>
 
+    <!-- DIFFICULTY CURVE -->
+    <div class="diff-card">
+      <div class="diff-title">Withdrawal Difficulty Curve</div>
+      <div class="diff-subtitle">Where you are in the journey</div>
+      <div class="diff-chart-wrap">
+        <svg class="diff-svg" id="diff-svg" viewBox="0 0 300 100" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="diff-you-here" id="diff-you-here"></div>
+      <div class="diff-zones">
+        <div class="diff-zone" style="background:rgba(168,32,32,0.25);color:#E07070;">Days 1-3<br>Hardest</div>
+        <div class="diff-zone" style="background:rgba(200,120,40,0.2);color:#D09050;">Days 4-7<br>Easing</div>
+        <div class="diff-zone" style="background:rgba(180,160,40,0.15);color:#C0B050;">Days 8-14<br>Manageable</div>
+        <div class="diff-zone" style="background:rgba(60,160,80,0.15);color:#60C070;">Days 15-21<br>Easy</div>
+      </div>
+    </div>
+
+    <!-- HOUR-BY-HOUR RECOVERY TIMELINE -->
+    <div class="hr-timeline">
+      <span class="hr-timeline-title">Recovery Timeline — Your Body Hour by Hour</span>
+      <div id="hr-timeline-list"></div>
+    </div>
+
   </div><!-- end tab-fr -->
 
   <!-- LOG / ANALYTICS TAB -->
@@ -1704,7 +1786,7 @@ const LS = {
 /* ═══════════════════════════════════════════════════
    SECTION: CONSTANTS
 ═══════════════════════════════════════════════════ */
-const JUNE2 = new Date('2026-06-02T00:00:00+05:30').getTime();
+// JUNE2 removed — June 2 has passed. Using 21-day cycle instead.
 const CYCLE_DAYS = 21;
 
 /* ═══════════════════════════════════════════════════
@@ -1792,26 +1874,12 @@ function getQuitTs(){
   return stored || new Date('2026-06-06T00:00:00+05:30').getTime();
 }
 
-function daysToJune2(){
-  return Math.max(0, (JUNE2 - Date.now()) / 86400000);
+function daysSinceMission(){
+  if(!S.missionStart) return 0;
+  return Math.floor((Date.now() - S.missionStart) / 86400000);
 }
-function hoursToJune2(){
-  return Math.max(0, Math.floor((JUNE2 - Date.now()) / 3600000));
-}
-function fmtDeadline(){
-  const d = Math.floor(daysToJune2());
-  const h = Math.floor((daysToJune2() - d) * 24);
-  if(d <= 0 && h <= 0) return 'Mission ends today';
-  if(d === 0) return h+'h left to June 2';
-  if(d === 1) return '1 day '+h+'h left to June 2';
-  return d+'d '+h+'h left to June 2';
-}
-function deadlineUrgencyTone(){
-  const d = daysToJune2();
-  if(d > 10) return 'Still enough time. But not if you waste today.';
-  if(d > 5)  return 'Final stretch. Every single hour counts now.';
-  if(d > 1)  return 'This is it. Do not stop now. You are almost there.';
-  return 'Hours left. You are on the edge of transformation.';
+function daysLeftInCycle21(){
+  return Math.max(0, 21 - getCycleDay());
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2043,7 +2111,7 @@ const URGENCY = [
   'Tonight still counts. Jupiter does not care about excuses. Neither should you.',
   'A man who controls his habits controls his destiny. This hour is the test.',
   'There are no neutral days in this window. Today either worked for you or against you.',
-  'June 2 is not moving. You either show up or you don\'t.',
+  'Jupiter is in your 10th house. Every day you execute compounds the transit.','Every day you show up is a day you didn\'t waste the most powerful transit of the next 12 years.',
 ];
 
 /* ═══════════════════════════════════════════════════
@@ -2077,7 +2145,7 @@ function calcSmokePts(startTs){
 }
 
 function calcMaxPts(){
-  const msLeft = Math.max(0,JUNE2-Date.now());
+  // June 2 reference removed
   const h = msLeft/3600000;
   const d = msLeft/86400000;
   let maxSmoke = h<=72?h*10:h<=168?72*10+(h-72)*6:72*10+96*6+(h-168)*3;
@@ -2272,8 +2340,8 @@ function updateWarRoom(){
   }
 
   // Progress bar — guard against negative total
-  const total = Math.max(1, JUNE2 - S.missionStart);
-  const elapsed = now - S.missionStart;
+  const total = Math.max(1, CYCLE_DAYS * 86400000); // 21-day cycle
+  const elapsed = Math.min(now - S.missionStart, CYCLE_DAYS * 86400000);
   const pct = Math.min(100, Math.max(0,(elapsed/total)*100));
   const pf = document.getElementById('wp-fill');
   if(pf) pf.style.width = pct.toFixed(1)+'%';
@@ -2351,6 +2419,11 @@ function updateFreedom(){
       </div>`;
     }).join('');
   }
+
+  // Render difficulty curve and hourly timeline
+  const cleanHrsForFr = Math.max(0,(Date.now()-getQuitTs())/3600000);
+  renderDifficultyCurve(cleanHrsForFr);
+  renderHourlyTimeline(cleanHrsForFr);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2428,6 +2501,93 @@ function toggleAnchor(){
   tasks.style.display = isOpen ? 'none' : 'block';
   if(arrow) arrow.textContent = isOpen ? '▾' : '▴';
 }
+
+/* ═══════════════════════════════════════════════════
+   SECTION: DIFFICULTY CURVE
+═══════════════════════════════════════════════════ */
+const DIFF_CURVE = [
+  {h:0,d:10},{h:4,d:35},{h:8,d:55},{h:16,d:75},{h:20,d:85},
+  {h:24,d:80},{h:36,d:70},{h:48,d:65},{h:60,d:72},{h:72,d:60},
+  {h:84,d:48},{h:96,d:38},{h:108,d:30},{h:120,d:25},
+  {h:144,d:18},{h:168,d:12},{h:240,d:8},{h:336,d:5},{h:504,d:3},
+];
+function getDifficultyAt(hrs){
+  const pts=DIFF_CURVE;
+  for(let i=0;i<pts.length-1;i++){
+    if(hrs>=pts[i].h&&hrs<=pts[i+1].h){
+      const t=(hrs-pts[i].h)/(pts[i+1].h-pts[i].h);
+      return pts[i].d+(pts[i+1].d-pts[i].d)*t;
+    }
+  }
+  return hrs<pts[0].h?pts[0].d:pts[pts.length-1].d;
+}
+function renderDifficultyCurve(cleanHrs){
+  const svg=document.getElementById('diff-svg');
+  const youHere=document.getElementById('diff-you-here');
+  if(!svg) return;
+  const W=300,H=100,PAD=8,maxHrs=504;
+  const pts=[];
+  for(let h=0;h<=maxHrs;h+=3){
+    const x=PAD+(h/maxHrs)*(W-PAD*2);
+    const d=getDifficultyAt(h);
+    const y=H-PAD-(d/100)*(H-PAD*2);
+    pts.push(x.toFixed(1)+','+y.toFixed(1));
+  }
+  const fillPath='M'+PAD+','+(H-PAD)+' '+pts.map(p=>'L'+p).join(' ')+' L'+(W-PAD)+','+(H-PAD)+' Z';
+  const strokePath='M'+pts.join(' L');
+  const curX=PAD+(Math.min(cleanHrs,maxHrs)/maxHrs)*(W-PAD*2);
+  const curD=getDifficultyAt(Math.min(cleanHrs,maxHrs));
+  const curY=H-PAD-(curD/100)*(H-PAD*2);
+  const col=curD>70?'#D03030':curD>40?'#D09050':curD>20?'#C0B050':'#60C070';
+  svg.innerHTML=`<defs><linearGradient id="dg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(168,32,32,0.3)"/><stop offset="30%" stop-color="rgba(200,120,40,0.2)"/><stop offset="60%" stop-color="rgba(180,160,40,0.12)"/><stop offset="100%" stop-color="rgba(60,160,80,0.08)"/></linearGradient></defs><path d="${fillPath}" fill="url(#dg)"/><path d="${strokePath}" fill="none" stroke="rgba(212,168,84,0.5)" stroke-width="1.5"/><circle cx="${curX.toFixed(1)}" cy="${curY.toFixed(1)}" r="5" fill="${col}" stroke="#fff" stroke-width="1.5"/><line x1="${curX.toFixed(1)}" y1="${(curY+7).toFixed(1)}" x2="${curX.toFixed(1)}" y2="${(H-PAD).toFixed(1)}" stroke="${col}" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>`;
+  if(youHere){
+    const pct=Math.round(curD);
+    const lbl=pct>70?'Peak zone — hardest it gets':pct>40?'Getting easier — worst is behind you':pct>20?'Manageable — habit replacing chemistry':'Crossed the threshold';
+    youHere.textContent='▲ You are here · Difficulty: '+pct+'% · '+lbl;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION: HOURLY RECOVERY TIMELINE
+═══════════════════════════════════════════════════ */
+function renderHourlyTimeline(cleanHrs){
+  const container=document.getElementById('hr-timeline-list');
+  if(!container) return;
+  const currentHour=Math.floor(cleanHrs);
+  if(currentHour<1){container.innerHTML='<div style="font-size:13px;color:var(--t-4);padding:8px 0">Mission just started. Your recovery timeline will appear here hour by hour.</div>';return;}
+  const hourKeys=Object.keys(HOURLY_MSGS).map(Number).sort((a,b)=>a-b);
+  const passedEntries=[];
+  for(let i=0;i<hourKeys.length;i++){
+    const k=hourKeys[i];
+    const nextK=hourKeys[i+1]||9999;
+    if(k<=currentHour){
+      passedEntries.push({h:k,msg:HOURLY_MSGS[k],isCurrent:currentHour>=k&&currentHour<nextK});
+    }
+  }
+  DAILY_MSGS.forEach((msg,i)=>{
+    const h=(i+8)*24;
+    if(h<=currentHour) passedEntries.push({h,msg,isCurrent:Math.abs(currentHour-h)<24});
+  });
+  passedEntries.sort((a,b)=>b.h-a.h);
+  if(!passedEntries.length){container.innerHTML='';return;}
+  const dayGroups={};
+  passedEntries.forEach(e=>{
+    const day=e.h<24?'Day 1':e.h<48?'Day 2':e.h<72?'Day 3':e.h<96?'Day 4':e.h<120?'Day 5':e.h<144?'Day 6':e.h<168?'Day 7':'Day '+(Math.floor(e.h/24)+1);
+    if(!dayGroups[day]) dayGroups[day]=[];
+    dayGroups[day].push(e);
+  });
+  let html='';
+  Object.entries(dayGroups).forEach(([day,entries])=>{
+    html+=`<div class="hr-group"><div class="hr-group-lbl">${day}</div>`;
+    entries.forEach(e=>{
+      const m=e.msg;
+      html+=`<div class="hr-entry ${e.isCurrent?'hr-current':''}"><div class="hr-icon">${m.icon}</div><div class="hr-content"><div class="hr-label">${m.hour||('Hour '+e.h)}</div><div class="hr-text">${m.text}</div>${m.feel?`<div class="hr-feel">${m.feel}</div>`:''}</div></div>`;
+    });
+    html+='</div>';
+  });
+  container.innerHTML=html;
+}
+
 function updateAnchorCard(tdLog){
   const tasks = getTasks();
   const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('');
@@ -3019,12 +3179,13 @@ function showApp(){
 }
 
 function updateDeadlineDisplays(){
-  const d = Math.floor(daysToJune2());
+  // Launch screen tagline
   const tagline = document.getElementById('launch-tagline');
-  if(tagline) tagline.textContent = d > 0 ? d+' days left · do or die' : 'Jupiter is active. Execute.';
+  if(tagline) tagline.textContent = 'Jupiter in Cancer · Your 10th House';
   const ldText = document.getElementById('ld-text');
-  if(ldText) ldText.innerHTML = d > 0 ? 'These <strong>'+d+' days</strong><br>are not coming back.' : 'Jupiter is in your 10th house.<br>Execute every day.';
+  if(ldText) ldText.innerHTML = 'Jupiter is in your 10th house.<br>Execute every day.';
   // Update mandate and pledge dates dynamically from stored quit time
+  if(!S.missionStart) return;
   const qd = new Date(getQuitTs());
   const dateStr = qd.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' at '+qd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   const mqd = document.getElementById('mandate-quit-date');
