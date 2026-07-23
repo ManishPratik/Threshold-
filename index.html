@@ -400,30 +400,6 @@ margin-bottom:10px;
   font-size:13px;line-height:1.7;color:var(--t-2);
 }
 
-/* Craving button */
-.wr-craving{padding:0 var(--page-pad) 16px;}
-.craving-btn{
-  width:100%;
-  background:linear-gradient(135deg,rgba(168,32,32,0.18),rgba(168,32,32,0.06));
-  border:1px solid rgba(168,32,32,0.3);
-  border-radius:var(--radius-md);padding:16px;
-  display:flex;align-items:center;gap:14px;
-  transition:transform 0.15s,background 0.2s;
-}
-.craving-btn:active{transform:scale(0.98);background:linear-gradient(135deg,rgba(168,32,32,0.28),rgba(168,32,32,0.1));}
-.cb-dot{
-  width:10px;height:10px;border-radius:50%;
-  background:var(--r-4);flex-shrink:0;
-  animation:cb-pulse 2s ease-in-out infinite;
-}
-@keyframes cb-pulse{
-  0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(208,48,48,0.4);}
-  50%{transform:scale(1.25);box-shadow:0 0 0 8px rgba(208,48,48,0);}
-}
-.cb-content{flex:1;text-align:left;}
-.cb-title{font-size:14px;font-weight:600;color:#E07070;line-height:1.2;}
-.cb-sub{font-size:11px;color:var(--t-3);margin-top:2px;}
-
 /* Progress bar */
 .wr-progress{padding:0 var(--page-pad) 32px;}
 .wp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
@@ -588,12 +564,6 @@ margin-bottom:10px;
 .ws-title{font-family:var(--fd);font-size:16px;color:var(--g-5);margin-bottom:3px;text-align:center;}
 .ws-fact{font-size:12px;color:var(--t-3);line-height:1.55;text-align:center;}
 
-/* Identity anchor (Clear: identity precedes behaviour) */
-.fr-identity{
-  font-family:var(--fd);font-size:18px;font-weight:500;color:var(--g-6);
-  text-align:center;padding:14px var(--page-pad) 6px;letter-spacing:0.02em;
-}
-
 /* Lapse-recovery card (Marlatt AVE counter) */
 .fr-lapse{
   margin:0 var(--page-pad) 16px;padding:16px;
@@ -621,11 +591,7 @@ margin-bottom:10px;
   flex-direction:column;align-items:center;justify-content:center;gap:1px;
   z-index:101;transition:transform 0.15s;cursor:pointer;
 }
-#s-app.active .fr-fab{display:flex;}
-#s-app.active #tab-wr.tab-pane.active ~ .fr-fab,
-#s-app.active #tab-tasks.tab-pane.active ~ .fr-fab,
-#s-app.active #tab-log.tab-pane.active ~ .fr-fab{display:none;}
-/* Simpler visibility (works everywhere): show on Freedom tab via :has() */
+/* Visibility: show only on Freedom tab. Requires Safari 15.4+ / Chrome 105+ (PWA target range). */
 body:has(#tab-fr.active) .fr-fab{display:flex;}
 body:has(#tab-wr.active) .fr-fab,
 body:has(#tab-tasks.active) .fr-fab,
@@ -633,7 +599,7 @@ body:has(#tab-log.active) .fr-fab{display:none;}
 .fr-fab:active{transform:scale(0.94);}
 .fr-fab-icon{font-size:22px;line-height:1;}
 .fr-fab-count{font-family:var(--fm);font-size:9px;letter-spacing:0.06em;color:var(--t-2);}
-.fr-fab.first-visit{animation:fab-pulse 1.4s ease-in-out 3;}
+.fr-fab.first-visit{animation:fab-pulse 1.5s ease-in-out 4;} /* 1.5s × 4 = 6s, matches tooltip */
 @keyframes fab-pulse{
   0%,100%{box-shadow:0 6px 24px rgba(0,0,0,0.4),0 0 0 0 rgba(168,32,32,0.5);}
   50%{box-shadow:0 6px 24px rgba(0,0,0,0.4),0 0 0 18px rgba(168,32,32,0);}
@@ -683,22 +649,7 @@ body:has(#tab-log.active) .fr-fab{display:none;}
 }
 .fv-sub{font-size:10px;color:var(--t-3);margin-top:3px;line-height:1.3;}
 
-/* Natural high + money row (legacy — kept for CSS token references, block deleted) */
-.fr-meters{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;padding:0 var(--page-pad) 16px;
-}
-.fr-meter-card{
-  background:var(--card);border:1px solid var(--b-dim);
-  border-radius:var(--radius-md);padding:14px;
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-}
-.fr-meter-icon{font-size:20px;line-height:1;}
-.fr-meter-val{
-  font-family:var(--fd);font-size:20px;color:var(--g-5);
-  line-height:1;text-align:center;
-}
-.fr-meter-lbl{font-family:var(--fb);font-size:11px;color:var(--t-3);text-align:center;}
+/* NH meter bar (reused inside vitals card) */
 .fr-meter-bar{
   width:100%;height:4px;background:var(--card-2);
   border-radius:2px;overflow:hidden;
@@ -746,13 +697,7 @@ body:has(#tab-log.active) .fr-fab{display:none;}
 .fr-more > summary:hover{background:rgba(184,212,160,0.08);color:var(--g-4);}
 .fr-more[open] > summary{margin-bottom:10px;}
 
-/* Dopamine trap */
-.fr-dopamine{
-  margin:0 var(--page-pad) 16px;
-  background:linear-gradient(135deg,rgba(168,32,32,0.09),transparent);
-  border:1px solid rgba(168,32,32,0.2);
-  border-radius:var(--radius-md);padding:16px;
-}
+/* Dopamine trap (inner elements .fd-title/.fd-body/.fd-truth reused inside accordion) */
 .fd-title{
   font-family:var(--fm);font-size:9px;letter-spacing:0.18em;
   color:var(--r-3);margin-bottom:10px;text-transform:uppercase;
@@ -2589,12 +2534,10 @@ function updateFreedom(){
   const nhPct = Math.min(100, (cleanHrs/(24*90))*100);
   const nhFill = document.getElementById('nh-fill');
   if(nhFill) nhFill.style.width = nhPct.toFixed(1)+'%';
-  setText('fr-nh-pct', nhPct.toFixed(1)+'%'); // legacy target — no-op if not in DOM
   setText('fv-nh', nhPct.toFixed(0)+'%');
 
   // Money
   const money = Math.floor(cleanDays*S.packCost);
-  setText('fr-money', '₹'+Math.floor(money).toLocaleString()); // legacy target
   setText('fv-money', '₹'+Math.floor(money).toLocaleString());
   setText('fr-money-anchor', getMoneyAnchor(money));
 
@@ -3388,6 +3331,7 @@ function showApp(){
   renderTasks();
   renderLog();
   renderAnalytics();
+  maybeFireFabFirstVisit(); // fires once per install, only after user reaches the app
 }
 
 function updateDeadlineDisplays(){
@@ -3566,7 +3510,7 @@ function cravingSaveTrigger(){
 function updateCravingCount(){
   const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
   const n = log.filter(c=>c.type==='surfed').length;
-  setText('craving-btn-count', n); // FAB compact counter (was 'N surfed' before Batch 11)
+  setText('craving-btn-count', n); // FAB compact counter
   setText('fv-surfed', n);
 }
 // Delegated click handler for trigger picker buttons.
@@ -3588,19 +3532,27 @@ init();
 updateDeadlineDisplays();
 updateCravingCount();
 
-// First-visit FAB hint — pulse + tooltip for 6s the first time a user reaches the app.
-(function firstVisitFabHint(){
-  try{
-    if(localStorage.getItem('th_fab_seen')) return;
-    const fab = document.getElementById('fr-fab');
-    const tip = document.getElementById('fr-fab-tip');
-    if(!fab || !tip) return;
-    fab.classList.add('first-visit');
-    tip.classList.add('visible');
-    setTimeout(()=>{ tip.classList.remove('visible'); }, 6000);
-    localStorage.setItem('th_fab_seen','1');
-  }catch(e){}
-})();
+// First-visit FAB hint — pulse + tooltip. Called from showApp() so it only fires
+// after the user has actually reached the Freedom screen (not on the launch screen).
+let _fabHintFired = false; // in-memory fallback for private-mode / disabled localStorage
+function maybeFireFabFirstVisit(){
+  if(_fabHintFired) return;
+  let seen = false;
+  try{ seen = !!localStorage.getItem('th_fab_seen'); }catch(e){ /* private mode */ }
+  if(seen) { _fabHintFired = true; return; }
+  const fab = document.getElementById('fr-fab');
+  const tip = document.getElementById('fr-fab-tip');
+  if(!fab || !tip) return;
+  fab.classList.add('first-visit');
+  tip.classList.add('visible');
+  // Align pulse and tooltip end together at 6s (pulse: 1.5s × 4 iterations).
+  setTimeout(()=>{
+    tip.classList.remove('visible');
+    fab.classList.remove('first-visit');
+  }, 6000);
+  _fabHintFired = true;
+  try{ localStorage.setItem('th_fab_seen','1'); }catch(e){ /* private mode — in-memory flag holds */ }
+}
 
 setInterval(updateWarRoom,1000);
 setInterval(()=>{
