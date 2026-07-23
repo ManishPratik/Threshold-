@@ -388,11 +388,11 @@ margin-bottom:10px;
 }
 .wro-dot.active{background:var(--g-4);transform:scale(1.5);}
 
-/* Urgency */
+/* Urgency (now on Freedom — sage-tinted to match medical-calm palette) */
 .wr-urgency{
   margin:0 var(--page-pad) 14px;
-  background:linear-gradient(135deg,rgba(168,32,32,0.08),transparent);
-  border:1px solid rgba(168,32,32,0.18);
+  background:linear-gradient(135deg,rgba(184,212,160,0.06),transparent);
+  border:1px solid rgba(184,212,160,0.18);
   border-radius:var(--radius-md);padding:13px 15px;
 }
 .wu-text{
@@ -1298,29 +1298,6 @@ margin-bottom:10px;
   <!-- WAR ROOM TAB -->
   <div id="tab-wr" class="tab-pane">
 
-    <!-- 21-DAY CYCLE BANNER -->
-    <div class="cycle-banner" id="cycle-banner">
-      <div class="cb-left">
-        <div class="cb-day" id="cb-day">Day — of 21</div>
-        <div class="cb-phase" id="cb-phase">· · ·</div>
-        <div class="cb-tagline" id="cb-tagline"></div>
-      </div>
-      <div class="cb-right">
-        <div class="cb-streak" id="cb-streak">0</div>
-        <div class="cb-streak-lbl">day streak</div>
-      </div>
-    </div>
-    <div style="padding:0 var(--page-pad) 14px">
-      <div class="cb-progress">
-        <div class="cb-progress-fill" id="cb-progress-fill" style="width:0%"></div>
-      </div>
-      <div class="cb-days-row">
-        <span>Day 1</span>
-        <span id="cb-cycle-num">Cycle 1</span>
-        <span>Day 21</span>
-      </div>
-    </div>
-
     <div class="wr-orb-wrap">
       <div class="orb-outer">
         <div class="orb-rings-outer">
@@ -1363,50 +1340,13 @@ margin-bottom:10px;
 
     <div class="wr-outcomes">
       <div class="wro-track">
-        <div class="wro active" data-i="0">
+        <div class="wro active">
           <div class="wro-header">
             <span class="wro-icon">💰</span>
             <div class="wro-title">The Wire Lands</div>
           </div>
           <div class="wro-body">Your phone buzzes. Zymo's account. Wire transfer confirmed. You are a funded CEO. This moment is being earned right now — every clean hour, every task.</div>
         </div>
-        <div class="wro" data-i="1">
-          <div class="wro-header">
-            <span class="wro-icon">⚡</span>
-            <div class="wro-title">Peak Presence</div>
-          </div>
-          <div class="wro-body">Full lungs. Zero fog. The room feels you walk in. This is what staying clean does to a man's body and energy.</div>
-        </div>
-        <div class="wro" data-i="2">
-          <div class="wro-header">
-            <span class="wro-icon">🔥</span>
-            <div class="wro-title">Magnetic Force</div>
-          </div>
-          <div class="wro-body">A man who controls his habits needs no effort to attract. You chose control. That choice is now visible on you.</div>
-        </div>
-      </div>
-      <div class="wro-dots">
-        <div class="wro-dot active" onclick="showWro(0)"></div>
-        <div class="wro-dot" onclick="showWro(1)"></div>
-        <div class="wro-dot" onclick="showWro(2)"></div>
-      </div>
-    </div>
-
-    <div class="wr-urgency">
-      <div class="wu-text" id="wu-text">"These days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away."</div>
-    </div>
-
-    <div class="wr-progress">
-      <div class="wp-head">
-        <div class="wp-lbl">Mission Progress</div>
-        <div class="wp-pct" id="wp-pct">0%</div>
-      </div>
-      <div class="wp-track">
-        <div class="wp-fill" id="wp-fill" style="width:0%"></div>
-      </div>
-      <div class="wp-dates">
-        <div id="wp-start">—</div>
-        <div id="wp-end">—</div>
       </div>
     </div>
   </div><!-- end tab-wr -->
@@ -1441,12 +1381,60 @@ margin-bottom:10px;
       <div class="fr-sub" id="fr-sub">The parasite is starving</div>
     </div>
 
+    <!-- 21-DAY CYCLE BANNER (moved from War Room) -->
+    <div class="cycle-banner" id="cycle-banner">
+      <div class="cb-left">
+        <div class="cb-day" id="cb-day">Day — of 21</div>
+        <div class="cb-phase" id="cb-phase">· · ·</div>
+        <div class="cb-tagline" id="cb-tagline"></div>
+      </div>
+      <div class="cb-right">
+        <div class="cb-streak" id="cb-streak">0</div>
+        <div class="cb-streak-lbl">day streak</div>
+      </div>
+    </div>
+    <div style="padding:0 var(--page-pad) 14px">
+      <div class="cb-progress">
+        <div class="cb-progress-fill" id="cb-progress-fill" style="width:0%"></div>
+      </div>
+      <div class="cb-days-row">
+        <span>Day 1</span>
+        <span id="cb-cycle-num">Cycle 1</span>
+        <span>Day 21</span>
+      </div>
+    </div>
+
     <div class="fr-worm-wrap">
       <div class="fr-worm-card">
         <div class="worm-stage-label" id="worm-stage-lbl">Stage: Fed & Demanding</div>
         <div class="worm-arena" id="worm-arena"></div>
         <div class="ws-title" id="ws-title">The Parasite</div>
         <div class="ws-fact" id="ws-fact">It has been feeding on you. Time to starve it.</div>
+      </div>
+    </div>
+
+    <!-- MOTIVATIONAL URGENCY (moved from War Room) -->
+    <div class="wr-urgency">
+      <div class="wu-text" id="wu-text">"These days are not coming back. Every hour you hold, the parasite starves further."</div>
+    </div>
+
+    <!-- BODY/ENERGY OUTCOMES (moved from War Room outcomes carousel) -->
+    <div class="wr-outcomes">
+      <div class="wro-track" style="min-height:auto">
+        <div class="wro active" style="position:relative;margin-bottom:10px;">
+          <div class="wro-header">
+            <span class="wro-icon">⚡</span>
+            <div class="wro-title">Peak Presence</div>
+          </div>
+          <div class="wro-body">Full lungs. Zero fog. The room feels you walk in. This is what staying clean does to a body and its energy.</div>
+        </div>
+        <div class="wro active" style="position:relative;">
+          <div class="wro-header">
+            <span class="wro-icon">🔥</span>
+            <div class="wro-title">Magnetic Force</div>
+          </div>
+          <div class="wro-body">Controlling your habits needs no effort to attract. You chose control. That choice is now visible on you.</div>
+        </div>
       </div>
     </div>
 
@@ -1505,6 +1493,21 @@ margin-bottom:10px;
     <div class="hr-timeline">
       <span class="hr-timeline-title">Recovery Timeline — Your Body Hour by Hour</span>
       <div id="hr-timeline-list"></div>
+    </div>
+
+    <!-- MISSION PROGRESS (moved from War Room) -->
+    <div class="wr-progress">
+      <div class="wp-head">
+        <div class="wp-lbl">Mission Progress</div>
+        <div class="wp-pct" id="wp-pct">0%</div>
+      </div>
+      <div class="wp-track">
+        <div class="wp-fill" id="wp-fill" style="width:0%"></div>
+      </div>
+      <div class="wp-dates">
+        <div id="wp-start">—</div>
+        <div id="wp-end">—</div>
+      </div>
     </div>
 
   </div><!-- end tab-fr -->
@@ -2037,8 +2040,6 @@ const S = {
   missionStart: null,
   packCost: 250,
   visionIdx: 0,
-  wroIdx: 0,
-  wroTimer: null,
   shownBadges: [],
   lastWormStage: -1,   // Track worm stage — only re-render on change
   lastBadgeCheck: 0,   // Throttle badge checks to once per minute
@@ -2969,22 +2970,6 @@ function switchTab(name, el){
 }
 
 /* ═══════════════════════════════════════════════════
-   SECTION: OUTCOME CARD ROTATION
-═══════════════════════════════════════════════════ */
-function showWro(i){
-  S.wroIdx=i;
-  document.querySelectorAll('.wro').forEach(w=>w.classList.remove('active'));
-  document.querySelectorAll('.wro-dot').forEach(d=>d.classList.remove('active'));
-  const w=document.querySelector(`.wro[data-i="${i}"]`);
-  const d=document.querySelectorAll('.wro-dot')[i];
-  if(w) w.classList.add('active');
-  if(d) d.classList.add('active');
-}
-function startWroRotation(){
-  S.wroTimer=setInterval(()=>showWro((S.wroIdx+1)%3), 6000);
-}
-
-/* ═══════════════════════════════════════════════════
    SECTION: LAUNCH & INIT
 ═══════════════════════════════════════════════════ */
 
@@ -3143,7 +3128,6 @@ window.addEventListener('appinstalled',()=>{document.getElementById('install-ban
 spawnEmbers();
 init();
 updateDeadlineDisplays();
-startWroRotation();
 setInterval(updateWarRoom,1000);
 setInterval(()=>{
   const fr=document.getElementById('tab-fr');
