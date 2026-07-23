@@ -604,6 +604,15 @@ margin-bottom:10px;
 }
 .fr-lapse-btn:active{background:rgba(184,212,160,0.18);}
 
+/* Cycle glance pill — replaces the full cycle banner on the home tab */
+.fr-cycle-pill{
+  display:block;margin:0 auto 12px;padding:5px 14px;
+  font-family:var(--fm);font-size:10px;letter-spacing:0.16em;
+  color:var(--g-4);background:rgba(184,212,160,0.06);
+  border:1px solid var(--b-dim);border-radius:999px;
+  width:max-content;text-transform:uppercase;
+}
+
 /* Vitals row — 3 numbers that matter (Surfed / NH / Saved) */
 .fr-vitals{
   display:grid;grid-template-columns:1fr 1fr 1fr;
@@ -1478,6 +1487,9 @@ margin-bottom:10px;
       <div class="fr-time" id="fr-time">—</div>
       <div class="fr-sub" id="fr-sub">You are free. It has nothing left to take from you.</div>
     </div>
+
+    <!-- CYCLE GLANCE — quick "Day X · Cycle N" context (full cycle banner remains on Log tab) -->
+    <div class="fr-cycle-pill" id="fr-cycle-pill">—</div>
 
     <!-- VITALS ROW — 3 numbers that matter, above the fold -->
     <div class="fr-vitals">
@@ -2522,6 +2534,10 @@ function updateFreedom(){
 
   // Day-aware Peak Presence body copy (Carr: describe the actual body state)
   setText('wro-body-peak', getBodyAwarenessCopy(cleanHrs));
+
+  // Cycle glance pill — quick day + cycle context (full banner stays on Log tab)
+  const dayInCycle = (Math.floor(cleanDays) % CYCLE_DAYS) + 1;
+  setText('fr-cycle-pill', 'Day '+dayInCycle+' · Cycle '+getCycleNum());
 
   // Open the most-relevant Learn accordion block once per session (based on cleanHrs)
   if(!S.learnOpened){
