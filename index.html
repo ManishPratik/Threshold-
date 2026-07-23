@@ -1352,7 +1352,7 @@ margin-bottom:10px;
       <div class="wra-tasks" id="wra-tasks" style="display:none"></div>
     </div>
 
-    <div class="wr-stats" style="grid-template-columns:1fr">
+    <div class="wr-stats" style="grid-template-columns:minmax(0,240px);justify-content:center">
       <div class="wrs">
         <div class="wrs-icon">⚡</div>
         <div class="wrs-val" id="wr-task-pts">0</div>
@@ -1406,7 +1406,7 @@ margin-bottom:10px;
       </div>
       <div class="wp-dates">
         <div id="wp-start">—</div>
-        <div>Jun 2</div>
+        <div id="wp-end">—</div>
       </div>
     </div>
   </div><!-- end tab-wr -->
@@ -2047,26 +2047,6 @@ const S = {
 /* ═══════════════════════════════════════════════════
    SECTION: SCORING ENGINE
 ═══════════════════════════════════════════════════ */
-function smokePtsPerHr(h){
-  if(h<=72) return 10;
-  if(h<=168) return 6;
-  return 3;
-}
-
-function calcSmokePts(startTs){
-  const h = Math.max(0, (Date.now()-startTs)/3600000);
-  if(h<=72) return Math.floor(h*10);
-  if(h<=168) return Math.floor(72*10+(h-72)*6);
-  return Math.floor(72*10+96*6+(h-168)*3);
-}
-
-function calcMaxPts(){
-  // June 2 reference removed
-  const h = msLeft/3600000;
-  const d = msLeft/86400000;
-  let maxSmoke = h<=72?h*10:h<=168?72*10+(h-72)*6:72*10+96*6+(h-168)*3;
-  return Math.floor(maxSmoke + Math.ceil(d)*MAX_TASK_PER_DAY) || 4221;
-}
 
 function calcProb(){
   const ss = getQuitTs();
@@ -2177,25 +2157,6 @@ const WORM_DATA = {
 };
 
 /* ═══════════════════════════════════════════════════
-   SECTION: BODY STRIP UPDATER
-═══════════════════════════════════════════════════ */
-function getBodyMsg(cleanHrs){
-  if(!S.missionStart) return {icon:'⏳', hour:'BODY RIGHT NOW', text:'Mission not yet started.', feel:''};
-  const h = Math.floor(cleanHrs);
-
-  if(h <= 168){
-    const keys = Object.keys(HOURLY_MSGS).map(Number).sort((a,b)=>a-b);
-    let best = 0;
-    for(const k of keys){ if(k<=h) best=k; }
-    return HOURLY_MSGS[best] || HOURLY_MSGS[0];
-  }
-  // After day 7 — daily
-  const dayIdx = Math.min(Math.floor(h/24)-7, DAILY_MSGS.length-1);
-  const dm = DAILY_MSGS[Math.max(0,dayIdx)];
-  return {icon:dm.icon, hour:dm.hour||`Day ${Math.floor(h/24)}`, text:dm.text, feel:dm.feel||''};
-}
-
-/* ═══════════════════════════════════════════════════
    SECTION: WAR ROOM UPDATER — runs every second
 ═══════════════════════════════════════════════════ */
 function updateWarRoom(){
@@ -2251,6 +2212,8 @@ function updateWarRoom(){
   setText('wp-pct', pct.toFixed(1)+'%');
   const ws = document.getElementById('wp-start');
   if(ws){ const d=new Date(S.missionStart); ws.textContent=d.toLocaleDateString('en-IN',{day:'numeric',month:'short'}); }
+  const we = document.getElementById('wp-end');
+  if(we){ const de=new Date(S.missionStart + CYCLE_DAYS*86400000); we.textContent=de.toLocaleDateString('en-IN',{day:'numeric',month:'short'}); }
 
   // Urgency — phase aware
   const phase = getPhase();
@@ -2293,10 +2256,11 @@ function updateFreedom(){
     S.lastWormStage = stage;
     renderWorm(stage);
   }
-  // Continuous shrink tied to nicotine clearance — runs every tick, not just on stage change
+  // Continuous shrink tied to nicotine clearance — runs every tick, not just on stage change.
+  // Stage 5 = ash particles (already tiny by design); reset scale so they render at natural size.
   const wormArena = document.getElementById('worm-arena');
   if(wormArena){
-    const scale = getWormScale(cleanHrs);
+    const scale = stage === 5 ? 1 : getWormScale(cleanHrs);
     wormArena.style.transformOrigin = 'center center';
     wormArena.style.transition = 'transform 0.6s ease-out';
     wormArena.style.transform = 'scale('+scale.toFixed(3)+')';
@@ -3084,11 +3048,7 @@ function showApp(){
   updateDeadlineDisplays();
   updateCycleBanner();
   updateWarRoom();
-  updateFreedom();
-  const ss2 = getQuitTs();
-  const stage = getWormStage((Date.now()-ss2)/3600000);
-  S.lastWormStage = stage;
-  renderWorm(stage);
+  updateFreedom(); // re-renders worm on stage change and applies continuous scale
   renderTasks();
   renderLog();
   renderAnalytics();
@@ -3138,13 +3098,6 @@ function init(){
    SECTION: UTILITY FUNCTIONS
 ═══════════════════════════════════════════════════ */
 function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
-function fmtClean(ms){
-  if(ms<60000) return 'Just now';
-  const d=Math.floor(ms/86400000),h=Math.floor((ms%86400000)/3600000),m=Math.floor((ms%3600000)/60000);
-  if(d>0)return d+'d '+h+'h';
-  if(h>0)return h+'h '+m+'m';
-  return m+'m';
-}
 function fmtCleanLong(ms){
   const d=Math.floor(ms/86400000),h=Math.floor((ms%86400000)/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
   if(d>0)return d+'d '+h+'h '+m+'m';
