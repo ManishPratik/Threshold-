@@ -604,6 +604,51 @@ margin-bottom:10px;
 }
 .fr-lapse-btn:active{background:rgba(184,212,160,0.18);}
 
+/* Craving SOS floating action button — always visible on Freedom tab, above bottom-nav */
+.fr-fab{
+  display:none;
+  position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));
+  width:60px;height:60px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,rgba(210,80,80,0.7),rgba(168,32,32,0.55) 55%,rgba(120,40,60,0.55) 100%);
+  border:1px solid rgba(255,180,180,0.35);
+  color:var(--t-1);
+  box-shadow:0 6px 24px rgba(0,0,0,0.4),0 0 30px rgba(168,32,32,0.25);
+  flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  z-index:101;transition:transform 0.15s;cursor:pointer;
+}
+#s-app.active .fr-fab{display:flex;}
+#s-app.active #tab-wr.tab-pane.active ~ .fr-fab,
+#s-app.active #tab-tasks.tab-pane.active ~ .fr-fab,
+#s-app.active #tab-log.tab-pane.active ~ .fr-fab{display:none;}
+/* Simpler visibility (works everywhere): show on Freedom tab via :has() */
+body:has(#tab-fr.active) .fr-fab{display:flex;}
+body:has(#tab-wr.active) .fr-fab,
+body:has(#tab-tasks.active) .fr-fab,
+body:has(#tab-log.active) .fr-fab{display:none;}
+.fr-fab:active{transform:scale(0.94);}
+.fr-fab-icon{font-size:22px;line-height:1;}
+.fr-fab-count{font-family:var(--fm);font-size:9px;letter-spacing:0.06em;color:var(--t-2);}
+.fr-fab.first-visit{animation:fab-pulse 1.4s ease-in-out 3;}
+@keyframes fab-pulse{
+  0%,100%{box-shadow:0 6px 24px rgba(0,0,0,0.4),0 0 0 0 rgba(168,32,32,0.5);}
+  50%{box-shadow:0 6px 24px rgba(0,0,0,0.4),0 0 0 18px rgba(168,32,32,0);}
+}
+.fr-fab-tip{
+  display:none;position:fixed;
+  right:88px;bottom:calc(92px + env(safe-area-inset-bottom));
+  background:rgba(20,25,30,0.96);border:1px solid var(--b-dim);
+  color:var(--t-1);font-size:12px;padding:9px 12px;border-radius:8px;
+  max-width:220px;line-height:1.4;z-index:101;
+  box-shadow:0 4px 14px rgba(0,0,0,0.5);
+  animation:tip-in 0.35s ease;
+}
+.fr-fab-tip.visible{display:block;}
+@keyframes tip-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+@media (prefers-reduced-motion:reduce){
+  .fr-fab.first-visit{animation:none;}
+  .fr-fab-tip{animation:none;}
+}
+
 /* Cycle glance pill — replaces the full cycle banner on the home tab */
 .fr-cycle-pill{
   display:block;margin:0 auto 12px;padding:5px 14px;
@@ -1525,15 +1570,6 @@ margin-bottom:10px;
       </div>
     </div>
 
-    <!-- CRAVING SOS — highest-leverage in-moment intervention -->
-    <div class="wr-craving">
-      <button class="craving-btn" onclick="openCravingSOS()">
-        <div style="flex:1;text-align:left">
-          <div style="font-family:var(--fd);font-size:15px;color:var(--t-1)">Feeling a craving?</div>
-          <div style="font-size:11.5px;color:var(--t-3);margin-top:2px">3 minutes. Watch it pass.</div>
-        </div>
-      </button>
-    </div>
 
     <div class="fr-worm-wrap">
       <div class="fr-worm-card">
@@ -1745,6 +1781,13 @@ margin-bottom:10px;
     <div id="log-stats" style="display:none"></div>
     <div id="log-list" style="display:none"></div>
   </div>
+
+  <!-- CRAVING SOS FLOATING ACTION BUTTON (Freedom tab only, sticky above bottom-nav) -->
+  <button id="fr-fab" class="fr-fab" onclick="openCravingSOS()" aria-label="Craving SOS — start a 3-minute pause">
+    <span class="fr-fab-icon" aria-hidden="true">🌊</span>
+    <span class="fr-fab-count" id="craving-btn-count">0</span>
+  </button>
+  <div class="fr-fab-tip" id="fr-fab-tip" role="tooltip">Feeling a craving? Tap here — 3-minute pause.</div>
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
@@ -3513,7 +3556,7 @@ function cravingSaveTrigger(){
 function updateCravingCount(){
   const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
   const n = log.filter(c=>c.type==='surfed').length;
-  setText('craving-btn-count', n+' surfed'); // legacy target
+  setText('craving-btn-count', n); // FAB compact counter (was 'N surfed' before Batch 11)
   setText('fv-surfed', n);
 }
 // Delegated click handler for trigger picker buttons.
@@ -3534,6 +3577,21 @@ spawnEmbers();
 init();
 updateDeadlineDisplays();
 updateCravingCount();
+
+// First-visit FAB hint — pulse + tooltip for 6s the first time a user reaches the app.
+(function firstVisitFabHint(){
+  try{
+    if(localStorage.getItem('th_fab_seen')) return;
+    const fab = document.getElementById('fr-fab');
+    const tip = document.getElementById('fr-fab-tip');
+    if(!fab || !tip) return;
+    fab.classList.add('first-visit');
+    tip.classList.add('visible');
+    setTimeout(()=>{ tip.classList.remove('visible'); }, 6000);
+    localStorage.setItem('th_fab_seen','1');
+  }catch(e){}
+})();
+
 setInterval(updateWarRoom,1000);
 setInterval(()=>{
   const fr=document.getElementById('tab-fr');
