@@ -562,6 +562,11 @@ margin-bottom:10px;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
 }
+.fr-time-sub{
+  font-family:var(--fm);font-size:11px;color:var(--t-3);
+  letter-spacing:0.14em;margin-top:6px;text-transform:uppercase;
+  min-height:14px;
+}
 .fr-sub{font-size:12px;color:var(--t-3);margin-top:5px;}
 
 /* Worm section — redesigned with more space */
@@ -1543,6 +1548,7 @@ body:has(#tab-log.active) .fr-fab{display:none;}
     <div class="fr-hero">
       <div class="fr-hero-lbl">Smoke-Free Time</div>
       <div class="fr-time" id="fr-time">—</div>
+      <div class="fr-time-sub" id="fr-time-sub"></div>
       <div class="fr-sub" id="fr-sub">You are free. It has nothing left to take from you.</div>
     </div>
 
@@ -2548,6 +2554,10 @@ function updateFreedom(){
   const cleanDays = cleanMs/86400000;
 
   setText('fr-time', fmtCleanLong(cleanMs));
+  // Compact day-focused secondary line under the hero (hidden until >=1 day)
+  const daysWhole = Math.floor(cleanDays);
+  const hoursWhole = Math.floor(cleanHrs);
+  setText('fr-time-sub', daysWhole >= 1 ? (daysWhole+' days · '+hoursWhole+' hours') : '');
 
   // Sub text
   const d = Math.floor(cleanDays);
