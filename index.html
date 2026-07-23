@@ -683,6 +683,19 @@ margin-bottom:10px;
 .fr-learn-block > summary:hover{background:rgba(184,212,160,0.03);}
 .fr-learn-body{padding:0 16px 16px;}
 
+/* Progressive disclosure inside milestones/timeline */
+.fr-more{margin-top:10px;}
+.fr-more > summary{
+  padding:9px 12px;font-family:var(--fm);font-size:10px;
+  letter-spacing:0.14em;text-transform:uppercase;color:var(--t-3);
+  cursor:pointer;list-style:none;
+  background:rgba(184,212,160,0.04);
+  border:1px solid var(--b-dim);border-radius:var(--radius-sm);
+}
+.fr-more > summary::-webkit-details-marker{display:none;}
+.fr-more > summary:hover{background:rgba(184,212,160,0.08);color:var(--g-4);}
+.fr-more[open] > summary{margin-bottom:10px;}
+
 /* Dopamine trap */
 .fr-dopamine{
   margin:0 var(--page-pad) 16px;
@@ -2546,10 +2559,10 @@ function updateFreedom(){
     if(tEl){ tEl.setAttribute('open',''); S.learnOpened = true; }
   }
 
-  // Milestones
+  // Milestones — reached always visible; next-3 upcoming visible; rest collapsed
   const ml = document.getElementById('fr-milestones');
   if(ml){
-    ml.innerHTML = MILESTONES.map(m=>{
+    const cardHtml = m => {
       const reached = cleanHrs*60 >= m.mins;
       const minsLeft = m.mins - cleanHrs*60;
       const timeLabel = reached ? '✓ Reached' : 'In ~'+fmtDur(minsLeft);
@@ -2562,7 +2575,16 @@ function updateFreedom(){
         </div>
         ${reached?'<div style="font-size:16px">✅</div>':''}
       </div>`;
-    }).join('');
+    };
+    const reachedList = MILESTONES.filter(m => cleanHrs*60 >= m.mins);
+    const upcoming = MILESTONES.filter(m => cleanHrs*60 < m.mins);
+    const nextThree = upcoming.slice(0,3);
+    const rest = upcoming.slice(3);
+    let out = reachedList.map(cardHtml).join('') + nextThree.map(cardHtml).join('');
+    if(rest.length){
+      out += `<details class="fr-more"><summary>See all ${rest.length} upcoming milestones</summary>${rest.map(cardHtml).join('')}</details>`;
+    }
+    ml.innerHTML = out;
   }
 
   // Render difficulty curve and hourly timeline
@@ -2721,15 +2743,22 @@ function renderHourlyTimeline(cleanHrs){
     if(!dayGroups[day]) dayGroups[day]=[];
     dayGroups[day].push(e);
   });
-  let html='';
-  Object.entries(dayGroups).forEach(([day,entries])=>{
-    html+=`<div class="hr-group"><div class="hr-group-lbl">${day}</div>`;
+  // Progressive disclosure: show 2 most-recent day-groups fully; wrap older in <details>.
+  const groupEntries = Object.entries(dayGroups);
+  const groupHtml = ([day,entries]) => {
+    let g = `<div class="hr-group"><div class="hr-group-lbl">${day}</div>`;
     entries.forEach(e=>{
       const m=e.msg;
-      html+=`<div class="hr-entry ${e.isCurrent?'hr-current':''}"><div class="hr-icon">${m.icon}</div><div class="hr-content"><div class="hr-label">${m.hour||('Hour '+e.h)}</div><div class="hr-text">${m.text}</div>${m.feel?`<div class="hr-feel">${m.feel}</div>`:''}</div></div>`;
+      g+=`<div class="hr-entry ${e.isCurrent?'hr-current':''}"><div class="hr-icon">${m.icon}</div><div class="hr-content"><div class="hr-label">${m.hour||('Hour '+e.h)}</div><div class="hr-text">${m.text}</div>${m.feel?`<div class="hr-feel">${m.feel}</div>`:''}</div></div>`;
     });
-    html+='</div>';
-  });
+    return g+'</div>';
+  };
+  const recent = groupEntries.slice(0,2);
+  const older = groupEntries.slice(2);
+  let html = recent.map(groupHtml).join('');
+  if(older.length){
+    html += `<details class="fr-more"><summary>See earlier ${older.length} day${older.length>1?'s':''}</summary>${older.map(groupHtml).join('')}</details>`;
+  }
   container.innerHTML=html;
 }
 
