@@ -1405,29 +1405,6 @@ margin-bottom:10px;
     <!-- IDENTITY ANCHOR (Clear: identity precedes behaviour) -->
     <div class="fr-identity">You are a non-smoker.</div>
 
-    <!-- 21-DAY CYCLE BANNER (moved from War Room) -->
-    <div class="cycle-banner" id="cycle-banner">
-      <div class="cb-left">
-        <div class="cb-day" id="cb-day">Day — of 21</div>
-        <div class="cb-phase" id="cb-phase">· · ·</div>
-        <div class="cb-tagline" id="cb-tagline"></div>
-      </div>
-      <div class="cb-right">
-        <div class="cb-streak" id="cb-streak">0</div>
-        <div class="cb-streak-lbl">day streak</div>
-      </div>
-    </div>
-    <div style="padding:0 var(--page-pad) 14px">
-      <div class="cb-progress">
-        <div class="cb-progress-fill" id="cb-progress-fill" style="width:0%"></div>
-      </div>
-      <div class="cb-days-row">
-        <span>Day 1</span>
-        <span id="cb-cycle-num">Cycle 1</span>
-        <span>Day 21</span>
-      </div>
-    </div>
-
     <div class="fr-worm-wrap">
       <div class="fr-worm-card">
         <div class="worm-stage-label" id="worm-stage-lbl">The little monster is loud right now. It cannot force you to feed it — watch it grow quieter.</div>
@@ -1526,7 +1503,35 @@ margin-bottom:10px;
       <div id="hr-timeline-list"></div>
     </div>
 
-    <!-- MISSION PROGRESS (moved from War Room) -->
+  </div><!-- end tab-fr -->
+
+  <!-- LOG / ANALYTICS TAB -->
+  <div id="tab-log" class="tab-pane">
+
+    <!-- 21-DAY CYCLE BANNER (moved here from Freedom — Carr: home page stays quiet) -->
+    <div class="cycle-banner" id="cycle-banner" style="margin-top:14px">
+      <div class="cb-left">
+        <div class="cb-day" id="cb-day">Day — of 21</div>
+        <div class="cb-phase" id="cb-phase">· · ·</div>
+        <div class="cb-tagline" id="cb-tagline"></div>
+      </div>
+      <div class="cb-right">
+        <div class="cb-streak" id="cb-streak">0</div>
+        <div class="cb-streak-lbl">day streak</div>
+      </div>
+    </div>
+    <div style="padding:0 var(--page-pad) 14px">
+      <div class="cb-progress">
+        <div class="cb-progress-fill" id="cb-progress-fill" style="width:0%"></div>
+      </div>
+      <div class="cb-days-row">
+        <span>Day 1</span>
+        <span id="cb-cycle-num">Cycle 1</span>
+        <span>Day 21</span>
+      </div>
+    </div>
+
+    <!-- MISSION PROGRESS (moved here from Freedom) -->
     <div class="wr-progress">
       <div class="wp-head">
         <div class="wp-lbl">Mission Progress</div>
@@ -1541,10 +1546,6 @@ margin-bottom:10px;
       </div>
     </div>
 
-  </div><!-- end tab-fr -->
-
-  <!-- LOG / ANALYTICS TAB -->
-  <div id="tab-log" class="tab-pane">
     <!-- Analytics section -->
     <div class="analytics-wrap">
       <div class="sec-lbl" style="padding-top:16px">Analytics</div>
