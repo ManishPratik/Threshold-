@@ -285,46 +285,6 @@ img{display:block;max-width:100%;}
    SECTION: WAR ROOM — Hero-first layout
 ═══════════════════════════════════════════════════ */
 
-/* Hours — massive hero */
-.wr-hero{
-  text-align:center;
-  padding:16px var(--page-pad) 20px;
-}
-.wr-hero-label{
-  font-family:var(--fm);font-size:9px;letter-spacing:0.22em;
-  color:var(--t-4);text-transform:uppercase;margin-bottom:6px;
-}
-.wr-hrs{
-  font-family:var(--fm);font-size:56px;font-weight:300;
-  line-height:0.95;letter-spacing:-0.03em;
-  background:linear-gradient(175deg,var(--g-7) 0%,var(--g-5) 40%,var(--g-3) 80%,var(--g-1) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.wr-hrs-sub{
-  font-family:var(--fd);font-style:italic;
-  font-size:12px;color:var(--t-4);margin-top:5px;
-}
-
-/* Body Now Strip — compact, below hero */
-.body-strip{
-  margin:0 var(--page-pad) 16px;
-  background:linear-gradient(135deg,rgba(184,212,160,0.07),rgba(184,212,160,0.02));
-  border:1px solid rgba(184,212,160,0.14);
-  border-radius:var(--radius-md);
-  padding:11px 14px;
-  display:flex;align-items:center;gap:10px;
-  min-height:50px;
-}
-.bs-icon{font-size:20px;flex-shrink:0;}
-.bs-content{flex:1;min-width:0;}
-.bs-hour{
-  font-family:var(--fm);font-size:8px;letter-spacing:0.18em;
-  color:var(--g-4);margin-bottom:2px;text-transform:uppercase;
-}
-.bs-feel{font-size:11px;line-height:1.45;color:var(--t-3);margin-top:4px;font-style:italic;}
-.bs-carr{font-size:11px;line-height:1.55;color:var(--g-3);margin-top:6px;font-style:italic;border-top:1px solid var(--b-dim);padding-top:6px;display:none;}
-
 /* Probability Orb — the hero element */
 .wr-orb-wrap{
   display:flex;flex-direction:column;align-items:center;
@@ -1244,23 +1204,6 @@ margin-bottom:10px;
   color:var(--g-4);font-style:italic;
   text-align:center;margin-top:10px;
 }
-.wr-mandate{
-  margin:0 var(--page-pad) 16px;
-  background:linear-gradient(135deg,rgba(184,212,160,0.1),rgba(184,212,160,0.04));
-  border:1.5px solid rgba(184,212,160,0.35);
-  border-radius:var(--radius-md);
-  padding:16px;
-}
-.wr-mandate-title{
-  font-family:var(--fm);font-size:9px;font-weight:700;
-  letter-spacing:0.3em;color:var(--g-4);
-  text-transform:uppercase;margin-bottom:10px;
-}
-.wr-mandate-body{
-  font-size:13px;line-height:1.9;color:var(--t-1);
-}
-.wr-mandate-body strong{color:var(--g-6);}
-
 /* Screen transition */
 #s-app{animation:screen-in 0.45s cubic-bezier(0.22,1,0.36,1);}
 @keyframes screen-in{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
@@ -1354,11 +1297,6 @@ margin-bottom:10px;
 
   <!-- WAR ROOM TAB -->
   <div id="tab-wr" class="tab-pane">
-    <div class="wr-hero">
-      <div class="wr-hero-label">Hours Smoke-Free</div>
-      <div class="wr-hrs" id="wr-hrs">—</div>
-      <div class="wr-hrs-sub">Jupiter in Cancer · 10th House · Active Now</div>
-    </div>
 
     <!-- 21-DAY CYCLE BANNER -->
     <div class="cycle-banner" id="cycle-banner">
@@ -1380,22 +1318,6 @@ margin-bottom:10px;
         <span>Day 1</span>
         <span id="cb-cycle-num">Cycle 1</span>
         <span>Day 21</span>
-      </div>
-    </div>
-
-    <!-- NON-NEGOTIABLE FACT — always visible -->
-    <div class="wr-mandate">
-      <div class="wr-mandate-title">NON-NEGOTIABLE</div>
-      <div class="wr-mandate-body">Quitting smoking is <strong>mandatory</strong> to raise funds for Zymo.<br><br>You have quit as of <strong id="mandate-quit-date">—</strong><br><br><strong>Zymo funding will come.</strong> Your chart rewards discipline. Disciplined founders get funded.</div>
-    </div>
-
-    <div class="body-strip" id="body-strip">
-      <div class="bs-icon" id="bs-icon">⏳</div>
-      <div class="bs-content">
-        <div class="bs-hour" id="bs-hour">Body Right Now</div>
-        <div class="bs-text" id="bs-text">Mission not yet started</div>
-        <div class="bs-feel" id="bs-feel"></div>
-        <div class="bs-carr" id="bs-carr"></div>
       </div>
     </div>
 
@@ -1430,13 +1352,7 @@ margin-bottom:10px;
       <div class="wra-tasks" id="wra-tasks" style="display:none"></div>
     </div>
 
-    <div class="wr-stats">
-      <div class="wrs">
-        <div class="wrs-icon">🚭</div>
-        <div class="wrs-val" id="wr-clean">—</div>
-        <div class="wrs-lbl">smoke-free</div>
-        <div class="wrs-sub" id="wr-smoke-pts">0 pts</div>
-      </div>
+    <div class="wr-stats" style="grid-template-columns:1fr">
       <div class="wrs">
         <div class="wrs-icon">⚡</div>
         <div class="wrs-val" id="wr-task-pts">0</div>
@@ -2286,21 +2202,10 @@ function updateWarRoom(){
   if(!S.missionStart) return;
   const now = Date.now();
 
-  // Clean time — from actual quit date
+  // Clean time — still computed for orb probability + cycle logic downstream
   const quitTs = getQuitTs();
   const cleanMs = Math.max(0, now - quitTs);
   const cleanHrs = cleanMs / 3600000;
-
-  // Hours smoke-free — the meaningful climbing number
-  const cleanHrsDisplay = Math.floor(cleanHrs);
-  setText('wr-hrs', cleanHrsDisplay.toLocaleString());
-
-  setText('wr-clean', fmtClean(cleanMs));
-
-  // Smoke pts
-  const ss = getQuitTs();
-  const sp = calcSmokePts(ss);
-  setText('wr-smoke-pts', sp+' pts earned');
 
   // Task pts
   const tp = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
@@ -2336,24 +2241,6 @@ function updateWarRoom(){
 
   // Check cycle completion
   if(isCycleComplete()) showCycleComplete();
-
-  // Body strip
-  const bm = getBodyMsg(cleanHrs);
-  setText('bs-icon', bm.icon);
-  setText('bs-hour', bm.hour);
-  setText('bs-text', bm.text);
-  const feelEl = document.getElementById('bs-feel');
-  if(feelEl) feelEl.textContent = bm.feel || '';
-  // Allen Carr reframe — show during Days 1-7 when discomfort is highest
-  const carrEl = document.getElementById('bs-carr');
-  if(carrEl){
-    if(cleanHrs <= 168 && cleanHrs > 0){
-      carrEl.textContent = '"Any inconvenience you feel right now is not because you stopped smoking — it is because you started. This is what smokers suffer throughout their entire smoking lives."';
-      carrEl.style.display = 'block';
-    } else {
-      carrEl.style.display = 'none';
-    }
-  }
 
   // Progress bar — guard against negative total
   const total = Math.max(1, CYCLE_DAYS * 86400000); // 21-day cycle
@@ -3217,8 +3104,6 @@ function updateDeadlineDisplays(){
   if(!S.missionStart) return;
   const qd = new Date(getQuitTs());
   const dateStr = qd.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' at '+qd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  const mqd = document.getElementById('mandate-quit-date');
-  if(mqd) mqd.textContent = dateStr;
   const pqd = document.getElementById('pledge-quit-date');
   if(pqd) pqd.textContent = dateStr;
 }
