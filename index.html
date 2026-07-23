@@ -583,6 +583,27 @@ margin-bottom:10px;
 .ws-title{font-family:var(--fd);font-size:16px;color:var(--g-5);margin-bottom:3px;text-align:center;}
 .ws-fact{font-size:12px;color:var(--t-3);line-height:1.55;text-align:center;}
 
+/* Identity anchor (Clear: identity precedes behaviour) */
+.fr-identity{
+  font-family:var(--fd);font-size:18px;font-weight:500;color:var(--g-6);
+  text-align:center;padding:14px var(--page-pad) 6px;letter-spacing:0.02em;
+}
+
+/* Lapse-recovery card (Marlatt AVE counter) */
+.fr-lapse{
+  margin:0 var(--page-pad) 16px;padding:16px;
+  background:linear-gradient(135deg,rgba(184,212,160,0.05),rgba(184,212,160,0.02));
+  border:1px solid rgba(184,212,160,0.15);border-radius:var(--radius-md);
+}
+.fr-lapse-title{font-family:var(--fd);font-size:15px;color:var(--t-1);margin-bottom:6px;}
+.fr-lapse-body{font-size:12.5px;color:var(--t-2);line-height:1.6;margin-bottom:10px;}
+.fr-lapse-btn{
+  width:100%;padding:11px;background:rgba(184,212,160,0.1);
+  border:1px solid rgba(184,212,160,0.25);border-radius:var(--radius-sm);
+  color:var(--t-1);font-size:12px;font-weight:500;
+}
+.fr-lapse-btn:active{background:rgba(184,212,160,0.18);}
+
 /* Natural high + money row */
 .fr-meters{
   display:grid;grid-template-columns:1fr 1fr;
@@ -1381,6 +1402,9 @@ margin-bottom:10px;
       <div class="fr-sub" id="fr-sub">You are free. It has nothing left to take from you.</div>
     </div>
 
+    <!-- IDENTITY ANCHOR (Clear: identity precedes behaviour) -->
+    <div class="fr-identity">You are a non-smoker.</div>
+
     <!-- 21-DAY CYCLE BANNER (moved from War Room) -->
     <div class="cycle-banner" id="cycle-banner">
       <div class="cb-left">
@@ -1451,7 +1475,7 @@ margin-bottom:10px;
         <div class="fr-meter-icon">💰</div>
         <div class="fr-meter-lbl">Money Saved</div>
         <div class="fr-meter-val" id="fr-money">₹0</div>
-        <div class="fr-meter-lbl" style="font-size:10px;color:var(--g-3);">= AIRA ad spend</div>
+        <div id="fr-money-anchor" class="fr-meter-lbl" style="font-size:10px;color:var(--g-3);">—</div>
       </div>
     </div>
 
@@ -1462,6 +1486,13 @@ margin-bottom:10px;
         <div class="frp-title">I AM A NON-SMOKER</div>
         <div class="frp-body">I have escaped the trap. Cigarettes gave me nothing to begin with. There is nothing to miss.<br><br>My quit date is <strong id="pledge-quit-date">—</strong>.</div>
       </div>
+    </div>
+
+    <!-- LAPSE-RECOVERY CARD (Marlatt: slip != relapse) -->
+    <div class="fr-lapse">
+      <div class="fr-lapse-title">If today doesn't go clean</div>
+      <div class="fr-lapse-body">A slip is not a return. It is a data point. Log the trigger and continue. A single lapse only becomes relapse if you decide it does.</div>
+      <button class="fr-lapse-btn" onclick="openOverlay('ov-slip')">Log a slip (streak intact)</button>
     </div>
 
     <div class="fr-dopamine">
@@ -1632,6 +1663,24 @@ margin-bottom:10px;
       </div>
     </div>
     <button class="btn-p" onclick="startNextCycle()">Begin Cycle 2 →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: SLIP (log-a-slip vs full-relapse choice)
+     Marlatt AVE counter: slip preserves streak, only user-confirmed
+     relapse resets. Distinct from confirmSmoked().
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-slip" onclick="closeOverlayOutside(event,'ov-slip')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">A slip is a data point.</div>
+    <div style="font-size:13px;color:var(--t-2);line-height:1.7;margin-bottom:22px;">
+      One cigarette does not end your quit. What matters is what you do in the next hour. Log it honestly, note what triggered it, and continue. Nothing is broken unless you decide it is.
+    </div>
+    <button class="btn-p" onclick="logSingleSlip()">Log slip only — streak intact</button>
+    <button class="btn-d" onclick="closeOverlay('ov-slip'); confirmSmoked();">Full relapse — reset streak</button>
+    <button class="btn-s" onclick="closeOverlay('ov-slip')">Cancel</button>
   </div>
 </div>
 
@@ -2110,6 +2159,36 @@ function getBodyAwarenessCopy(cleanHrs){
   return 'Your baseline is returning. Full lungs. Clear head. This is the natural state, not an achievement.';
 }
 
+// Personal-benefit money anchor — ladder scales with rupees saved.
+const MONEY_ANCHORS = [
+  {min:0,      txt:'= one clean day at a time'},
+  {min:500,    txt:'= a good meal out'},
+  {min:1500,   txt:'= a book you have been meaning to read'},
+  {min:3000,   txt:'= a pair of running shoes'},
+  {min:6000,   txt:'= two pairs of running shoes'},
+  {min:12000,  txt:'= 4 months gym membership'},
+  {min:25000,  txt:'= a weekend trip'},
+  {min:50000,  txt:'= a short holiday'},
+  {min:100000, txt:'= a domestic flight + hotel week'}
+];
+function getMoneyAnchor(rupees){
+  let out = MONEY_ANCHORS[0].txt;
+  for(const a of MONEY_ANCHORS){ if(rupees >= a.min) out = a.txt; }
+  return out;
+}
+
+// Slip-log: writes an entry to CRAVING_LOG without wiping SMOKING_START.
+// Distinct from confirmSmoked() which fully resets the streak.
+function logSingleSlip(){
+  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  log.push({ts:Date.now(), resisted:false, type:'slip', note:'Single slip — streak intact'});
+  localStorage.setItem(LS.CRAVING_LOG, JSON.stringify(log));
+  closeOverlay('ov-slip');
+  updateFreedom();
+  renderLog();
+  alert('Slip logged. Streak intact. Next hour is a fresh choice.');
+}
+
 function renderWorm(stage){
   const arena = document.getElementById('worm-arena');
   if(!arena) return;
@@ -2284,6 +2363,7 @@ function updateFreedom(){
   // Money
   const money = Math.floor(cleanDays*S.packCost);
   setText('fr-money', '₹'+Math.floor(money).toLocaleString());
+  setText('fr-money-anchor', getMoneyAnchor(money));
 
   // Day-aware Peak Presence body copy (Carr: describe the actual body state)
   setText('wro-body-peak', getBodyAwarenessCopy(cleanHrs));
