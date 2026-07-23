@@ -604,7 +604,27 @@ margin-bottom:10px;
 }
 .fr-lapse-btn:active{background:rgba(184,212,160,0.18);}
 
-/* Natural high + money row */
+/* Vitals row — 3 numbers that matter (Surfed / NH / Saved) */
+.fr-vitals{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:8px;padding:0 var(--page-pad) 16px;
+}
+.fv-card{
+  background:var(--card);border:1px solid var(--b-dim);
+  border-radius:var(--radius-md);padding:12px 10px;text-align:center;
+  min-width:0;
+}
+.fv-lbl{
+  font-family:var(--fm);font-size:9px;letter-spacing:0.16em;
+  color:var(--t-3);text-transform:uppercase;margin-bottom:4px;
+}
+.fv-val{
+  font-family:var(--fm);font-size:20px;color:var(--g-5);
+  line-height:1.05;letter-spacing:-0.01em;
+}
+.fv-sub{font-size:10px;color:var(--t-3);margin-top:3px;line-height:1.3;}
+
+/* Natural high + money row (legacy — kept for CSS token references, block deleted) */
 .fr-meters{
   display:grid;grid-template-columns:1fr 1fr;
   gap:10px;padding:0 var(--page-pad) 16px;
@@ -1434,6 +1454,27 @@ margin-bottom:10px;
       <div class="fr-sub" id="fr-sub">You are free. It has nothing left to take from you.</div>
     </div>
 
+    <!-- VITALS ROW — 3 numbers that matter, above the fold -->
+    <div class="fr-vitals">
+      <div class="fv-card">
+        <div class="fv-lbl">Surfed</div>
+        <div class="fv-val" id="fv-surfed">0</div>
+        <div class="fv-sub">cravings</div>
+      </div>
+      <div class="fv-card">
+        <div class="fv-lbl">NH</div>
+        <div class="fv-val" id="fv-nh">0%</div>
+        <div class="fr-meter-bar" style="margin-top:6px">
+          <div class="fr-meter-fill" id="nh-fill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="fv-card">
+        <div class="fv-lbl">Saved</div>
+        <div class="fv-val" id="fv-money">₹0</div>
+        <div class="fv-sub" id="fr-money-anchor">—</div>
+      </div>
+    </div>
+
     <!-- CRAVING SOS — highest-leverage in-moment intervention -->
     <div class="wr-craving">
       <button class="craving-btn" onclick="openCravingSOS()">
@@ -1441,7 +1482,6 @@ margin-bottom:10px;
           <div style="font-family:var(--fd);font-size:15px;color:var(--t-1)">Feeling a craving?</div>
           <div style="font-size:11.5px;color:var(--t-3);margin-top:2px">3 minutes. Watch it pass.</div>
         </div>
-        <div style="font-size:11px;color:var(--g-4);font-family:var(--fm);letter-spacing:0.08em;" id="craving-btn-count">0 surfed</div>
       </button>
     </div>
 
@@ -1476,23 +1516,6 @@ margin-bottom:10px;
           </div>
           <div class="wro-body">A non-smoker does not spend the day thinking about cigarettes. You are becoming that person again — the version of you who does not need this to feel normal.</div>
         </div>
-      </div>
-    </div>
-
-    <div class="fr-meters">
-      <div class="fr-meter-card">
-        <div class="fr-meter-icon">✨</div>
-        <div class="fr-meter-lbl">Natural High</div>
-        <div class="fr-meter-bar">
-          <div class="fr-meter-fill" id="nh-fill" style="width:0%"></div>
-        </div>
-        <div class="fr-meter-val" id="fr-nh-pct">0%</div>
-      </div>
-      <div class="fr-meter-card">
-        <div class="fr-meter-icon">💰</div>
-        <div class="fr-meter-lbl">Money Saved</div>
-        <div class="fr-meter-val" id="fr-money">₹0</div>
-        <div id="fr-money-anchor" class="fr-meter-lbl" style="font-size:10px;color:var(--g-3);">—</div>
       </div>
     </div>
 
@@ -2446,15 +2469,17 @@ function updateFreedom(){
     wormArena.style.transform = 'scale('+scale.toFixed(3)+')';
   }
 
-  // Natural high meter — 3 months = 100% (horizontal bar now)
+  // Natural high meter — 3 months = 100% (horizontal bar in vitals card)
   const nhPct = Math.min(100, (cleanHrs/(24*90))*100);
   const nhFill = document.getElementById('nh-fill');
   if(nhFill) nhFill.style.width = nhPct.toFixed(1)+'%';
-  setText('fr-nh-pct', nhPct.toFixed(1)+'%');
+  setText('fr-nh-pct', nhPct.toFixed(1)+'%'); // legacy target — no-op if not in DOM
+  setText('fv-nh', nhPct.toFixed(0)+'%');
 
   // Money
   const money = Math.floor(cleanDays*S.packCost);
-  setText('fr-money', '₹'+Math.floor(money).toLocaleString());
+  setText('fr-money', '₹'+Math.floor(money).toLocaleString()); // legacy target
+  setText('fv-money', '₹'+Math.floor(money).toLocaleString());
   setText('fr-money-anchor', getMoneyAnchor(money));
 
   // Day-aware Peak Presence body copy (Carr: describe the actual body state)
@@ -3398,7 +3423,8 @@ function cravingSaveTrigger(){
 function updateCravingCount(){
   const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
   const n = log.filter(c=>c.type==='surfed').length;
-  setText('craving-btn-count', n+' surfed');
+  setText('craving-btn-count', n+' surfed'); // legacy target
+  setText('fv-surfed', n);
 }
 // Delegated click handler for trigger picker buttons.
 document.addEventListener('click', function(e){
