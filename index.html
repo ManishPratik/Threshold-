@@ -1434,9 +1434,6 @@ margin-bottom:10px;
       <div class="fr-sub" id="fr-sub">You are free. It has nothing left to take from you.</div>
     </div>
 
-    <!-- IDENTITY ANCHOR (Clear: identity precedes behaviour) -->
-    <div class="fr-identity">You are a non-smoker.</div>
-
     <!-- CRAVING SOS — highest-leverage in-moment intervention -->
     <div class="wr-craving">
       <button class="craving-btn" onclick="openCravingSOS()">
@@ -1459,7 +1456,7 @@ margin-bottom:10px;
 
     <!-- MOTIVATIONAL URGENCY (moved from War Room) -->
     <div class="wr-urgency">
-      <div class="wu-text" id="wu-text">"Each hour that passes is one the little monster does not get. Nothing is being lost — nothing was ever there."</div>
+      <div class="wu-text" id="wu-text">"Each hour that passes is one less thing the trap gets to hold over you."</div>
     </div>
 
     <!-- BODY/ENERGY OUTCOMES (moved from War Room outcomes carousel) -->
@@ -1503,7 +1500,7 @@ margin-bottom:10px;
     <div class="fr-pledge">
       <div class="frp-icon">🚭</div>
       <div class="frp-content">
-        <div class="frp-title">I AM A NON-SMOKER</div>
+        <div class="frp-title">You are a non-smoker.</div>
         <div class="frp-body">I have escaped the trap. Cigarettes gave me nothing to begin with. There is nothing to miss.<br><br>My quit date is <strong id="pledge-quit-date">—</strong>.</div>
       </div>
     </div>
@@ -3314,11 +3311,11 @@ window.addEventListener('appinstalled',()=>{document.getElementById('install-ban
    openOverlay/closeOverlay helpers, and CRAVING_LOG LS key.
 ═══════════════════════════════════════════════════ */
 const CARR_LINES = [
-  'You do not want a cigarette. Nicotine wants nicotine. Wait 3 minutes.',
-  'The craving is the little monster asking to be fed. Watch it. Do not feed it.',
-  'There is nothing to give up. You are keeping something — your baseline.',
-  'This feeling is the drug leaving your body. That is a good thing.',
-  'Non-smokers feel this too. They call it "being alive". Sit with it.'
+  'A craving is a sensation. It cannot make you smoke.',
+  'This feeling passes whether you feed it or not. Try passing.',
+  'The trap wants you to believe you are missing something. You are not.',
+  'Wait three minutes. That is all it takes to prove it does not need you.',
+  'Non-smokers get through these moments all the time. You are one of them now.'
 ];
 const CRAV = { phase:'idle', tick:null, secLeft:180, cycleIdx:0, trigger:null };
 
