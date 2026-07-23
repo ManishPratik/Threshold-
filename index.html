@@ -1353,7 +1353,7 @@ margin-bottom:10px;
   </div>
 
   <!-- WAR ROOM TAB -->
-  <div id="tab-wr" class="tab-pane active">
+  <div id="tab-wr" class="tab-pane">
     <div class="wr-hero">
       <div class="wr-hero-label">Hours Smoke-Free</div>
       <div class="wr-hrs" id="wr-hrs">—</div>
@@ -1518,7 +1518,7 @@ margin-bottom:10px;
   </div>
 
   <!-- FREEDOM TAB -->
-  <div id="tab-fr" class="tab-pane">
+  <div id="tab-fr" class="tab-pane active">
     <div class="fr-hero">
       <div class="fr-hero-lbl">Smoke-Free Time</div>
       <div class="fr-time" id="fr-time">—</div>
@@ -1672,7 +1672,7 @@ margin-bottom:10px;
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="switchTab('wr',this)">
+    <button class="nav-btn" onclick="switchTab('wr',this)">
       <div class="nav-icon">◈</div>
       <div class="nav-label">War Room</div>
     </button>
@@ -1680,7 +1680,7 @@ margin-bottom:10px;
       <div class="nav-icon">▦</div>
       <div class="nav-label">Tasks</div>
     </button>
-    <button class="nav-btn" onclick="switchTab('fr',this)">
+    <button class="nav-btn active" onclick="switchTab('fr',this)">
       <div class="nav-icon">◉</div>
       <div class="nav-label">Freedom</div>
     </button>
@@ -3173,6 +3173,11 @@ function showApp(){
   updateDeadlineDisplays();
   updateCycleBanner();
   updateWarRoom();
+  updateFreedom();
+  const ss2 = getQuitTs();
+  const stage = getWormStage((Date.now()-ss2)/3600000);
+  S.lastWormStage = stage;
+  renderWorm(stage);
   renderTasks();
   renderLog();
   renderAnalytics();
