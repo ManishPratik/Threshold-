@@ -584,7 +584,13 @@ margin-bottom:10px;
 
 /* ═══════════════════════════════════════════════════
    SECTION: FREEDOM TAB — Worm + health redesigned
+   Medical-calm palette: neutral bg + white hero + sage title + green rot worm
 ═══════════════════════════════════════════════════ */
+body:has(#tab-fr.active){ background:#0B0D10; }
+body:has(#tab-fr.active) .heat-a,
+body:has(#tab-fr.active) .heat-b,
+body:has(#tab-fr.active) .heat-c{ opacity:0.15; }
+
 
 /* Clean time hero */
 .fr-hero{
@@ -598,7 +604,7 @@ margin-bottom:10px;
 .fr-time{
   font-family:var(--fm);font-size:40px;font-weight:300;
   line-height:1;letter-spacing:-0.02em;
-  background:linear-gradient(175deg,var(--g-6) 0%,var(--g-4) 60%,var(--g-2) 100%);
+  background:linear-gradient(175deg,#F5F7FA 0%,#D6DCE3 60%,#9AA3AE 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
 }
@@ -613,14 +619,14 @@ margin-bottom:10px;
 }
 .worm-stage-label{
   font-family:var(--fm);font-size:9px;letter-spacing:0.18em;
-  color:var(--r-3);margin-bottom:12px;text-transform:uppercase;
+  color:#8A9A82;margin-bottom:12px;text-transform:uppercase;
 }
 .worm-arena{
   width:100%;height:110px;position:relative;
   display:flex;align-items:center;justify-content:center;
   margin-bottom:12px;
 }
-.ws-title{font-family:var(--fd);font-size:16px;color:var(--g-5);margin-bottom:3px;text-align:center;}
+.ws-title{font-family:var(--fd);font-size:16px;color:#B8D4A0;margin-bottom:3px;text-align:center;}
 .ws-fact{font-size:12px;color:var(--t-3);line-height:1.55;text-align:center;}
 
 /* Natural high + money row */
@@ -2222,12 +2228,12 @@ function renderWorm(stage){
     return;
   }
 
-  // Worm config by stage
+  // Worm config by stage — sickly green rot palette (parasite as biological, not fire)
   const configs = {
-    1: {segs:8, baseSize:18, color:'#C47A6A', speed:'1.2s', anim:'wriggle-fast', glow:'rgba(196,122,106,0.5)', spacing:14},
-    2: {segs:7, baseSize:15, color:'#9A6060', speed:'2s',   anim:'wriggle-med',  glow:'rgba(154,96,96,0.3)',   spacing:12},
-    3: {segs:5, baseSize:11, color:'#6A4A4A', speed:'3.5s', anim:'wriggle-slow', glow:'none',                  spacing:10},
-    4: {segs:3, baseSize:7,  color:'#4A3232', speed:'5s',   anim:'wriggle-dying',glow:'none',                  spacing:8},
+    1: {segs:8, baseSize:18, color:'#7A9A5A', speed:'1.2s', anim:'wriggle-fast', glow:'rgba(122,154,90,0.5)', spacing:14},
+    2: {segs:7, baseSize:15, color:'#5E7A48', speed:'2s',   anim:'wriggle-med',  glow:'rgba(94,122,72,0.3)',  spacing:12},
+    3: {segs:5, baseSize:11, color:'#4A6238', speed:'3.5s', anim:'wriggle-slow', glow:'none',                 spacing:10},
+    4: {segs:3, baseSize:7,  color:'#3A4A2E', speed:'5s',   anim:'wriggle-dying',glow:'none',                 spacing:8},
   };
   const c = configs[stage];
   const arenaW = arena.offsetWidth || 160;
