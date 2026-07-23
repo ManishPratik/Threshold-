@@ -649,6 +649,31 @@ margin-bottom:10px;
   border-radius:2px;transition:width 4s cubic-bezier(0.4,0,0.2,1);
 }
 
+/* Education accordion — Dopamine + Milestones + Timeline collapsed into <details> */
+.fr-learn{padding:0;}
+.fr-learn-block{
+  margin:0 var(--page-pad) 10px;
+  border:1px solid var(--b-dim);
+  border-radius:var(--radius-md);
+  background:var(--card);
+  overflow:hidden;
+}
+.fr-learn-block > summary{
+  padding:14px 16px;
+  font-family:var(--fd);font-size:15px;color:var(--g-5);
+  cursor:pointer;list-style:none;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background 0.15s;
+}
+.fr-learn-block > summary::-webkit-details-marker{display:none;}
+.fr-learn-block > summary::after{
+  content:'▾';color:var(--t-3);font-size:14px;
+  transition:transform 0.2s;
+}
+.fr-learn-block[open] > summary::after{transform:rotate(180deg);}
+.fr-learn-block > summary:hover{background:rgba(184,212,160,0.03);}
+.fr-learn-body{padding:0 16px 16px;}
+
 /* Dopamine trap */
 .fr-dopamine{
   margin:0 var(--page-pad) 16px;
@@ -1551,19 +1576,31 @@ margin-bottom:10px;
       <button class="fr-lapse-btn" onclick="openOverlay('ov-slip')">Log a slip (streak intact)</button>
     </div>
 
-    <div class="fr-dopamine">
-      <div class="fd-title">⚠️ The Dopamine Trap — Science</div>
-      <div class="fd-body">Nicotine does not give your brain pleasure. It <strong>hijacks your natural dopamine system</strong>, lowers your baseline, then charges you a cigarette every 45 minutes to feel normal again.<br><br>Between cigarettes, you feel <strong>worse than a non-smoker</strong>. The "relief" from smoking is just returning to the baseline a non-smoker has for free — all the time.</div>
-      <div class="fd-truth">"Smoking right now will not make you feel good. It will make you feel slightly less bad — for 4 minutes. Then worse than you feel right now."</div>
-    </div>
+    <!-- EDUCATION ACCORDION — Dopamine science + Milestones + Timeline collapsed under <details> -->
+    <div class="fr-learn">
+      <details class="fr-learn-block" id="learn-dopamine">
+        <summary>The Dopamine Trap — Science</summary>
+        <div class="fr-learn-body">
+          <div class="fd-body">Nicotine does not give your brain pleasure. It <strong>hijacks your natural dopamine system</strong>, lowers your baseline, then charges you a cigarette every 45 minutes to feel normal again.<br><br>Between cigarettes, you feel <strong>worse than a non-smoker</strong>. The "relief" from smoking is just returning to the baseline a non-smoker has for free — all the time.</div>
+          <div class="fd-truth">"Smoking right now will not make you feel good. It will make you feel slightly less bad — for 4 minutes. Then worse than you feel right now."</div>
+        </div>
+      </details>
 
-    <div class="sec-lbl">Health Milestones</div>
-    <div class="fr-milestones" id="fr-milestones"></div>
+      <details class="fr-learn-block" id="learn-milestones">
+        <summary>Health Milestones</summary>
+        <div class="fr-learn-body">
+          <div class="fr-milestones" id="fr-milestones"></div>
+        </div>
+      </details>
 
-    <!-- HOUR-BY-HOUR RECOVERY TIMELINE -->
-    <div class="hr-timeline">
-      <span class="hr-timeline-title">Recovery Timeline — Your Body Hour by Hour</span>
-      <div id="hr-timeline-list"></div>
+      <details class="fr-learn-block" id="learn-timeline">
+        <summary>Recovery Timeline — Hour by Hour</summary>
+        <div class="fr-learn-body">
+          <div class="hr-timeline" style="margin:0;padding:0;background:none;border:none;">
+            <div id="hr-timeline-list"></div>
+          </div>
+        </div>
+      </details>
     </div>
 
   </div><!-- end tab-fr -->
@@ -2207,6 +2244,7 @@ const S = {
   shownBadges: [],
   lastWormStage: -1,   // Track worm stage — only re-render on change
   lastBadgeCheck: 0,   // Throttle badge checks to once per minute
+  learnOpened: false,  // One-time default-open on the Learn accordion (by cleanHrs)
 };
 
 /* ═══════════════════════════════════════════════════
@@ -2484,6 +2522,13 @@ function updateFreedom(){
 
   // Day-aware Peak Presence body copy (Carr: describe the actual body state)
   setText('wro-body-peak', getBodyAwarenessCopy(cleanHrs));
+
+  // Open the most-relevant Learn accordion block once per session (based on cleanHrs)
+  if(!S.learnOpened){
+    const target = cleanHrs<72 ? 'learn-dopamine' : cleanHrs<336 ? 'learn-milestones' : 'learn-timeline';
+    const tEl = document.getElementById(target);
+    if(tEl){ tEl.setAttribute('open',''); S.learnOpened = true; }
+  }
 
   // Milestones
   const ml = document.getElementById('fr-milestones');
