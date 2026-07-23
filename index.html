@@ -927,6 +927,38 @@ margin-bottom:10px;
   border-radius:var(--radius-lg);padding:22px;margin-bottom:20px;
 }
 
+/* Physiological-sigh timer visual */
+.cs-wave-wrap{
+  height:180px;display:flex;align-items:center;justify-content:center;margin:24px 0;
+}
+.cs-wave{
+  width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,var(--g-glow),transparent 72%);
+  transition:transform 2s cubic-bezier(0.4,0,0.6,1);
+  transform:scale(0.55);
+  box-shadow:0 0 40px rgba(184,212,160,0.15);
+}
+.cs-wave.inhale{transform:scale(1.35);transition-duration:2s;}
+.cs-wave.hold{transform:scale(1.35);transition-duration:1s;}
+.cs-wave.exhale{transform:scale(0.55);transition-duration:5s;}
+
+/* Trigger picker grid */
+.cs-trigger-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;
+}
+.cs-trig{
+  padding:14px 10px;
+  background:rgba(184,212,160,0.06);
+  border:1px solid rgba(184,212,160,0.18);
+  border-radius:var(--radius-sm);
+  color:var(--t-2);font-size:13px;text-align:left;
+  transition:background 0.15s,border-color 0.15s;
+}
+.cs-trig.selected{
+  background:rgba(184,212,160,0.16);border-color:var(--g-4);color:var(--t-1);
+}
+.btn-p:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none;}
+
 /* Buttons */
 .btn-p{
   width:100%;padding:15px;
@@ -1405,6 +1437,17 @@ margin-bottom:10px;
     <!-- IDENTITY ANCHOR (Clear: identity precedes behaviour) -->
     <div class="fr-identity">You are a non-smoker.</div>
 
+    <!-- CRAVING SOS — highest-leverage in-moment intervention -->
+    <div class="wr-craving">
+      <button class="craving-btn" onclick="openCravingSOS()">
+        <div style="flex:1;text-align:left">
+          <div style="font-family:var(--fd);font-size:15px;color:var(--t-1)">Feeling a craving?</div>
+          <div style="font-size:11.5px;color:var(--t-3);margin-top:2px">3 minutes. Watch it pass.</div>
+        </div>
+        <div style="font-size:11px;color:var(--g-4);font-family:var(--fm);letter-spacing:0.08em;" id="craving-btn-count">0 surfed</div>
+      </button>
+    </div>
+
     <div class="fr-worm-wrap">
       <div class="fr-worm-card">
         <div class="worm-stage-label" id="worm-stage-lbl">The little monster is loud right now. It cannot force you to feed it — watch it grow quieter.</div>
@@ -1682,6 +1725,57 @@ margin-bottom:10px;
     <button class="btn-p" onclick="logSingleSlip()">Log slip only — streak intact</button>
     <button class="btn-d" onclick="closeOverlay('ov-slip'); confirmSmoked();">Full relapse — reset streak</button>
     <button class="btn-s" onclick="closeOverlay('ov-slip')">Cancel</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: CRAVING SOS (physiological sigh + trigger logger)
+     Carr micro-lesson on idle, 3-min sigh timer with animated wave,
+     one-tap trigger logger writing to CRAVING_LOG.
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-craving" onclick="closeOverlayOutside(event,'ov-craving')">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <button onclick="closeOverlay('ov-craving')" style="position:absolute;top:14px;right:16px;font-size:22px;color:var(--t-3);padding:6px 10px;">×</button>
+
+    <div id="cs-stage-idle">
+      <div class="cs-title">This is the little monster.</div>
+      <div class="cs-sub" id="cs-carr-line">You do not want a cigarette. Nicotine wants nicotine. Stay with the feeling for 3 minutes and watch it fade.</div>
+      <div class="cs-vision">
+        <div style="font-size:13px;color:var(--t-1);margin-bottom:8px;font-weight:500;">Physiological sigh — fastest way down</div>
+        <div style="font-size:12px;color:var(--t-3);line-height:1.6">Double inhale through the nose, long slow exhale through the mouth. Repeat for 3 minutes.</div>
+      </div>
+      <button class="btn-p" onclick="cravingStart()">Start 3-minute sigh</button>
+      <button class="btn-s" onclick="cravingSkipToTrigger()">Skip — just log the trigger</button>
+    </div>
+
+    <div id="cs-stage-timer" style="display:none">
+      <div class="cs-title" id="cs-timer-phase">Inhale</div>
+      <div class="cs-sub" id="cs-timer-remaining">3:00</div>
+      <div class="cs-wave-wrap"><div class="cs-wave" id="cs-wave"></div></div>
+      <button class="btn-s" onclick="cravingAbort()">Stop early</button>
+    </div>
+
+    <div id="cs-stage-trigger" style="display:none">
+      <div class="cs-title">What set it off?</div>
+      <div class="cs-sub">One tap. This is for you — not judgment. Patterns come from data.</div>
+      <div class="cs-trigger-grid">
+        <button class="cs-trig" data-t="coffee">☕ Coffee</button>
+        <button class="cs-trig" data-t="stress">🌀 Stress</button>
+        <button class="cs-trig" data-t="social">👥 Social</button>
+        <button class="cs-trig" data-t="driving">🚗 Driving</button>
+        <button class="cs-trig" data-t="boredom">🕳️ Boredom</button>
+        <button class="cs-trig" data-t="alcohol">🍺 Alcohol</button>
+        <button class="cs-trig" data-t="after-meal">🍽️ After meal</button>
+        <button class="cs-trig" data-t="other">⋯ Other</button>
+      </div>
+      <button class="btn-p" onclick="cravingSaveTrigger()" id="cs-save-btn" disabled>Log it</button>
+    </div>
+
+    <div id="cs-stage-done" style="display:none">
+      <div class="cs-title">Logged. It passed.</div>
+      <div class="cs-sub">Total cravings surfed: <strong id="cs-total-count">0</strong>. Each one is a time the little monster asked, and you watched it leave without feeding it.</div>
+      <button class="btn-p" onclick="closeOverlay('ov-craving')">Back to Freedom</button>
+    </div>
   </div>
 </div>
 
@@ -3003,9 +3097,9 @@ function renderLog(){
   ll.innerHTML='<div class="log-group">'+Object.entries(grouped).map(([day,items])=>`
     <div class="log-day-lbl">${day} · ${items.filter(e=>e.resisted).length}/${items.length} resisted</div>
     ${items.map(e=>`<div class="log-entry">
-      <div class="le-icon">${e.type==='relapse'?'💔':e.resisted?'✅':'⚡'}</div>
+      <div class="le-icon">${e.type==='relapse'?'💔':e.type==='surfed'?'🌊':e.type==='slip'?'⚠️':e.resisted?'✅':'⚡'}</div>
       <div>
-        <div class="le-title">${e.type==='relapse'?'Relapse — Streak Reset':e.resisted?'Craving Resisted':'Craving Hit'}</div>
+        <div class="le-title">${e.type==='relapse'?'Relapse — Streak Reset':e.type==='surfed'?'Craving Surfed':e.type==='slip'?'Slip — Streak Intact':e.resisted?'Craving Resisted':'Craving Hit'}</div>
         <div class="le-time">${new Date(e.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div>
         ${e.note?'<div class="le-note">'+e.note+'</div>':''}
       </div>
@@ -3215,15 +3309,122 @@ document.getElementById('ib-later').onclick=()=>{document.getElementById('instal
 window.addEventListener('appinstalled',()=>{document.getElementById('install-banner').style.display='none';});
 
 /* ═══════════════════════════════════════════════════
+   SECTION: CRAVING SOS (physiological sigh + trigger logger)
+   Reuses #ov-craving CSS (existing shell), .craving-btn class,
+   openOverlay/closeOverlay helpers, and CRAVING_LOG LS key.
+═══════════════════════════════════════════════════ */
+const CARR_LINES = [
+  'You do not want a cigarette. Nicotine wants nicotine. Wait 3 minutes.',
+  'The craving is the little monster asking to be fed. Watch it. Do not feed it.',
+  'There is nothing to give up. You are keeping something — your baseline.',
+  'This feeling is the drug leaving your body. That is a good thing.',
+  'Non-smokers feel this too. They call it "being alive". Sit with it.'
+];
+const CRAV = { phase:'idle', tick:null, secLeft:180, cycleIdx:0, trigger:null };
+
+function openCravingSOS(){
+  CRAV.phase='idle'; CRAV.tick=null; CRAV.secLeft=180; CRAV.cycleIdx=0; CRAV.trigger=null;
+  setText('cs-carr-line', CARR_LINES[Math.floor(Math.random()*CARR_LINES.length)]);
+  document.querySelectorAll('.cs-trig').forEach(b=>b.classList.remove('selected'));
+  const sb = document.getElementById('cs-save-btn'); if(sb) sb.disabled = true;
+  showCravingStage('idle');
+  openOverlay('ov-craving');
+}
+function showCravingStage(s){
+  ['idle','timer','trigger','done'].forEach(k=>{
+    const el = document.getElementById('cs-stage-'+k);
+    if(el) el.style.display = (k===s) ? 'block' : 'none';
+  });
+}
+function cravingStart(){
+  CRAV.phase='timer'; CRAV.secLeft=180; CRAV.cycleIdx=0;
+  showCravingStage('timer');
+  runBreathCycle();
+}
+function runBreathCycle(){
+  // Physiological sigh: 2s double-inhale -> 1s hold -> 5s slow exhale = 8s per cycle.
+  const stages = [
+    {label:'Inhale — nose', ms:2000, cls:'inhale'},
+    {label:'Hold', ms:1000, cls:'hold'},
+    {label:'Exhale slowly — mouth', ms:5000, cls:'exhale'}
+  ];
+  const wave = document.getElementById('cs-wave');
+  function step(){
+    if(CRAV.phase !== 'timer'){ return; }
+    if(CRAV.secLeft <= 0){ cravingFinishTimer(); return; }
+    const st = stages[CRAV.cycleIdx % 3];
+    setText('cs-timer-phase', st.label);
+    if(wave){ wave.className = 'cs-wave '+st.cls; }
+    // Live remaining-time display (mm:ss)
+    const m = Math.floor(CRAV.secLeft/60);
+    const s = Math.max(0, Math.floor(CRAV.secLeft%60));
+    setText('cs-timer-remaining', m+':'+String(s).padStart(2,'0'));
+    CRAV.tick = setTimeout(()=>{
+      CRAV.secLeft -= st.ms/1000;
+      CRAV.cycleIdx++;
+      step();
+    }, st.ms);
+  }
+  step();
+}
+function cravingAbort(){
+  if(CRAV.tick){ clearTimeout(CRAV.tick); CRAV.tick=null; }
+  CRAV.phase='trigger';
+  showCravingStage('trigger');
+}
+function cravingSkipToTrigger(){
+  CRAV.phase='trigger';
+  showCravingStage('trigger');
+}
+function cravingFinishTimer(){
+  if(CRAV.tick){ clearTimeout(CRAV.tick); CRAV.tick=null; }
+  CRAV.phase='trigger';
+  showCravingStage('trigger');
+}
+function cravingSaveTrigger(){
+  if(!CRAV.trigger) return;
+  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  log.push({
+    ts: Date.now(),
+    resisted: true,
+    type: 'surfed',
+    trigger: CRAV.trigger,
+    note: 'Surfed — trigger: '+CRAV.trigger
+  });
+  localStorage.setItem(LS.CRAVING_LOG, JSON.stringify(log));
+  const surfed = log.filter(c=>c.type==='surfed').length;
+  setText('cs-total-count', surfed);
+  showCravingStage('done');
+  updateCravingCount();
+  renderLog();
+}
+function updateCravingCount(){
+  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  const n = log.filter(c=>c.type==='surfed').length;
+  setText('craving-btn-count', n+' surfed');
+}
+// Delegated click handler for trigger picker buttons.
+document.addEventListener('click', function(e){
+  const t = e.target.closest('.cs-trig');
+  if(!t) return;
+  document.querySelectorAll('.cs-trig').forEach(b=>b.classList.remove('selected'));
+  t.classList.add('selected');
+  CRAV.trigger = t.dataset.t;
+  const sb = document.getElementById('cs-save-btn');
+  if(sb) sb.disabled = false;
+});
+
+/* ═══════════════════════════════════════════════════
    SECTION: BOOT
 ═══════════════════════════════════════════════════ */
 spawnEmbers();
 init();
 updateDeadlineDisplays();
+updateCravingCount();
 setInterval(updateWarRoom,1000);
 setInterval(()=>{
   const fr=document.getElementById('tab-fr');
-  if(fr&&fr.classList.contains('active')) updateFreedom();
+  if(fr&&fr.classList.contains('active')){ updateFreedom(); updateCravingCount(); }
 },1000);
 setInterval(()=>{
   const tt=document.getElementById('tab-tasks');
