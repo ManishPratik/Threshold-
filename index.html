@@ -2189,6 +2189,22 @@ function getWormStage(cleanHrs){
   return 5;
 }
 
+// Continuous shrink factor tracking nicotine clearance between stage boundaries.
+// Anchors match stage-boundary hours; linear interpolation in between.
+function getWormScale(cleanHrs){
+  const stops = [[0,1.00],[2,0.85],[24,0.62],[72,0.42],[504,0.18]];
+  const last = stops[stops.length-1];
+  if(cleanHrs >= last[0]) return last[1];
+  for(let i=0;i<stops.length-1;i++){
+    const h0=stops[i][0], s0=stops[i][1], h1=stops[i+1][0], s1=stops[i+1][1];
+    if(cleanHrs>=h0 && cleanHrs<h1){
+      const t = (cleanHrs-h0)/(h1-h0);
+      return s0 + t*(s1-s0);
+    }
+  }
+  return 1;
+}
+
 function renderWorm(stage){
   const arena = document.getElementById('worm-arena');
   if(!arena) return;
@@ -2389,6 +2405,14 @@ function updateFreedom(){
   if(stage !== S.lastWormStage){
     S.lastWormStage = stage;
     renderWorm(stage);
+  }
+  // Continuous shrink tied to nicotine clearance — runs every tick, not just on stage change
+  const wormArena = document.getElementById('worm-arena');
+  if(wormArena){
+    const scale = getWormScale(cleanHrs);
+    wormArena.style.transformOrigin = 'center center';
+    wormArena.style.transition = 'transform 0.6s ease-out';
+    wormArena.style.transform = 'scale('+scale.toFixed(3)+')';
   }
 
   // Natural high meter — 3 months = 100% (horizontal bar now)
