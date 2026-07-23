@@ -1378,7 +1378,7 @@ margin-bottom:10px;
     <div class="fr-hero">
       <div class="fr-hero-lbl">Smoke-Free Time</div>
       <div class="fr-time" id="fr-time">—</div>
-      <div class="fr-sub" id="fr-sub">The parasite is starving</div>
+      <div class="fr-sub" id="fr-sub">You are free. It has nothing left to take from you.</div>
     </div>
 
     <!-- 21-DAY CYCLE BANNER (moved from War Room) -->
@@ -1406,7 +1406,7 @@ margin-bottom:10px;
 
     <div class="fr-worm-wrap">
       <div class="fr-worm-card">
-        <div class="worm-stage-label" id="worm-stage-lbl">Stage: Fed & Demanding</div>
+        <div class="worm-stage-label" id="worm-stage-lbl">The little monster is loud right now. It cannot force you to feed it — watch it grow quieter.</div>
         <div class="worm-arena" id="worm-arena"></div>
         <div class="ws-title" id="ws-title">The Parasite</div>
         <div class="ws-fact" id="ws-fact">It has been feeding on you. Time to starve it.</div>
@@ -1415,7 +1415,7 @@ margin-bottom:10px;
 
     <!-- MOTIVATIONAL URGENCY (moved from War Room) -->
     <div class="wr-urgency">
-      <div class="wu-text" id="wu-text">"These days are not coming back. Every hour you hold, the parasite starves further."</div>
+      <div class="wu-text" id="wu-text">"Each hour that passes is one the little monster does not get. Nothing is being lost — nothing was ever there."</div>
     </div>
 
     <!-- BODY/ENERGY OUTCOMES (moved from War Room outcomes carousel) -->
@@ -1424,16 +1424,16 @@ margin-bottom:10px;
         <div class="wro active" style="position:relative;margin-bottom:10px;">
           <div class="wro-header">
             <span class="wro-icon">⚡</span>
-            <div class="wro-title">Peak Presence</div>
+            <div class="wro-title">Returning to Baseline</div>
           </div>
-          <div class="wro-body">Full lungs. Zero fog. The room feels you walk in. This is what staying clean does to a body and its energy.</div>
+          <div class="wro-body" id="wro-body-peak">Your body is climbing back to the state it had before nicotine hijacked it. The fog, the tightness, the low-grade tiredness — those were the drug, not you.</div>
         </div>
         <div class="wro active" style="position:relative;">
           <div class="wro-header">
             <span class="wro-icon">🔥</span>
-            <div class="wro-title">Magnetic Force</div>
+            <div class="wro-title">Nothing to Chase</div>
           </div>
-          <div class="wro-body">Controlling your habits needs no effort to attract. You chose control. That choice is now visible on you.</div>
+          <div class="wro-body">A non-smoker does not spend the day thinking about cigarettes. You are becoming that person again — the version of you who does not need this to feel normal.</div>
         </div>
       </div>
     </div>
@@ -1460,7 +1460,7 @@ margin-bottom:10px;
       <div class="frp-icon">🚭</div>
       <div class="frp-content">
         <div class="frp-title">I AM A NON-SMOKER</div>
-        <div class="frp-body">I have taken a pledge that I will never smoke again from <strong id="pledge-quit-date">—</strong>.<br><br>Smoking raises blood pressure. <strong>Smoking causes heart attacks.</strong><br><br>This is not a choice. This is survival.</div>
+        <div class="frp-body">I have escaped the trap. Cigarettes gave me nothing to begin with. There is nothing to miss.<br><br>My quit date is <strong id="pledge-quit-date">—</strong>.</div>
       </div>
     </div>
 
@@ -1485,7 +1485,7 @@ margin-bottom:10px;
         <div class="diff-zone" style="background:rgba(168,32,32,0.25);color:#E07070;">Days 1-3<br>Hardest</div>
         <div class="diff-zone" style="background:rgba(200,120,40,0.2);color:#D09050;">Days 4-7<br>Easing</div>
         <div class="diff-zone" style="background:rgba(180,160,40,0.15);color:#C0B050;">Days 8-14<br>Manageable</div>
-        <div class="diff-zone" style="background:rgba(60,160,80,0.15);color:#60C070;">Days 15-21<br>Easy</div>
+        <div class="diff-zone" style="background:rgba(60,160,80,0.15);color:#60C070;">Days 15+<br>Cue-vigilance</div>
       </div>
     </div>
 
@@ -2102,6 +2102,14 @@ function getWormScale(cleanHrs){
   return 1;
 }
 
+// Honest body-state copy indexed by cleanHrs. Avoids false-precision claims like
+// "Full lungs. Zero fog." on day 1 which erode trust during withdrawal.
+function getBodyAwarenessCopy(cleanHrs){
+  if(cleanHrs < 72) return 'Day 1-3. Withdrawal fog is real and expected. This is the drug leaving. It is not who you are.';
+  if(cleanHrs < 336) return 'The fog is lifting. Sleep and focus rebuild in weeks, not days.';
+  return 'Your baseline is returning. Full lungs. Clear head. This is the natural state, not an achievement.';
+}
+
 function renderWorm(stage){
   const arena = document.getElementById('worm-arena');
   if(!arena) return;
@@ -2243,7 +2251,7 @@ function updateFreedom(){
 
   // Sub text
   const d = Math.floor(cleanDays);
-  const subTexts = ['Hour by hour. The worm is starving.','The hardest 72 hours. Hold the line.','Peak withdrawal passing. The worst is almost done.','7 days. The parasite is dying.','The parasite is nearly gone.','Free. The worm is dead.'];
+  const subTexts = ['The chemical grip is loosening.','Peak withdrawal. This is the drug leaving, not you losing anything.','The worst is behind you.','A week free. The little monster is quiet.','It barely whispers now.','Free. The trap is behind you.'];
   const si = cleanHrs<24?0:cleanHrs<72?1:cleanHrs<96?2:cleanHrs<168?3:cleanHrs<504?4:5;
   setText('fr-sub', subTexts[si]);
 
@@ -2276,6 +2284,9 @@ function updateFreedom(){
   // Money
   const money = Math.floor(cleanDays*S.packCost);
   setText('fr-money', '₹'+Math.floor(money).toLocaleString());
+
+  // Day-aware Peak Presence body copy (Carr: describe the actual body state)
+  setText('wro-body-peak', getBodyAwarenessCopy(cleanHrs));
 
   // Milestones
   const ml = document.getElementById('fr-milestones');
