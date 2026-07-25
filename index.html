@@ -444,6 +444,7 @@ margin-bottom:10px;
 }
 .tan-count{font-family:var(--fb);font-size:13px;font-weight:600;color:var(--g-5);}
 .tan-sub{font-family:var(--fm);font-size:10px;color:var(--t-3);letter-spacing:0.03em;}
+.blk-head{
   padding:14px var(--page-pad) 8px;
   display:flex;align-items:center;gap:8px;
 }
@@ -517,6 +518,113 @@ margin-bottom:10px;
   text-shadow:0 0 12px rgba(184,212,160,0.6);
 }
 @keyframes pts-up{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-64px);}}
+
+/* Task-tab header controls */
+.th-add, .th-menu{
+  background:rgba(184,212,160,0.08);border:1px solid rgba(184,212,160,0.15);
+  border-radius:var(--radius-sm);
+  width:44px;font-size:20px;color:var(--g-5);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  cursor:pointer;
+}
+.th-add:active,.th-menu:active{background:rgba(184,212,160,0.16);}
+.th-menu{font-size:16px;}
+
+/* Block header ⋯ button */
+.blk-menu-btn{
+  margin-left:4px;background:transparent;border:none;color:var(--t-4);
+  font-size:16px;cursor:pointer;padding:2px 6px;border-radius:6px;
+}
+.blk-menu-btn:active{background:rgba(184,212,160,0.1);color:var(--g-4);}
+
+/* Task row drag handle */
+.t-drag{
+  color:var(--t-4);font-size:14px;cursor:grab;user-select:none;
+  padding:0 2px;letter-spacing:-2px;
+}
+.t-drag:active{cursor:grabbing;}
+.task.dragging{opacity:0.4;}
+.task-list.drag-over{background:rgba(184,212,160,0.04);border-radius:var(--radius-md);}
+
+/* Per-block add + empty slot */
+.task-add-inline{
+  margin-top:4px;padding:10px 14px;
+  background:transparent;border:1px dashed rgba(184,212,160,0.2);
+  border-radius:var(--radius-md);color:var(--g-3);
+  font-family:var(--fb);font-size:12px;
+  cursor:pointer;text-align:center;
+}
+.task-add-inline:active{background:rgba(184,212,160,0.05);color:var(--g-5);}
+.task-empty-slot{
+  padding:14px;text-align:center;color:var(--t-3);font-size:12px;
+  border:1px dashed var(--b-dim);border-radius:var(--radius-md);
+}
+.task-empty-slot a{color:var(--g-5);cursor:pointer;text-decoration:underline;}
+
+/* Tasks tab empty state */
+.tasks-empty{
+  margin:20px var(--page-pad);padding:36px 20px;
+  background:var(--card);border:1px solid var(--b);border-radius:var(--radius-lg);
+  text-align:center;
+}
+.te-icon{font-size:44px;margin-bottom:10px;}
+.te-title{font-family:var(--fd);font-size:20px;color:var(--t-1);margin-bottom:8px;}
+.te-sub{font-size:13px;color:var(--t-3);margin-bottom:20px;line-height:1.5;}
+.te-actions{display:flex;flex-direction:column;gap:8px;}
+
+/* Undo snackbar */
+.undo-snackbar{
+  position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);
+  background:var(--card-2);border:1px solid var(--b);border-radius:var(--radius-md);
+  padding:12px 14px 12px 18px;
+  display:flex;align-items:center;gap:14px;min-width:260px;max-width:90vw;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;
+  z-index:900;
+}
+.undo-snackbar.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+.usb-msg{flex:1;font-size:13px;color:var(--t-1);}
+.usb-btn{
+  background:transparent;border:none;color:var(--g-5);
+  font-family:var(--fm);font-size:12px;font-weight:600;letter-spacing:0.06em;
+  cursor:pointer;padding:4px 8px;border-radius:6px;
+}
+.usb-btn:active{background:rgba(184,212,160,0.12);}
+
+/* Block-manage rows */
+.bm-row{
+  display:flex;align-items:center;gap:8px;
+  padding:8px;background:var(--bg-2);border-radius:var(--radius-sm);
+  border:1px solid var(--b-dim);
+}
+.bm-icon, .bm-new .f-input{
+  padding:8px 10px;background:var(--bg-3);border:1px solid var(--b-dim);
+  color:var(--t-1);font-size:14px;border-radius:8px;
+}
+.bm-icon{flex:0 0 70px;text-align:center;}
+.bm-name{flex:1;padding:8px 10px;background:var(--bg-3);border:1px solid var(--b-dim);color:var(--t-1);font-size:13px;border-radius:8px;}
+.bm-up,.bm-dn,.bm-del{
+  background:transparent;border:1px solid var(--b-dim);color:var(--t-3);
+  width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
+}
+.bm-up:disabled,.bm-dn:disabled{opacity:0.3;cursor:default;}
+.bm-del{color:var(--r-4);border-color:rgba(208,48,48,0.25);}
+.bm-del:active{background:rgba(208,48,48,0.1);}
+
+/* Streak-picker rows */
+.sp-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;background:var(--bg-2);border:1px solid var(--b-dim);
+  border-radius:var(--radius-sm);cursor:pointer;font-size:13px;color:var(--t-1);
+}
+.sp-row:has(input:checked){border-color:rgba(184,212,160,0.3);background:rgba(184,212,160,0.06);}
+.sp-row input[type=checkbox]{accent-color:var(--g-4);width:16px;height:16px;}
+.sp-pts{color:var(--g-3);font-family:var(--fm);font-size:11px;margin-left:auto;}
+
+/* Form helper text */
+.f-hint{font-size:11px;color:var(--t-3);margin-top:4px;}
+.f-hint a{color:var(--g-4);cursor:pointer;text-decoration:underline;}
 
 /* ═══════════════════════════════════════════════════
    SECTION: FREEDOM TAB — Worm + health redesigned
@@ -1473,9 +1581,13 @@ body:has(#tab-log.active) .fr-fab{display:none;}
         <div class="th-title">Today</div>
         <div class="th-date" id="th-date"></div>
       </div>
-      <div class="th-pill">
-        <div class="th-pts" id="th-pts">0</div>
-        <div class="th-pts-lbl">pts today</div>
+      <div style="display:flex;gap:8px;align-items:stretch;">
+        <div class="th-pill">
+          <div class="th-pts" id="th-pts">0</div>
+          <div class="th-pts-lbl">pts today</div>
+        </div>
+        <button class="th-add" onclick="openTaskAdd()" title="Add task">+</button>
+        <button class="th-menu" onclick="openTaskSettings()" title="Task settings">⚙</button>
       </div>
     </div>
     <!-- Phase context -->
@@ -1868,26 +1980,104 @@ body:has(#tab-log.active) .fr-fab{display:none;}
 </div>
 
 <!-- ════════════════════════════════════════
-     OVERLAY: TASK EDIT
+     OVERLAY: TASK EDIT / ADD
 ════════════════════════════════════════ -->
 <div class="overlay" id="ov-task-edit" onclick="closeOverlayOutside(event,'ov-task-edit')">
   <div class="sheet">
     <div class="sheet-handle"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
-      <div class="sheet-title" style="margin-bottom:0">Edit Task</div>
+      <div class="sheet-title" id="te-title" style="margin-bottom:0">Edit Task</div>
       <button onclick="closeOverlay('ov-task-edit')" style="font-size:20px;color:var(--t-3);padding:4px 8px;">✕</button>
     </div>
-    <input type="hidden" id="edit-id"/>
     <div style="margin-bottom:14px">
-      <label class="f-label">Task Name</label>
-      <input type="text" id="edit-name" class="f-input"/>
+      <label class="f-label">Task name</label>
+      <input type="text" id="te-name" class="f-input" placeholder="e.g. Morning Run"/>
     </div>
-    <div style="margin-bottom:20px">
-      <label class="f-label">Duration (minutes)</label>
-      <input type="number" id="edit-mins" class="f-input"/>
+    <div style="display:flex;gap:10px;margin-bottom:14px">
+      <div style="flex:1">
+        <label class="f-label">Points</label>
+        <input type="number" id="te-pts" class="f-input" min="1" max="50" value="5"/>
+        <div class="f-hint">3 easy · 8 medium · 15 heavy</div>
+      </div>
+      <div style="flex:1">
+        <label class="f-label">Duration (min)</label>
+        <input type="number" id="te-mins" class="f-input" min="1" value="30"/>
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <label class="f-label">Block</label>
+      <select id="te-block" class="f-input"></select>
+      <div class="f-hint"><a onclick="openBlockManage()">Manage blocks →</a></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <label style="display:flex;align-items:center;gap:8px;flex:1;cursor:pointer">
+        <input type="checkbox" id="te-priority"/>
+        <span style="font-size:13px;color:var(--t-2);">Mark as priority</span>
+      </label>
+      <input type="text" id="te-priority-icon" class="f-input" style="flex:0 0 60px;text-align:center;" value="🎯" maxlength="4" title="Priority icon"/>
     </div>
     <button class="btn-p" onclick="saveTaskEdit()">Save</button>
-    <button class="btn-s" onclick="closeOverlay('ov-task-edit')">Cancel</button>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button class="btn-s" id="te-duplicate" style="flex:1" onclick="duplicateTaskFromEdit()">Duplicate</button>
+      <button class="btn-s" id="te-delete" style="flex:1;color:var(--r-4);border-color:rgba(208,48,48,0.35)" onclick="deleteTaskFromEdit()">Delete</button>
+    </div>
+    <button class="btn-s" style="margin-top:8px" onclick="closeOverlay('ov-task-edit')">Cancel</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: BLOCK MANAGE
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-block-manage" onclick="closeOverlayOutside(event,'ov-block-manage')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="sheet-title" style="margin-bottom:0">Manage Blocks</div>
+      <button onclick="closeOverlay('ov-block-manage')" style="font-size:20px;color:var(--t-3);padding:4px 8px;">✕</button>
+    </div>
+    <div id="bm-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+    <div class="bm-new" style="display:flex;gap:8px;align-items:center;padding-top:12px;border-top:1px solid var(--b-dim);">
+      <select id="bm-new-icon" class="f-input" style="flex:0 0 70px"></select>
+      <input type="text" id="bm-new-name" class="f-input" placeholder="New block name" style="flex:1"/>
+      <button class="btn-p" style="flex:0 0 auto;padding:10px 16px;" onclick="addBlockFromManage()">Add</button>
+    </div>
+    <button class="btn-s" style="margin-top:14px" onclick="closeOverlay('ov-block-manage')">Done</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: TASK SETTINGS
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-task-settings" onclick="closeOverlayOutside(event,'ov-task-settings')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div class="sheet-title" style="margin-bottom:0">Task Settings</div>
+      <button onclick="closeOverlay('ov-task-settings')" style="font-size:20px;color:var(--t-3);padding:4px 8px;">✕</button>
+    </div>
+    <button class="btn-s" style="width:100%;margin-bottom:8px;text-align:left;padding-left:16px" onclick="closeOverlay('ov-task-settings');openBlockManage()">🗂  Manage blocks</button>
+    <button class="btn-s" style="width:100%;margin-bottom:8px;text-align:left;padding-left:16px" onclick="closeOverlay('ov-task-settings');openStreakPicker()">🔥  Pick streak tasks</button>
+    <button class="btn-s" style="width:100%;margin-bottom:16px;text-align:left;padding-left:16px;color:var(--r-4);border-color:rgba(208,48,48,0.35)" onclick="closeOverlay('ov-task-settings');confirmResetTasksToDefaults()">↺  Reset to starter pack</button>
+    <button class="btn-s" style="width:100%" onclick="closeOverlay('ov-task-settings')">Close</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: STREAK PICKER
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-streak-picker" onclick="closeOverlayOutside(event,'ov-streak-picker')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div class="sheet-title" style="margin-bottom:0">Streak Tasks</div>
+      <button onclick="closeOverlay('ov-streak-picker')" style="font-size:20px;color:var(--t-3);padding:4px 8px;">✕</button>
+    </div>
+    <div style="font-size:12px;color:var(--t-3);margin-bottom:14px;line-height:1.5;">
+      Pick the tasks that define your streak. A day counts only if ALL selected tasks are done.
+    </div>
+    <div id="sp-list" style="display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow-y:auto;margin-bottom:16px;"></div>
+    <button class="btn-p" onclick="saveStreakPicker()">Save</button>
+    <button class="btn-s" style="margin-top:8px" onclick="closeOverlay('ov-streak-picker')">Cancel</button>
   </div>
 </div>
 
@@ -1919,6 +2109,8 @@ const LS = {
   CRAVING_LOG:    'th_craving_log',
   BADGES_SHOWN:   'th_badges_shown',
   TASKS_CUSTOM:   'th_tasks_custom',
+  BLOCKS_CUSTOM:  'th_blocks_custom',
+  STREAK_TASKS:   'th_streak_tasks',
   DAY_START:      'th_day_start_',
 };
 
@@ -1987,8 +2179,21 @@ function isCycleComplete(){
     !localStorage.getItem('th_cycle_celebrated_' + getCycleNum());
 }
 
+function getStreakTaskIds(){
+  const stored = localStorage.getItem(LS.STREAK_TASKS);
+  if(stored){
+    try { const arr = JSON.parse(stored); if(Array.isArray(arr)) return arr; } catch(e){}
+  }
+  // No user config yet — infer from current tasks
+  const active = getActiveTasks();
+  const priority = active.filter(t=>t.priority).map(t=>t.id);
+  if(priority.length) return priority;
+  // Final fallback: any single task, if user has any
+  return active.length ? [active[0].id] : [];
+}
 function getStreak(){
   const log = getTaskLog();
+  const coreIds = getStreakTaskIds();
   let streak = 0;
   const today = new Date();
   for(let i = 0; i < 21; i++){
@@ -1996,10 +2201,12 @@ function getStreak(){
     d.setDate(d.getDate() - i);
     const key = d.toISOString().slice(0, 10);
     const dayLog = log[key] || {};
-    // Core tasks: morning-viz + zymo-fundraising
-    const hasCore = dayLog['morning-viz'] && dayLog['zymo-fundraising'];
+    // Core = user-picked streak tasks (or inferred). If no core defined, any completion counts.
+    const hasCore = coreIds.length
+      ? coreIds.every(id => dayLog[id])
+      : Object.keys(dayLog).some(k => k !== '__max' && dayLog[k]);
     if(hasCore) streak++;
-    else if(i > 0) break; // gap in streak
+    else if(i > 0) break;
   }
   return streak;
 }
@@ -2022,28 +2229,35 @@ function daysLeftInCycle21(){
 }
 
 /* ═══════════════════════════════════════════════════
-   SECTION: TASK DEFINITIONS
-   — To add/edit tasks: change this array only
+   SECTION: TASK DEFINITIONS — SEED ONLY
+   — Live tasks and blocks are stored in localStorage
+     (LS.TASKS_CUSTOM / LS.BLOCKS_CUSTOM). This array
+     seeds a fresh install and powers "Load starter pack".
 ═══════════════════════════════════════════════════ */
-const DEFAULT_TASKS = [
-  {id:'warm-water',     name:'Warm Water',           mins:5,  pts:3,  block:'Morning'},
-  {id:'get-fresh',      name:'Get Fresh',             mins:15, pts:3,  block:'Morning'},
-  {id:'morning-viz',    name:'Morning Visualization', mins:45, pts:10, block:'Morning'},
-  {id:'gym',            name:'Gym',                   mins:60, pts:10, block:'Morning'},
-  {id:'bath-breakfast', name:'Bath + Breakfast',      mins:30, pts:4,  block:'Morning'},
-  {id:'newspaper',      name:'Newspaper Reading',     mins:60, pts:5,  block:'Morning'},
-  {id:'zymo-fundraising',name:'Zymo Fundraising',     mins:90, pts:15, block:'Deep Work', priority:true, priorityIcon:'🎯'},
-  {id:'deep-work-2',    name:'Deep Work 2',           mins:90, pts:8,  block:'Deep Work'},
-  {id:'lunch-yog',      name:'Lunch + Yog Nidra',     mins:60, pts:5,  block:'Deep Work'},
-  {id:'deep-work-3',    name:'Deep Work 3',           mins:90, pts:8,  block:'Deep Work'},
-  {id:'deep-work-4',    name:'Deep Work 4',           mins:90, pts:8,  block:'Deep Work'},
-  {id:'aira',           name:'AIRA',                  mins:90, pts:10, block:'Deep Work', priority:true, priorityIcon:'✨'},
-  {id:'deep-work-5',    name:'Deep Work 5',           mins:90, pts:8,  block:'Deep Work'},
-  {id:'night-reading',  name:'Night Reading',         mins:30, pts:5,  block:'Night'},
-  {id:'night-viz',      name:'Night Visualization',   mins:30, pts:8,  block:'Night'},
+const DEFAULT_BLOCKS = [
+  {id:'blk-morning',   name:'Morning',   icon:'🌅', order:0},
+  {id:'blk-deep-work', name:'Deep Work', icon:'⚡', order:1},
+  {id:'blk-night',     name:'Night',     icon:'🌙', order:2},
 ];
-const BLOCK_ICONS = {'Morning':'🌅','Deep Work':'⚡','Night':'🌙'};
-const MAX_TASK_PER_DAY = DEFAULT_TASKS.reduce((s,t)=>s+t.pts,0);
+const DEFAULT_TASKS = [
+  {id:'warm-water',      name:'Warm Water',           mins:5,  pts:3,  block_id:'blk-morning',   order:0},
+  {id:'get-fresh',       name:'Get Fresh',            mins:15, pts:3,  block_id:'blk-morning',   order:1},
+  {id:'morning-viz',     name:'Morning Visualization',mins:45, pts:10, block_id:'blk-morning',   order:2},
+  {id:'gym',             name:'Gym',                  mins:60, pts:10, block_id:'blk-morning',   order:3},
+  {id:'bath-breakfast',  name:'Bath + Breakfast',     mins:30, pts:4,  block_id:'blk-morning',   order:4},
+  {id:'newspaper',       name:'Newspaper Reading',    mins:60, pts:5,  block_id:'blk-morning',   order:5},
+  {id:'zymo-fundraising',name:'Zymo Fundraising',     mins:90, pts:15, block_id:'blk-deep-work', order:0, priority:true, priorityIcon:'🎯'},
+  {id:'deep-work-2',     name:'Deep Work 2',          mins:90, pts:8,  block_id:'blk-deep-work', order:1},
+  {id:'lunch-yog',       name:'Lunch + Yog Nidra',    mins:60, pts:5,  block_id:'blk-deep-work', order:2},
+  {id:'deep-work-3',     name:'Deep Work 3',          mins:90, pts:8,  block_id:'blk-deep-work', order:3},
+  {id:'deep-work-4',     name:'Deep Work 4',          mins:90, pts:8,  block_id:'blk-deep-work', order:4},
+  {id:'aira',            name:'AIRA',                 mins:90, pts:10, block_id:'blk-deep-work', order:5, priority:true, priorityIcon:'✨'},
+  {id:'deep-work-5',     name:'Deep Work 5',          mins:90, pts:8,  block_id:'blk-deep-work', order:6},
+  {id:'night-reading',   name:'Night Reading',        mins:30, pts:5,  block_id:'blk-night',     order:0},
+  {id:'night-viz',       name:'Night Visualization',  mins:30, pts:8,  block_id:'blk-night',     order:1},
+];
+const DEFAULT_STREAK_TASKS = ['morning-viz','zymo-fundraising'];
+const BLOCK_ICON_CHOICES = ['🌅','⚡','🌙','🎯','✨','💪','🧠','📚','🧘','🍎','💧','🏃','🌊','🔥','🌱','🛡️','📋'];
 
 /* ═══════════════════════════════════════════════════
    SECTION: HEALTH MILESTONES
@@ -2280,7 +2494,7 @@ function calcProb(){
   const daysPct = Math.min(40, (cleanDays/30)*40);
 
   // Task points component — max 106pts/day, 30 days = 3180pts = 45%
-  const maxTaskPts = MAX_TASK_PER_DAY * 30;
+  const maxTaskPts = Math.max(1, getMaxTaskPerDay()) * 30;
   const taskPct = Math.min(45, (tp/maxTaskPts)*45);
 
   // Smoke-free hours bonus — first 72 hours = 10%
@@ -2623,16 +2837,15 @@ function showCycleComplete(){
   const streak = getStreak();
   const pts = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
 
-  // Count tasks done in this cycle
+  // Count tasks done in this cycle (history-safe: iterate log entries directly)
   const log = getTaskLog();
-  const tasks = getTasks();
   let tasksDone = 0;
   for(let i=0; i<CYCLE_DAYS; i++){
     const d = new Date(S.missionStart);
     d.setDate(d.getDate() + (cycleNum-1)*CYCLE_DAYS + i);
     const key = d.toISOString().slice(0,10);
     const dayLog = log[key]||{};
-    tasksDone += tasks.filter(t=>dayLog[t.id]).length;
+    tasksDone += Object.keys(dayLog).filter(k => k !== '__max' && dayLog[k]).length;
   }
 
   setText('cc-cycle-num', 'CYCLE '+cycleNum+' COMPLETE');
@@ -2767,7 +2980,8 @@ function updateAnchorCard(tdLog){
   const done = tasks.filter(t=>tdLog[t.id]).length;
   const total = tasks.length;
   const pts = tasks.filter(t=>tdLog[t.id]).reduce((s,t)=>s+t.pts,0);
-  const pct = Math.round((pts/MAX_TASK_PER_DAY)*100);
+  const maxToday = Math.max(1, getMaxTaskPerDay());
+  const pct = Math.round((pts/maxToday)*100);
 
   setText('wra-score', done+' / '+total);
   const bar = document.getElementById('wra-bar-main');
@@ -2785,10 +2999,246 @@ function updateAnchorCard(tdLog){
   }).join('') + (pct>0?`<div class="wra-pct">${pct}% complete today</div>`:'');
 }
 
-function getTasks(){
-  const custom = JSON.parse(localStorage.getItem(LS.TASKS_CUSTOM)||'{}');
-  return DEFAULT_TASKS.map(t=>({...t, name:custom[t.id]?.name||t.name, mins:custom[t.id]?.mins||t.mins}));
+/* ═══════════════════════════════════════════════════
+   SECTION: TASK + BLOCK DATA LAYER (v3 — fully user-editable)
+═══════════════════════════════════════════════════ */
+function _uid(prefix){ return prefix + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,7); }
+
+function _migrateIfNeeded(){
+  // If new schema keys are absent, seed from DEFAULT_TASKS + DEFAULT_BLOCKS.
+  // Legacy TASKS_CUSTOM format was {id:{name,mins}} (object). New format is an array.
+  const raw = localStorage.getItem(LS.TASKS_CUSTOM);
+  let needsSeed = false;
+  if(!raw){ needsSeed = true; }
+  else {
+    try {
+      const parsed = JSON.parse(raw);
+      if(!Array.isArray(parsed)) needsSeed = true; // legacy object → reseed
+    } catch(e){ needsSeed = true; }
+  }
+  if(needsSeed){
+    // Legacy name/mins overrides preserved when reseeding
+    let legacy = {};
+    if(raw){ try{ const p=JSON.parse(raw); if(p && typeof p==='object' && !Array.isArray(p)) legacy=p; }catch(e){} }
+    const seeded = DEFAULT_TASKS.map(t => ({
+      ...t,
+      name: (legacy[t.id]?.name) || t.name,
+      mins: (legacy[t.id]?.mins) || t.mins,
+      archived: false,
+      created_at: Date.now(),
+    }));
+    localStorage.setItem(LS.TASKS_CUSTOM, JSON.stringify(seeded));
+  }
+  if(!localStorage.getItem(LS.BLOCKS_CUSTOM)){
+    localStorage.setItem(LS.BLOCKS_CUSTOM, JSON.stringify(DEFAULT_BLOCKS.map(b=>({...b}))));
+  }
 }
+
+function getBlocks(){
+  _migrateIfNeeded();
+  const raw = localStorage.getItem(LS.BLOCKS_CUSTOM);
+  let arr = [];
+  try { arr = JSON.parse(raw) || []; } catch(e){ arr = []; }
+  return arr.slice().sort((a,b)=>(a.order||0)-(b.order||0));
+}
+function setBlocks(arr){
+  localStorage.setItem(LS.BLOCKS_CUSTOM, JSON.stringify(arr));
+}
+function getTasksAll(){
+  _migrateIfNeeded();
+  const raw = localStorage.getItem(LS.TASKS_CUSTOM);
+  let arr = [];
+  try { arr = JSON.parse(raw) || []; } catch(e){ arr = []; }
+  return arr;
+}
+function setTasks(arr){
+  localStorage.setItem(LS.TASKS_CUSTOM, JSON.stringify(arr));
+}
+function getTasks(){
+  // Active (non-archived) tasks, sorted by block order then task order
+  const blocks = getBlocks();
+  const blockOrder = {};
+  blocks.forEach((b,i)=>{ blockOrder[b.id] = b.order!=null?b.order:i; });
+  return getTasksAll()
+    .filter(t=>!t.archived)
+    .slice()
+    .sort((a,b)=>{
+      const bo = (blockOrder[a.block_id]||0) - (blockOrder[b.block_id]||0);
+      if(bo !== 0) return bo;
+      return (a.order||0) - (b.order||0);
+    });
+}
+function getActiveTasks(){ return getTasks(); }
+function getTaskById(id){
+  const all = getTasksAll();
+  return all.find(t=>t.id===id) || null;
+}
+function getMaxTaskPerDay(){
+  return getActiveTasks().reduce((s,t)=>s+(t.pts||0),0);
+}
+
+/* CRUD — tasks */
+function addTask({name, pts, mins, block_id, priority, priorityIcon}){
+  const all = getTasksAll();
+  const siblings = all.filter(t=>t.block_id===block_id && !t.archived);
+  const nextOrder = siblings.reduce((m,t)=>Math.max(m, (t.order||0)+1), 0);
+  const newTask = {
+    id: _uid('task'),
+    name: (name||'Untitled').trim(),
+    pts: Math.max(1, parseInt(pts)||1),
+    mins: Math.max(1, parseInt(mins)||10),
+    block_id,
+    order: nextOrder,
+    archived: false,
+    created_at: Date.now(),
+  };
+  if(priority){ newTask.priority = true; if(priorityIcon) newTask.priorityIcon = priorityIcon; }
+  all.push(newTask);
+  setTasks(all);
+  return newTask.id;
+}
+function updateTask(id, patch){
+  const all = getTasksAll();
+  const i = all.findIndex(t=>t.id===id);
+  if(i<0) return;
+  const t = {...all[i], ...patch};
+  if(patch.name!=null) t.name = String(patch.name).trim() || t.name;
+  if(patch.pts!=null) t.pts = Math.max(1, parseInt(patch.pts)||1);
+  if(patch.mins!=null) t.mins = Math.max(1, parseInt(patch.mins)||1);
+  if(patch.priority===false){ delete t.priority; delete t.priorityIcon; }
+  all[i] = t;
+  setTasks(all);
+}
+function duplicateTask(id){
+  const src = getTaskById(id);
+  if(!src) return null;
+  return addTask({
+    name: src.name + ' (copy)',
+    pts: src.pts,
+    mins: src.mins,
+    block_id: src.block_id,
+    priority: !!src.priority,
+    priorityIcon: src.priorityIcon,
+  });
+}
+/* Delete = archive (preserve history). Returns snapshot for undo. */
+function archiveTask(id){
+  const all = getTasksAll();
+  const i = all.findIndex(t=>t.id===id);
+  if(i<0) return null;
+  const snapshot = {...all[i]};
+  all[i].archived = true;
+  setTasks(all);
+  return snapshot;
+}
+function restoreArchivedTask(id){
+  const all = getTasksAll();
+  const i = all.findIndex(t=>t.id===id);
+  if(i<0) return;
+  all[i].archived = false;
+  setTasks(all);
+}
+function reorderTaskWithinBlock(id, newIndex){
+  const all = getTasksAll();
+  const t = all.find(x=>x.id===id);
+  if(!t) return;
+  const siblings = all.filter(x=>x.block_id===t.block_id && !x.archived).sort((a,b)=>(a.order||0)-(b.order||0));
+  const cur = siblings.findIndex(x=>x.id===id);
+  if(cur<0) return;
+  siblings.splice(cur,1);
+  siblings.splice(Math.max(0,Math.min(newIndex, siblings.length)), 0, t);
+  siblings.forEach((x,idx)=>{ x.order = idx; });
+  setTasks(all);
+}
+function moveTaskToBlock(id, targetBlockId, insertIndex){
+  const all = getTasksAll();
+  const t = all.find(x=>x.id===id);
+  if(!t) return;
+  t.block_id = targetBlockId;
+  // Renumber target block
+  const siblings = all.filter(x=>x.block_id===targetBlockId && !x.archived && x.id!==id).sort((a,b)=>(a.order||0)-(b.order||0));
+  siblings.splice(Math.max(0,Math.min(insertIndex, siblings.length)), 0, t);
+  siblings.forEach((x,idx)=>{ x.order = idx; });
+  setTasks(all);
+}
+
+/* CRUD — blocks */
+function addBlock({name, icon}){
+  const blocks = getBlocks();
+  const nextOrder = blocks.reduce((m,b)=>Math.max(m,(b.order||0)+1), 0);
+  const newBlock = {
+    id: _uid('blk'),
+    name: (name||'Untitled Block').trim(),
+    icon: icon || '📋',
+    order: nextOrder,
+  };
+  blocks.push(newBlock);
+  setBlocks(blocks);
+  return newBlock.id;
+}
+function updateBlock(id, patch){
+  const blocks = getBlocks();
+  const i = blocks.findIndex(b=>b.id===id);
+  if(i<0) return;
+  blocks[i] = {...blocks[i], ...patch};
+  if(patch.name!=null) blocks[i].name = String(patch.name).trim() || blocks[i].name;
+  setBlocks(blocks);
+}
+function deleteBlock(id, moveTasksToBlockId){
+  const blocks = getBlocks();
+  const remaining = blocks.filter(b=>b.id!==id);
+  const all = getTasksAll();
+  // Move any tasks (archived or active) that lived in this block
+  all.forEach(t=>{
+    if(t.block_id===id){ t.block_id = moveTasksToBlockId; }
+  });
+  setBlocks(remaining);
+  setTasks(all);
+}
+function reorderBlock(id, newIndex){
+  const blocks = getBlocks();
+  const cur = blocks.findIndex(b=>b.id===id);
+  if(cur<0) return;
+  const [b] = blocks.splice(cur,1);
+  blocks.splice(Math.max(0,Math.min(newIndex, blocks.length)), 0, b);
+  blocks.forEach((x,idx)=>{ x.order = idx; });
+  setBlocks(blocks);
+}
+
+/* Load / reset to starter pack — wipes current tasks + blocks, keeps log */
+function loadStarterPack(){
+  localStorage.setItem(LS.BLOCKS_CUSTOM, JSON.stringify(DEFAULT_BLOCKS.map(b=>({...b}))));
+  const seeded = DEFAULT_TASKS.map(t => ({...t, archived:false, created_at:Date.now()}));
+  localStorage.setItem(LS.TASKS_CUSTOM, JSON.stringify(seeded));
+}
+
+/* Undo snackbar */
+let _undoTimer = null;
+let _undoAction = null;
+function showUndoSnackbar(msg, undoFn){
+  clearTimeout(_undoTimer);
+  _undoAction = undoFn;
+  let sn = document.getElementById('undo-snackbar');
+  if(!sn){
+    sn = document.createElement('div');
+    sn.id = 'undo-snackbar';
+    sn.className = 'undo-snackbar';
+    document.body.appendChild(sn);
+  }
+  sn.innerHTML = `<span class="usb-msg">${msg}</span><button class="usb-btn" onclick="triggerUndo()">UNDO</button>`;
+  sn.classList.add('show');
+  _undoTimer = setTimeout(()=>{ sn.classList.remove('show'); _undoAction = null; }, 5000);
+}
+function triggerUndo(){
+  if(_undoAction){ _undoAction(); _undoAction = null; }
+  clearTimeout(_undoTimer);
+  const sn = document.getElementById('undo-snackbar');
+  if(sn) sn.classList.remove('show');
+  renderTasks();
+  updateWarRoom();
+  renderAnalytics();
+}
+
 function todayKey(){ return new Date().toISOString().slice(0,10); }
 function getTaskLog(){ return JSON.parse(localStorage.getItem(LS.TASK_LOG)||'{}'); }
 function getDayStart(){
@@ -2808,106 +3258,141 @@ function startDay(){
   renderTasks();
 }
 
-let lastTaskRenderKey = '';
-
 function renderTasks(){
   const dns = document.getElementById('day-not-started');
   const tlw = document.getElementById('task-list-wrap');
   if(!dns||!tlw) return;
 
-  // Always hide the "not started" placeholder — auto-start removes need for it
   dns.innerHTML = '';
 
   const dateEl = document.getElementById('th-date');
   if(dateEl) dateEl.textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
 
+  const blocks = getBlocks();
   const tasks = getTasks();
   const log = getTaskLog();
   const tdKey = todayKey();
   const tdLog = log[tdKey]||{};
-  const now = Date.now();
-  const dayStart = getDayStart();
 
-  // MIDNIGHT = end of today
-  // Show ALL tasks always — no hiding based on time
-  // Completed tasks show as done, pending show as pending
-  const timed = tasks.map(tk => ({ ...tk }));
-  const doneTasks = timed.filter(tk => tdLog[tk.id]);
-  const achievable = timed.filter(tk => !tdLog[tk.id]);
-  const overflow = [];
-  const minsUntilMidnight = (new Date().setHours(23,59,59,999) - now) / 60000;
-
-  // Today pts
+  // Today pts (dynamic — from active tasks)
   const tp = tasks.filter(tk=>tdLog[tk.id]).reduce((s,tk)=>s+tk.pts,0);
   const tpEl = document.getElementById('th-pts');
-  if(tpEl) tpEl.textContent = tp;
-
-  // Render key — full rebuild on any completion change
-  const completionKey = tasks.map(t=>tdLog[t.id]?'1':'0').join('');
-  const needFullRender = completionKey !== lastTaskRenderKey;
-  lastTaskRenderKey = completionKey;
-
-  if(needFullRender){
-    let headerHtml = '';
-
-    // Show ALL tasks — done + remaining
-    const visibleTasks = [...doneTasks, ...achievable];
-
-    // Group by block
-    const blocks = {};
-    visibleTasks.forEach(tk => {
-      if(!blocks[tk.block]) blocks[tk.block] = [];
-      blocks[tk.block].push(tk);
-    });
-
-    let html = headerHtml;
-    for(const [bname, btasks] of Object.entries(blocks)){
-      const bPts = btasks.reduce((s,tk)=>s+tk.pts,0);
-      const bDone = btasks.filter(tk=>tdLog[tk.id]).reduce((s,tk)=>s+tk.pts,0);
-      html += `<div class="blk-head">
-        <span class="blk-icon">${BLOCK_ICONS[bname]||'📋'}</span>
-        <span class="blk-name">${bname}</span>
-        <span class="blk-pts">${bDone}/${bPts}pts</span>
-      </div>`;
-      html += `<div class="task-list">`;
-      btasks.forEach(tk => {
-        const done = !!tdLog[tk.id];
-        const active = !done && now >= tk.tStart && now < tk.tEnd;
-        html += `<div class="task ${done?'t-done':active?'t-active':''} ${tk.priority?'t-priority':''}" data-id="${tk.id}">
-          <div class="t-check" onclick="completeTask('${tk.id}',event)"><div class="t-check-inner">${done?'✓':''}</div></div>
-          <div class="t-info">
-            <div class="t-name">${tk.name}</div>
-            <div class="t-meta"><span class="t-time">${tk.mins}m</span><span class="t-pts">+${tk.pts}pts</span></div>
-          </div>
-          <button class="t-edit" onclick="openTaskEdit('${tk.id}')">✏️</button>
-        </div>`;
-      });
-      html += '</div>';
-    }
-    tlw.innerHTML = html;
+  if(tpEl){
+    const maxToday = getMaxTaskPerDay();
+    tpEl.textContent = maxToday ? `${tp}/${maxToday}` : tp;
   }
 
-  // No countdown timers — duration only display
+  // Empty state
+  if(tasks.length === 0){
+    tlw.innerHTML = `<div class="tasks-empty">
+      <div class="te-icon">📝</div>
+      <div class="te-title">No tasks yet</div>
+      <div class="te-sub">Add your first task, or load the starter pack of 15 defaults.</div>
+      <div class="te-actions">
+        <button class="btn-p" onclick="openTaskAdd()">+ Add task</button>
+        <button class="btn-s" onclick="confirmLoadStarter()">Load starter pack</button>
+      </div>
+    </div>`;
+    return;
+  }
+
+  // Group by block (respecting block order)
+  let html = '';
+  blocks.forEach(b => {
+    const btasks = tasks.filter(t => t.block_id === b.id);
+    const bPts = btasks.reduce((s,tk)=>s+tk.pts,0);
+    const bDone = btasks.filter(tk=>tdLog[tk.id]).reduce((s,tk)=>s+tk.pts,0);
+    html += `<div class="blk-head" data-block-id="${b.id}">
+      <span class="blk-icon">${b.icon||'📋'}</span>
+      <span class="blk-name">${escapeHtml(b.name)}</span>
+      <span class="blk-pts">${bDone}/${bPts}pts</span>
+      <button class="blk-menu-btn" onclick="openBlockManage()" title="Manage blocks">⋯</button>
+    </div>`;
+    html += `<div class="task-list" data-drop-block="${b.id}" ondragover="onTaskDragOver(event)" ondrop="onTaskDrop(event,'${b.id}')">`;
+    if(btasks.length === 0){
+      html += `<div class="task-empty-slot" data-block-id="${b.id}">Drop tasks here or <a onclick="openTaskAdd('${b.id}')">+ add one</a></div>`;
+    }
+    btasks.forEach(tk => {
+      const done = !!tdLog[tk.id];
+      html += `<div class="task ${done?'t-done':''} ${tk.priority?'t-priority':''}" data-id="${tk.id}" draggable="true" ondragstart="onTaskDragStart(event,'${tk.id}')" ondragend="onTaskDragEnd(event)">
+        <div class="t-drag" title="Drag to reorder">⋮⋮</div>
+        <div class="t-check" onclick="completeTask('${tk.id}',event)"><div class="t-check-inner">${done?'✓':''}</div></div>
+        <div class="t-info" onclick="openTaskEdit('${tk.id}')">
+          <div class="t-name">${tk.priority&&tk.priorityIcon?tk.priorityIcon+' ':''}${escapeHtml(tk.name)}</div>
+          <div class="t-meta"><span class="t-time">${tk.mins}m</span><span class="t-pts">+${tk.pts}pts</span></div>
+        </div>
+        <button class="t-edit" onclick="openTaskEdit('${tk.id}')" title="Edit">✏️</button>
+      </div>`;
+    });
+    html += `<button class="task-add-inline" onclick="openTaskAdd('${b.id}')">+ Add task to ${escapeHtml(b.name)}</button>`;
+    html += '</div>';
+  });
+  tlw.innerHTML = html;
+}
+
+function escapeHtml(str){
+  return String(str==null?'':str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* Drag and drop */
+let _dragTaskId = null;
+function onTaskDragStart(evt, id){
+  _dragTaskId = id;
+  evt.dataTransfer.effectAllowed = 'move';
+  try { evt.dataTransfer.setData('text/plain', id); } catch(e){}
+  evt.currentTarget.classList.add('dragging');
+}
+function onTaskDragEnd(evt){
+  evt.currentTarget.classList.remove('dragging');
+  _dragTaskId = null;
+}
+function onTaskDragOver(evt){
+  evt.preventDefault();
+  evt.dataTransfer.dropEffect = 'move';
+}
+function onTaskDrop(evt, targetBlockId){
+  evt.preventDefault();
+  const id = _dragTaskId || evt.dataTransfer.getData('text/plain');
+  if(!id) return;
+  // Find drop index within the list, based on Y of drop vs siblings
+  const listEl = evt.currentTarget;
+  const rows = Array.from(listEl.querySelectorAll('.task'));
+  let insertIndex = rows.length;
+  for(let i=0;i<rows.length;i++){
+    const r = rows[i];
+    if(r.getAttribute('data-id') === id) continue;
+    const rect = r.getBoundingClientRect();
+    if(evt.clientY < rect.top + rect.height/2){ insertIndex = i; break; }
+  }
+  const cur = getTaskById(id);
+  if(!cur) return;
+  if(cur.block_id === targetBlockId){
+    reorderTaskWithinBlock(id, insertIndex);
+  } else {
+    moveTaskToBlock(id, targetBlockId, insertIndex);
+  }
+  renderTasks();
+  updateWarRoom();
+  renderAnalytics();
 }
 
 function completeTask(id, evt){
   const tdKey = todayKey();
   const log = getTaskLog();
   if(!log[tdKey]) log[tdKey]={};
-  const tasks = getTasks();
-  const task = tasks.find(t=>t.id===id);
+  const task = getTaskById(id);
   if(!task) return;
 
   let total = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
   if(log[tdKey][id]){
     delete log[tdKey][id];
-    total = Math.max(0,total-task.pts);
+    total = Math.max(0,total-(task.pts||0));
   } else {
     log[tdKey][id] = Date.now();
-    total += task.pts;
-    // Haptic feedback
+    total += (task.pts||0);
     if(navigator.vibrate) navigator.vibrate([30,10,20]);
-    // Points fly animation
     if(evt){
       const fly = document.createElement('div');
       fly.className = 'pts-fly';
@@ -2917,36 +3402,203 @@ function completeTask(id, evt){
       document.body.appendChild(fly);
       setTimeout(()=>fly.remove(),1200);
     }
-    // Pulse orb
     const sphere = document.getElementById('orb-sphere');
     if(sphere){ sphere.style.transform='scale(1.06)'; setTimeout(()=>sphere.style.transform='',300); }
   }
+  // Snapshot today's MAX so historical analytics stays accurate after edits
+  log[tdKey].__max = getMaxTaskPerDay();
   localStorage.setItem(LS.TASK_LOG, JSON.stringify(log));
   localStorage.setItem(LS.TASK_PTS_TOTAL, total);
   renderTasks();
   updateWarRoom();
+  renderAnalytics();
 }
 
-function openTaskEdit(id){
-  const tasks = getTasks();
-  const t = tasks.find(t=>t.id===id);
-  if(!t) return;
-  document.getElementById('edit-id').value = id;
-  document.getElementById('edit-name').value = t.name;
-  document.getElementById('edit-mins').value = t.mins;
+/* ═══════════════════════════════════════════════════
+   SECTION: TASK / BLOCK / STREAK OVERLAYS
+═══════════════════════════════════════════════════ */
+let _editingTaskId = null; // null = add mode
+
+function openTaskAdd(preselectBlockId){
+  _editingTaskId = null;
+  const blocks = getBlocks();
+  if(blocks.length === 0){ alert('Add a block first.'); return openBlockManage(); }
+  document.getElementById('te-title').textContent = 'Add Task';
+  document.getElementById('te-name').value = '';
+  document.getElementById('te-pts').value = 5;
+  document.getElementById('te-mins').value = 30;
+  document.getElementById('te-priority').checked = false;
+  document.getElementById('te-priority-icon').value = '🎯';
+  populateBlockSelect(preselectBlockId || blocks[0].id);
+  document.getElementById('te-delete').style.display = 'none';
+  document.getElementById('te-duplicate').style.display = 'none';
   openOverlay('ov-task-edit');
 }
-
+function openTaskEdit(id){
+  const t = getTaskById(id);
+  if(!t) return;
+  _editingTaskId = id;
+  document.getElementById('te-title').textContent = 'Edit Task';
+  document.getElementById('te-name').value = t.name;
+  document.getElementById('te-pts').value = t.pts;
+  document.getElementById('te-mins').value = t.mins;
+  document.getElementById('te-priority').checked = !!t.priority;
+  document.getElementById('te-priority-icon').value = t.priorityIcon || '🎯';
+  populateBlockSelect(t.block_id);
+  document.getElementById('te-delete').style.display = '';
+  document.getElementById('te-duplicate').style.display = '';
+  openOverlay('ov-task-edit');
+}
+function populateBlockSelect(selectedId){
+  const sel = document.getElementById('te-block');
+  const blocks = getBlocks();
+  sel.innerHTML = blocks.map(b=>`<option value="${b.id}" ${b.id===selectedId?'selected':''}>${escapeHtml(b.icon+' '+b.name)}</option>`).join('');
+}
 function saveTaskEdit(){
-  const id = document.getElementById('edit-id').value;
-  const name = document.getElementById('edit-name').value.trim();
-  const mins = parseInt(document.getElementById('edit-mins').value);
-  if(!name||!mins) return;
-  const custom = JSON.parse(localStorage.getItem(LS.TASKS_CUSTOM)||'{}');
-  custom[id] = {name,mins};
-  localStorage.setItem(LS.TASKS_CUSTOM, JSON.stringify(custom));
+  const name = document.getElementById('te-name').value.trim();
+  const pts = parseInt(document.getElementById('te-pts').value);
+  const mins = parseInt(document.getElementById('te-mins').value);
+  const block_id = document.getElementById('te-block').value;
+  const priority = document.getElementById('te-priority').checked;
+  const priorityIcon = document.getElementById('te-priority-icon').value.trim() || '🎯';
+  if(!name){ alert('Task name required'); return; }
+  if(!(pts>=1)){ alert('Points must be 1 or more'); return; }
+  if(!(mins>=1)){ alert('Minutes must be 1 or more'); return; }
+  if(!block_id){ alert('Pick a block'); return; }
+  if(_editingTaskId){
+    updateTask(_editingTaskId, {name, pts, mins, block_id, priority, priorityIcon: priority?priorityIcon:undefined});
+  } else {
+    addTask({name, pts, mins, block_id, priority, priorityIcon});
+  }
   closeOverlay('ov-task-edit');
   renderTasks();
+  updateWarRoom();
+  renderAnalytics();
+}
+function deleteTaskFromEdit(){
+  if(!_editingTaskId) return;
+  const id = _editingTaskId;
+  const snapshot = archiveTask(id);
+  closeOverlay('ov-task-edit');
+  renderTasks();
+  updateWarRoom();
+  renderAnalytics();
+  if(snapshot){
+    showUndoSnackbar('Task "'+escapeHtml(snapshot.name)+'" deleted', ()=>{ restoreArchivedTask(id); });
+  }
+}
+function duplicateTaskFromEdit(){
+  if(!_editingTaskId) return;
+  const newId = duplicateTask(_editingTaskId);
+  closeOverlay('ov-task-edit');
+  renderTasks();
+  updateWarRoom();
+  renderAnalytics();
+  if(newId) openTaskEdit(newId);
+}
+
+/* Block manage overlay */
+function openBlockManage(){
+  // Populate the "new block" icon dropdown if empty
+  const newIconSel = document.getElementById('bm-new-icon');
+  if(newIconSel && !newIconSel.options.length){
+    newIconSel.innerHTML = BLOCK_ICON_CHOICES.map(ic=>`<option value="${ic}">${ic}</option>`).join('');
+    newIconSel.value = '📋';
+  }
+  renderBlockManage();
+  openOverlay('ov-block-manage');
+}
+
+function openTaskSettings(){
+  openOverlay('ov-task-settings');
+}
+function renderBlockManage(){
+  const wrap = document.getElementById('bm-list');
+  const blocks = getBlocks();
+  wrap.innerHTML = blocks.map((b,i) => `
+    <div class="bm-row" data-id="${b.id}">
+      <select class="bm-icon" onchange="onBlockIconChange('${b.id}', this.value)">
+        ${BLOCK_ICON_CHOICES.map(ic=>`<option value="${ic}" ${ic===b.icon?'selected':''}>${ic}</option>`).join('')}
+      </select>
+      <input class="bm-name" type="text" value="${escapeHtml(b.name)}" onchange="onBlockNameChange('${b.id}', this.value)"/>
+      <button class="bm-up" onclick="onBlockReorder('${b.id}', ${i-1})" ${i===0?'disabled':''}>▲</button>
+      <button class="bm-dn" onclick="onBlockReorder('${b.id}', ${i+1})" ${i===blocks.length-1?'disabled':''}>▼</button>
+      <button class="bm-del" onclick="onBlockDelete('${b.id}')">🗑</button>
+    </div>
+  `).join('');
+}
+function onBlockIconChange(id, icon){ updateBlock(id, {icon}); renderTasks(); renderBlockManage(); }
+function onBlockNameChange(id, name){ updateBlock(id, {name}); renderTasks(); renderBlockManage(); }
+function onBlockReorder(id, newIndex){ reorderBlock(id, newIndex); renderTasks(); renderBlockManage(); }
+function onBlockDelete(id){
+  const blocks = getBlocks();
+  if(blocks.length < 2){ alert('At least one block is required. Add another block first.'); return; }
+  const targets = blocks.filter(b=>b.id!==id);
+  const owned = getTasksAll().filter(t=>t.block_id===id);
+  let dest = targets[0].id;
+  if(owned.length){
+    const choice = prompt('This block has '+owned.length+' task(s). Move them to which block?\n\n' +
+      targets.map((b,i)=>`${i+1}. ${b.icon} ${b.name}`).join('\n'), '1');
+    if(!choice) return;
+    const idx = parseInt(choice)-1;
+    if(idx<0 || idx>=targets.length){ alert('Invalid choice'); return; }
+    dest = targets[idx].id;
+  }
+  deleteBlock(id, dest);
+  renderTasks();
+  renderBlockManage();
+  updateWarRoom();
+  renderAnalytics();
+}
+function addBlockFromManage(){
+  const name = document.getElementById('bm-new-name').value.trim();
+  const icon = document.getElementById('bm-new-icon').value || '📋';
+  if(!name){ alert('Block name required'); return; }
+  addBlock({name, icon});
+  document.getElementById('bm-new-name').value = '';
+  renderBlockManage();
+  renderTasks();
+}
+
+/* Streak-picker overlay */
+function openStreakPicker(){
+  renderStreakPicker();
+  openOverlay('ov-streak-picker');
+}
+function renderStreakPicker(){
+  const wrap = document.getElementById('sp-list');
+  const tasks = getActiveTasks();
+  const current = new Set(getStreakTaskIds());
+  wrap.innerHTML = tasks.length ? tasks.map(t=>`
+    <label class="sp-row">
+      <input type="checkbox" value="${t.id}" ${current.has(t.id)?'checked':''}/>
+      <span>${t.priority&&t.priorityIcon?t.priorityIcon+' ':''}${escapeHtml(t.name)} <span class="sp-pts">+${t.pts}</span></span>
+    </label>
+  `).join('') : '<div style="color:var(--t-3);font-size:13px;">No tasks yet. Add a task first.</div>';
+}
+function saveStreakPicker(){
+  const checks = document.querySelectorAll('#sp-list input[type=checkbox]');
+  const ids = Array.from(checks).filter(c=>c.checked).map(c=>c.value);
+  localStorage.setItem(LS.STREAK_TASKS, JSON.stringify(ids));
+  closeOverlay('ov-streak-picker');
+  renderAnalytics();
+  updateWarRoom();
+}
+
+/* Starter-pack confirmation */
+function confirmLoadStarter(){
+  if(!confirm('Load the starter pack of 15 default tasks?\n\nThis replaces your current tasks and blocks (completion history is preserved).')) return;
+  loadStarterPack();
+  renderTasks();
+  updateWarRoom();
+  renderAnalytics();
+}
+function confirmResetTasksToDefaults(){
+  if(!confirm('Reset all tasks and blocks to the built-in starter pack? Completion history stays intact.')) return;
+  loadStarterPack();
+  renderTasks();
+  updateWarRoom();
+  renderAnalytics();
 }
 
 /* ═══════════════════════════════════════════════════
@@ -3019,14 +3671,19 @@ function renderAnalytics(){
     const cycleStart = new Date(S.missionStart);
     cycleStart.setDate(cycleStart.getDate() + (getCycleNum()-1)*CYCLE_DAYS);
     const today = new Date().toISOString().slice(0,10);
+    // History-safe: include archived tasks for pts lookup; use per-day __max snapshot when present
+    const allTasksById = {};
+    getTasksAll().forEach(t => { allTasksById[t.id] = t; });
+    const maxToday = Math.max(1, getMaxTaskPerDay());
     let html = '';
     for(let i=0; i<CYCLE_DAYS; i++){
       const d = new Date(cycleStart);
       d.setDate(d.getDate()+i);
       const key = d.toISOString().slice(0,10);
       const dayLog = taskLog[key]||{};
-      const donePts = tasks.filter(t=>dayLog[t.id]).reduce((s,t)=>s+t.pts,0);
-      const pct = Math.round((donePts/MAX_TASK_PER_DAY)*100);
+      const donePts = Object.keys(dayLog).reduce((s,tid)=> tid==='__max' ? s : s + ((allTasksById[tid]?.pts)||0), 0);
+      const dayMax = Math.max(1, dayLog.__max || maxToday);
+      const pct = Math.round((donePts/dayMax)*100);
       const isFuture = key > today;
       const isToday = key === today;
       const phase = i<7?1:i<14?2:3;
@@ -3039,16 +3696,21 @@ function renderAnalytics(){
     cal.innerHTML = html;
   }
 
-  // Build last 7 days data
+  // Build last 7 days data (history-safe: include archived tasks + per-day snapshot)
+  const allTasksById7 = {};
+  getTasksAll().forEach(t => { allTasksById7[t.id] = t; });
+  const maxToday7 = Math.max(1, getMaxTaskPerDay());
   const days = [];
   for(let i=6; i>=0; i--){
     const d = new Date();
     d.setDate(d.getDate()-i);
     const key = d.toISOString().slice(0,10);
     const dayLog = taskLog[key]||{};
-    const totalPts = tasks.filter(t=>dayLog[t.id]).reduce((s,t)=>s+t.pts,0);
-    const doneCnt = tasks.filter(t=>dayLog[t.id]).length;
-    const totalPct = Math.round((totalPts/MAX_TASK_PER_DAY)*100);
+    const doneIds = Object.keys(dayLog).filter(k => k !== '__max');
+    const totalPts = doneIds.reduce((s,tid)=> s + ((allTasksById7[tid]?.pts)||0), 0);
+    const doneCnt = doneIds.length;
+    const dayMax = Math.max(1, dayLog.__max || maxToday7);
+    const totalPct = Math.round((totalPts/dayMax)*100);
     days.push({key, date:d, totalPct, totalPts, doneCnt, isToday:i===0});
   }
 
