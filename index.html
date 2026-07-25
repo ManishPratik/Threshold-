@@ -653,24 +653,110 @@ margin-bottom:10px;
 }
 .fr-sub{font-size:12px;color:var(--t-3);margin-top:5px;}
 
-/* Worm section — redesigned with more space */
-.fr-worm-wrap{padding:20px var(--page-pad);}
-.fr-worm-card{
-  background:var(--card);border:1px solid var(--b-dim);
-  border-radius:var(--radius-lg);padding:20px;
+/* ═══════════════════════════════════════════════════
+   SECTION: THE CHAMBER — bloodstream vessel + live nicotine %
+═══════════════════════════════════════════════════ */
+.fr-chamber-wrap{
+  padding:24px var(--page-pad) 20px;
   display:flex;flex-direction:column;align-items:center;
 }
-.worm-stage-label{
-  font-family:var(--fm);font-size:9px;letter-spacing:0.18em;
-  color:var(--g-3);margin-bottom:12px;text-transform:uppercase;
+.chamber-pct-wrap{text-align:center;margin-bottom:14px;}
+.chamber-pct{
+  font-family:var(--fd);font-size:72px;font-weight:600;
+  line-height:1;letter-spacing:-0.03em;
+  color:#D03030;
+  text-shadow:0 0 30px currentColor;
+  transition:color 0.8s ease,text-shadow 0.8s ease;
+  display:inline-block;
 }
-.worm-arena{
-  width:100%;height:110px;position:relative;
+.chamber-pct::after{content:'%';font-size:40px;margin-left:6px;opacity:0.65;font-weight:400;}
+.chamber-pct-lbl{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.22em;
+  color:var(--t-3);margin-top:8px;text-transform:uppercase;
+}
+.chamber-pct.state-critical{color:#D03030;}
+.chamber-pct.state-high{color:#D07830;}
+.chamber-pct.state-fading{color:#9A9A9A;text-shadow:0 0 18px rgba(154,154,154,0.5);}
+.chamber-pct.state-trace{color:#6E7A6A;text-shadow:0 0 12px rgba(110,122,106,0.4);}
+.chamber-pct.state-cleared{color:var(--gr-4);text-shadow:0 0 24px rgba(74,154,90,0.6);}
+
+.chamber{
+  position:relative;
+  width:min(78vw, 340px);
+  aspect-ratio:1/1;
+  border-radius:50%;
+  background:radial-gradient(circle at 50% 42%, rgba(140,30,30,0.20) 0%, rgba(30,12,12,0.7) 55%, rgba(10,5,5,0.95) 100%);
+  border:2px solid rgba(180,60,60,0.28);
+  overflow:hidden;
+  box-shadow:0 0 48px rgba(168,32,32,0.16), inset 0 0 48px rgba(0,0,0,0.65);
   display:flex;align-items:center;justify-content:center;
-  margin-bottom:12px;
+  transition:background 1.2s ease,border-color 1.2s ease,box-shadow 1.2s ease;
 }
-.ws-title{font-family:var(--fd);font-size:16px;color:var(--g-5);margin-bottom:3px;text-align:center;}
-.ws-fact{font-size:12px;color:var(--t-3);line-height:1.55;text-align:center;}
+.chamber-ring{
+  position:absolute;inset:-2px;
+  border-radius:50%;
+  border:2px solid transparent;
+  pointer-events:none;
+}
+.chamber-ring.pulse{animation:chamber-pulse 1.1s ease-out;}
+@keyframes chamber-pulse{
+  0%{border-color:rgba(220,70,70,0.95);box-shadow:0 0 32px rgba(220,70,70,0.65),inset 0 0 24px rgba(220,70,70,0.35);}
+  100%{border-color:transparent;box-shadow:0 0 0 rgba(220,70,70,0),inset 0 0 0 rgba(220,70,70,0);}
+}
+.chamber.cleared{
+  background:radial-gradient(circle at 50% 42%, rgba(74,154,90,0.15) 0%, rgba(10,20,14,0.9) 60%, rgba(6,12,9,0.95) 100%);
+  border-color:rgba(120,200,140,0.35);
+  box-shadow:0 0 48px rgba(74,154,90,0.25), inset 0 0 48px rgba(0,0,0,0.55);
+}
+.chamber.cleared .chamber-ring{
+  border-color:rgba(120,200,140,0.55);
+  box-shadow:0 0 24px rgba(74,154,90,0.35);
+}
+.chamber-worm-wrap{
+  transform:scale(2.6);
+  transform-origin:center;
+  transition:opacity 1s;
+}
+.chamber.cleared .chamber-worm-wrap{opacity:0;}
+.worm-arena{
+  width:180px;height:110px;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.chamber-particles{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+.nicotine-particle{
+  position:absolute;width:5px;height:5px;border-radius:50%;
+  background:rgba(122,154,90,0.75);
+  filter:drop-shadow(0 0 4px rgba(122,154,90,0.9));
+  animation:particle-drift 3.6s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes particle-drift{
+  0%{opacity:1;transform:translate(0,0) scale(1);}
+  70%{opacity:0.7;}
+  100%{opacity:0;transform:translate(var(--px,60px),var(--py,-100px)) scale(0.25);}
+}
+.chamber-dead-overlay{
+  position:absolute;inset:0;display:flex;
+  align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:22px;color:var(--gr-4);
+  text-align:center;letter-spacing:0.08em;line-height:1.15;
+  text-shadow:0 0 24px rgba(120,200,140,0.65);
+  opacity:0;pointer-events:none;
+  transition:opacity 1.4s ease 0.4s;
+}
+.chamber.cleared .chamber-dead-overlay{opacity:1;}
+.worm-stage-label{
+  font-family:var(--fm);font-size:9px;letter-spacing:0.20em;
+  color:var(--g-3);margin-top:22px;text-transform:uppercase;text-align:center;
+}
+.ws-title{font-family:var(--fd);font-size:17px;color:var(--g-5);margin-top:8px;text-align:center;}
+.ws-fact{font-size:12.5px;color:var(--t-3);line-height:1.6;text-align:center;margin-top:6px;max-width:340px;}
+@media (prefers-reduced-motion:reduce){
+  .chamber-ring.pulse{animation:none;}
+  .nicotine-particle{animation-duration:0.01s;}
+}
 
 /* Lapse-recovery card (Marlatt AVE counter) */
 .fr-lapse{
@@ -1634,13 +1720,23 @@ body:has(#tab-log.active) .fr-fab{display:none;}
     </div>
 
 
-    <div class="fr-worm-wrap">
-      <div class="fr-worm-card">
-        <div class="worm-stage-label" id="worm-stage-lbl">The little monster is loud right now. It cannot force you to feed it — watch it grow quieter.</div>
-        <div class="worm-arena" id="worm-arena"></div>
-        <div class="ws-title" id="ws-title">The Parasite</div>
-        <div class="ws-fact" id="ws-fact">It has been feeding on you. Time to starve it.</div>
+    <!-- CHAMBER — bloodstream vessel view of the parasite dying in real time -->
+    <div class="fr-chamber-wrap">
+      <div class="chamber-pct-wrap">
+        <div class="chamber-pct state-critical" id="chamber-pct">100</div>
+        <div class="chamber-pct-lbl">% Nicotine in Blood</div>
       </div>
+      <div class="chamber" id="chamber">
+        <div class="chamber-ring" id="chamber-ring"></div>
+        <div class="chamber-particles" id="chamber-particles"></div>
+        <div class="chamber-worm-wrap">
+          <div class="worm-arena" id="worm-arena"></div>
+        </div>
+        <div class="chamber-dead-overlay" id="chamber-dead-overlay">PARASITE<br/>CLEARED</div>
+      </div>
+      <div class="worm-stage-label" id="worm-stage-lbl">The little monster is loud right now. Watch it grow quieter.</div>
+      <div class="ws-title" id="ws-title">The Parasite</div>
+      <div class="ws-fact" id="ws-fact">It has been feeding on you. Time to starve it.</div>
     </div>
 
     <!-- DIFFICULTY CURVE (promoted from bottom; shows where you are in the journey) -->
@@ -2514,6 +2610,77 @@ function fmtProb(p){
 /* ═══════════════════════════════════════════════════
    SECTION: WORM RENDERER
 ═══════════════════════════════════════════════════ */
+// Live nicotine remaining, from half-life pharmacology (t½ = 2h).
+// Matches the app's HOURLY_MSGS at H2/H12/H24 exactly.
+function nicotinePctRemaining(cleanHrs){
+  if(cleanHrs <= 0) return 100;
+  const pct = 100 * Math.pow(0.5, cleanHrs / 2);
+  return Math.max(0, Math.min(100, pct));
+}
+
+let _lastChamberStage = -1;
+let _lastParticleTick = 0;
+let _chamberInitialized = false;
+
+function updateChamber(cleanHrs){
+  const pctEl = document.getElementById('chamber-pct');
+  const chamberEl = document.getElementById('chamber');
+  const ringEl = document.getElementById('chamber-ring');
+  const partEl = document.getElementById('chamber-particles');
+  if(!pctEl || !chamberEl) return;
+
+  const pct = nicotinePctRemaining(cleanHrs);
+  const stage = getWormStage(cleanHrs);
+
+  // Number: integer above 10, tighter precision as it approaches zero.
+  let display;
+  if(pct >= 10) display = Math.round(pct).toString();
+  else if(pct >= 1) display = pct.toFixed(1);
+  else if(pct >= 0.01) display = pct.toFixed(2);
+  else display = '0';
+  pctEl.textContent = display;
+
+  // Color state — red (dominant) → amber → grey (fading) → sage (cleared)
+  const stateCls =
+    pct >= 50 ? 'state-critical' :
+    pct >= 20 ? 'state-high' :
+    pct >= 5  ? 'state-fading' :
+    pct > 0.01 ? 'state-trace' : 'state-cleared';
+  pctEl.className = 'chamber-pct ' + stateCls;
+
+  // Chamber body state — cleared triggers the sage-green resolution
+  if(stage === 5){ chamberEl.classList.add('cleared'); }
+  else { chamberEl.classList.remove('cleared'); }
+
+  // Stage-transition pulse + haptic (skip the initial mount, only fire on real transitions)
+  if(_chamberInitialized && stage !== _lastChamberStage && ringEl){
+    ringEl.classList.remove('pulse');
+    // Force reflow so the animation restarts cleanly
+    void ringEl.offsetWidth;
+    ringEl.classList.add('pulse');
+    if(navigator.vibrate){ navigator.vibrate([40, 30, 40]); }
+  }
+  _lastChamberStage = stage;
+  _chamberInitialized = true;
+
+  // Nicotine particles — drift out of the chamber while parasite is alive + shedding
+  const now = Date.now();
+  if(stage < 5 && pct > 1 && now - _lastParticleTick > 1200 && partEl){
+    _lastParticleTick = now;
+    const p = document.createElement('div');
+    p.className = 'nicotine-particle';
+    p.style.left = (42 + Math.random()*16) + '%';
+    p.style.top  = (42 + Math.random()*16) + '%';
+    // Random exit vector — biased upward
+    const angle = -Math.PI/2 + (Math.random()-0.5) * Math.PI * 0.9;
+    const dist = 130 + Math.random()*70;
+    p.style.setProperty('--px', Math.cos(angle)*dist + 'px');
+    p.style.setProperty('--py', Math.sin(angle)*dist + 'px');
+    partEl.appendChild(p);
+    setTimeout(() => p.remove(), 3700);
+  }
+}
+
 function getWormStage(cleanHrs){
   // Aligned to the app's own HOURLY_MSGS nicotine narrative:
   //   H2  — 50% cleared        H12 — half-life complete
@@ -2740,14 +2907,17 @@ function updateFreedom(){
     renderWorm(stage);
   }
   // Continuous shrink tied to nicotine clearance — runs every tick, not just on stage change.
-  // Stage 5 = ash particles (already tiny by design); reset scale so they render at natural size.
+  // Stage 5 = worm hidden by chamber.cleared CSS; skip scale to let opacity fade take over.
   const wormArena = document.getElementById('worm-arena');
   if(wormArena){
-    const scale = stage === 5 ? 1 : getWormScale(cleanHrs);
+    const scale = stage === 5 ? 0.5 : getWormScale(cleanHrs);
     wormArena.style.transformOrigin = 'center center';
     wormArena.style.transition = 'transform 0.6s ease-out';
     wormArena.style.transform = 'scale('+scale.toFixed(3)+')';
   }
+
+  // Chamber (bloodstream vessel + live nicotine %)
+  updateChamber(cleanHrs);
 
   // Natural high meter — 3 months = 100% (horizontal bar in vitals card)
   const nhPct = Math.min(100, (cleanHrs/(24*90))*100);
