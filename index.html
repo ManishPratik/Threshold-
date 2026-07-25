@@ -758,6 +758,71 @@ margin-bottom:10px;
   .nicotine-particle{animation-duration:0.01s;}
 }
 
+/* ═══════════════════════════════════════════════════
+   SECTION: PEAK WITHDRAWAL BANNER (H0-72 active)
+═══════════════════════════════════════════════════ */
+.peak-banner{
+  margin:0 var(--page-pad) 16px;
+  padding:14px;
+  background:linear-gradient(135deg, rgba(168,32,32,0.14), rgba(208,48,48,0.05));
+  border:1px solid rgba(208,48,48,0.38);
+  border-radius:var(--radius-md);
+  box-shadow:0 0 24px rgba(168,32,32,0.10), inset 0 0 22px rgba(168,32,32,0.05);
+  animation:peak-throb 3.5s ease-in-out infinite;
+}
+@keyframes peak-throb{
+  0%,100%{box-shadow:0 0 24px rgba(168,32,32,0.10), inset 0 0 22px rgba(168,32,32,0.05);}
+  50%{box-shadow:0 0 34px rgba(208,48,48,0.24), inset 0 0 28px rgba(208,48,48,0.11);}
+}
+.peak-banner-inner{display:flex;gap:12px;align-items:flex-start;}
+.peak-banner-icon{
+  font-size:22px;color:var(--r-4);flex-shrink:0;line-height:1;margin-top:1px;
+  filter:drop-shadow(0 0 8px rgba(208,48,48,0.55));
+  animation:peak-icon-pulse 2s ease-in-out infinite;
+}
+@keyframes peak-icon-pulse{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:0.72;transform:scale(1.08);}
+}
+.peak-banner-body{flex:1;min-width:0;}
+.peak-banner-title{
+  font-family:var(--fm);font-size:11px;letter-spacing:0.20em;
+  color:var(--r-4);text-transform:uppercase;font-weight:600;
+  margin-bottom:6px;
+}
+.peak-banner-sub{
+  font-size:12.5px;color:var(--t-2);line-height:1.55;
+  margin-bottom:10px;
+}
+.peak-banner-countdown{
+  font-family:var(--fm);font-size:11px;color:var(--t-3);letter-spacing:0.06em;
+}
+.peak-banner-countdown span{color:var(--t-1);font-weight:500;}
+.peak-banner-bar-bg{
+  margin-top:6px;height:3px;
+  background:rgba(208,48,48,0.15);border-radius:2px;overflow:hidden;
+}
+.peak-banner-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--r-3),var(--r-4));
+  transition:width 1s ease;
+  box-shadow:0 0 8px rgba(208,48,48,0.45);
+}
+
+/* Chamber gets an ambient throb during peak — reinforces "you are inside the storm" */
+.chamber.in-peak{
+  animation:chamber-peak-throb 4.2s ease-in-out infinite;
+}
+@keyframes chamber-peak-throb{
+  0%,100%{border-color:rgba(180,60,60,0.28);box-shadow:0 0 48px rgba(168,32,32,0.16), inset 0 0 48px rgba(0,0,0,0.65);}
+  50%{border-color:rgba(220,80,80,0.55);box-shadow:0 0 68px rgba(168,32,32,0.32), inset 0 0 52px rgba(0,0,0,0.6);}
+}
+@media (prefers-reduced-motion:reduce){
+  .peak-banner{animation:none;}
+  .peak-banner-icon{animation:none;}
+  .chamber.in-peak{animation:none;}
+}
+
 /* Lapse-recovery card (Marlatt AVE counter) */
 .fr-lapse{
   margin:0 var(--page-pad) 16px;padding:16px;
@@ -1698,6 +1763,20 @@ body:has(#tab-log.active) .fr-fab{display:none;}
     <!-- CYCLE GLANCE — quick "Day X · Cycle N" context (full cycle banner remains on Log tab) -->
     <div class="fr-cycle-pill" id="fr-cycle-pill">—</div>
 
+    <!-- PEAK WITHDRAWAL BANNER — active H0-72, hidden after. Item #3 of the smoking rework. -->
+    <div class="peak-banner" id="peak-banner" style="display:none">
+      <div class="peak-banner-inner">
+        <div class="peak-banner-icon">⚠</div>
+        <div class="peak-banner-body">
+          <div class="peak-banner-title" id="peak-banner-title">PEAK WITHDRAWAL ZONE</div>
+          <div class="peak-banner-sub" id="peak-banner-sub">The hardest stretch of your journey. Every craving you resist here is worth ten resisted later.</div>
+          <div class="peak-banner-countdown">Ends in <span id="peak-banner-time">—</span>
+            <div class="peak-banner-bar-bg"><div class="peak-banner-bar-fill" id="peak-banner-bar" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- VITALS ROW — 3 numbers that matter, above the fold -->
     <div class="fr-vitals">
       <div class="fv-card">
@@ -2610,6 +2689,62 @@ function fmtProb(p){
 /* ═══════════════════════════════════════════════════
    SECTION: WORM RENDERER
 ═══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   SECTION: PEAK WITHDRAWAL WINDOW (0-72h)
+   — Matches the app's own difficulty-curve zone "Days 1-3 Hardest".
+   — Banner + chamber throb active during; hidden after H72 (paves
+     the way for the cross-the-peak celebration in item #4).
+═══════════════════════════════════════════════════ */
+const PEAK_END_HOURS = 72;
+
+function updatePeakBanner(cleanHrs){
+  const banner = document.getElementById('peak-banner');
+  const chamber = document.getElementById('chamber');
+  if(!banner) return;
+
+  if(cleanHrs >= PEAK_END_HOURS){
+    banner.style.display = 'none';
+    if(chamber) chamber.classList.remove('in-peak');
+    return;
+  }
+
+  banner.style.display = 'block';
+  if(chamber) chamber.classList.add('in-peak');
+
+  // Countdown remaining
+  const remaining = Math.max(0, PEAK_END_HOURS - cleanHrs);
+  const h = Math.floor(remaining);
+  const m = Math.floor((remaining - h) * 60);
+  const timeEl = document.getElementById('peak-banner-time');
+  if(timeEl) timeEl.textContent = h + 'h ' + m + 'm';
+
+  // Progress bar (fraction of peak already crossed)
+  const barEl = document.getElementById('peak-banner-bar');
+  if(barEl){
+    const donePct = Math.min(100, (cleanHrs / PEAK_END_HOURS) * 100);
+    barEl.style.width = donePct.toFixed(2) + '%';
+  }
+
+  // Copy sharpens as user moves through the sub-zones of the peak
+  const titleEl = document.getElementById('peak-banner-title');
+  const subEl = document.getElementById('peak-banner-sub');
+  if(titleEl && subEl){
+    if(cleanHrs < 4){
+      titleEl.textContent = 'PEAK WITHDRAWAL · ENTERING';
+      subEl.textContent = 'The parasite has just realised the food is cut. First cravings arrive within 2 hours. Each one lasts 3-5 minutes maximum. Ride the wave.';
+    } else if(cleanHrs < 24){
+      titleEl.textContent = 'PEAK WITHDRAWAL · DAY 1';
+      subEl.textContent = 'You are inside the hardest stretch of your entire journey. Every craving you resist right now is worth ten cravings resisted later.';
+    } else if(cleanHrs < 48){
+      titleEl.textContent = 'PEAK WITHDRAWAL · DEEPEST HOURS';
+      subEl.textContent = 'The peak of the peak. Receptors recalibrating hardest right now. Your body is doing the work — you just have to hold. Do not negotiate with the parasite.';
+    } else {
+      titleEl.textContent = 'PEAK WITHDRAWAL · FINAL STRETCH';
+      subEl.textContent = 'You have already crossed the deepest hours. What remains is the tail. Close this window and you have permanently crossed the biggest hurdle of the entire quit.';
+    }
+  }
+}
+
 // Live nicotine remaining, from half-life pharmacology (t½ = 2h).
 // Matches the app's HOURLY_MSGS at H2/H12/H24 exactly.
 function nicotinePctRemaining(cleanHrs){
@@ -2918,6 +3053,8 @@ function updateFreedom(){
 
   // Chamber (bloodstream vessel + live nicotine %)
   updateChamber(cleanHrs);
+  // Peak withdrawal banner (H0-72 window)
+  updatePeakBanner(cleanHrs);
 
   // Natural high meter — 3 months = 100% (horizontal bar in vitals card)
   const nhPct = Math.min(100, (cleanHrs/(24*90))*100);
