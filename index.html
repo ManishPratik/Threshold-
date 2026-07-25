@@ -2515,17 +2515,21 @@ function fmtProb(p){
    SECTION: WORM RENDERER
 ═══════════════════════════════════════════════════ */
 function getWormStage(cleanHrs){
-  if(cleanHrs < 2)   return 1;
-  if(cleanHrs < 24)  return 2;
-  if(cleanHrs < 72)  return 3;
-  if(cleanHrs < 504) return 4; // 3 weeks
-  return 5;
+  // Aligned to the app's own HOURLY_MSGS nicotine narrative:
+  //   H2  — 50% cleared        H12 — half-life complete
+  //   H24 — nicotine gone      H72 — fully cleared, peak passed
+  if(cleanHrs < 2)   return 1; // Fed & Demanding (100%–50%)
+  if(cleanHrs < 12)  return 2; // Starving (50%→5%)
+  if(cleanHrs < 24)  return 3; // Collapsing (5%→2%)
+  if(cleanHrs < 72)  return 4; // Dying — final trace (2%→1%)
+  return 5;                    // Dead — fully cleared from blood
 }
 
-// Continuous shrink factor tracking nicotine clearance between stage boundaries.
-// Anchors match stage-boundary hours; linear interpolation in between.
+// Continuous shrink factor tracking nicotine half-life clearance.
+// Anchors match the numbers the app itself narrates in HOURLY_MSGS:
+// H2 = 50% cleared, H12 = half-life complete, H24 = nicotine gone from blood.
 function getWormScale(cleanHrs){
-  const stops = [[0,1.00],[2,0.85],[24,0.62],[72,0.42],[504,0.18]];
+  const stops = [[0,1.00],[1,0.70],[2,0.50],[4,0.25],[6,0.15],[8,0.10],[12,0.05],[24,0.02],[72,0.01]];
   const last = stops[stops.length-1];
   if(cleanHrs >= last[0]) return last[1];
   for(let i=0;i<stops.length-1;i++){
@@ -2624,11 +2628,11 @@ function renderWorm(stage){
 }
 
 const WORM_DATA = {
-  1:{label:'Fed & Demanding',    title:'The Parasite is Strong',    fact:'It has been feeding on you for years. But you just cut off its supply.'},
-  2:{label:'Starving — Half Dead', title:'The Parasite is Weakening', fact:'50% of its nicotine supply is gone. It is fighting back with cravings. That is fear.'},
-  3:{label:'Collapsing',         title:'The Parasite is Collapsing', fact:'Nicotine cleared from blood. It is running on empty. Every hour you hold is another blow.'},
-  4:{label:'Dying — Almost Gone', title:'The Parasite is Dying',     fact:'Barely alive. Almost translucent. In days it will be completely gone.'},
-  5:{label:'Dead ✓',             title:'The Parasite is Dead',       fact:'Gone. Your mind is yours again. This is what freedom feels like.'},
+  1:{label:'Fed & Demanding',        title:'The Parasite is Strong',      fact:'It has been feeding on you for years. You just cut off the supply. First 2 hours it still holds full strength.'},
+  2:{label:'Starving — 50% Gone',    title:'The Parasite is Weakening',   fact:'Nicotine half-life kicked in at Hour 2 — 50% already cleared. It is fighting back with cravings. That is fear, not power.'},
+  3:{label:'Collapsing — 5% Left',   title:'The Parasite is Collapsing',  fact:'Half-life complete. Only trace nicotine remains. It is running on empty. Every hour you hold is another blow.'},
+  4:{label:'Dying — Final Trace',    title:'The Parasite is Dying',       fact:'Nicotine is gone from your blood. The last few hours of trace clearance before it is fully dead. Withdrawal peaks now.'},
+  5:{label:'Dead ✓',                 title:'The Parasite is Dead',        fact:'Nicotine fully cleared. Peak withdrawal passed. What you feel now is habit, not chemistry. Your mind is yours again.'},
 };
 
 /* ═══════════════════════════════════════════════════
