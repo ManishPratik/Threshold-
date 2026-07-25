@@ -139,19 +139,10 @@ img{display:block;max-width:100%;}
   color:var(--t-3);margin-top:12px;letter-spacing:0.01em;
 }
 
-/* Outcome cards on launch */
-.launch-outcomes{padding:32px var(--page-pad) 0;display:flex;flex-direction:column;gap:12px;}
-.oc{
-  background:var(--card);border:1px solid var(--b);
-  border-radius:var(--radius-lg);padding:20px;
-  position:relative;overflow:hidden;
-  transition:transform 0.2s ease,border-color 0.2s ease;
-}
-.oc:active{transform:scale(0.99);}
-.oc-glow{position:absolute;inset:0;border-radius:inherit;pointer-events:none;}
-.oc-1 .oc-glow{background:radial-gradient(ellipse at top right,rgba(200,220,240,0.07),transparent 65%);}
-.oc-2 .oc-glow{background:radial-gradient(ellipse at top right,rgba(184,212,160,0.07),transparent 65%);}
-.oc-3 .oc-glow{background:radial-gradient(ellipse at top right,rgba(120,200,200,0.06),transparent 65%);}
+/* Launch-outcomes base rule + .oc-1/2/3 orphan glow selectors removed in
+   Batch 29 — the new .launch-outcomes rule (further down, Batch 27) owns
+   the layout now; the numbered oc-1/2/3 classes are gone since Batch 27
+   made outcomes a dynamic list. */
 .oc-num{font-family:var(--fm);font-size:9px;letter-spacing:0.3em;color:var(--t-4);margin-bottom:10px;}
 .oc-icon{font-size:28px;display:block;margin-bottom:8px;line-height:1;}
 .oc-title{font-family:var(--fd);font-size:21px;font-weight:600;color:var(--g-5);margin-bottom:8px;line-height:1.15;}
@@ -3659,9 +3650,11 @@ function updateWarRoom(){
   const we = document.getElementById('wp-end');
   if(we){ const de=new Date(S.missionStart + CYCLE_DAYS*86400000); we.textContent=de.toLocaleDateString('en-IN',{day:'numeric',month:'short'}); }
 
-  // Urgency — phase aware
-  const phase = getPhase();
-  setText('wu-text', '"'+phase.urgency+'"');
+  // Phase-aware urgency was previously written into #wu-text every second,
+  // which overwrote the user's edited quote from Batch 25 within ~1 sec.
+  // Removed in Batch 29 — #wu-text is now purely user-editable via
+  // renderFreedomEditables(). Phase context still surfaces via
+  // updateCycleBanner + the phase-header on Tasks tab.
 
   // Check milestone badges — throttled to once per 60s to avoid per-second overhead
   const now2 = Date.now();
