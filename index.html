@@ -759,6 +759,207 @@ margin-bottom:10px;
 }
 
 /* ═══════════════════════════════════════════════════
+   SECTION: COMMAND TAB (Batch 22 — merged WR+Log+Analytics)
+═══════════════════════════════════════════════════ */
+/* Orb delta (vs 7-day avg) */
+.orb-delta{
+  text-align:center;margin-top:8px;
+  font-family:var(--fm);font-size:11px;color:var(--t-3);letter-spacing:0.06em;
+}
+.orb-delta .up{color:var(--gr-4);}
+.orb-delta .down{color:var(--r-4);}
+
+/* Streak Hero — big number, flame that grows with streak */
+.streak-hero{
+  margin:12px var(--page-pad) 16px;
+  padding:18px 16px;
+  background:linear-gradient(135deg, rgba(184,212,160,0.06), rgba(184,212,160,0.02));
+  border:1px solid var(--b);
+  border-radius:var(--radius-lg);
+  display:flex;align-items:center;gap:16px;
+  position:relative;
+}
+.sh-flame{
+  font-size:38px;line-height:1;flex-shrink:0;
+  transition:font-size 0.6s ease, filter 0.6s ease;
+  filter:drop-shadow(0 0 12px rgba(208,120,48,0.4));
+}
+.sh-flame.big{font-size:52px;filter:drop-shadow(0 0 18px rgba(208,120,48,0.65));}
+.sh-flame.gold{font-size:60px;filter:drop-shadow(0 0 22px rgba(212,180,60,0.75));}
+.sh-body{flex:1;min-width:0;}
+.sh-num{
+  font-family:var(--fd);font-size:48px;line-height:1;font-weight:600;
+  color:var(--t-1);letter-spacing:-0.02em;
+  background:linear-gradient(180deg,var(--t-1),var(--g-5));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.sh-lbl{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.22em;
+  color:var(--t-3);margin-top:4px;text-transform:uppercase;
+}
+.sh-best{
+  position:absolute;top:10px;right:12px;
+  font-family:var(--fm);font-size:9px;letter-spacing:0.16em;
+  color:var(--g-6);text-transform:uppercase;
+  padding:3px 8px;
+  background:rgba(212,180,60,0.10);
+  border:1px solid rgba(212,180,60,0.35);
+  border-radius:999px;
+}
+
+/* Heatmap calendar polish */
+.an-calendar{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:5px;
+  margin-top:8px;
+}
+.an-cal-day{
+  aspect-ratio:1/1;position:relative;
+  background:var(--card-2);border:1px solid var(--b-dim);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.an-cal-fill{position:absolute;inset:0;}
+.an-cal-lbl{
+  position:relative;font-family:var(--fm);font-size:10px;
+  color:var(--t-2);z-index:2;
+}
+.an-cal-day.future .an-cal-lbl{color:var(--t-4);}
+.an-cal-day.today{border-color:var(--g-4);box-shadow:0 0 8px rgba(184,212,160,0.3);}
+.an-cal-legend{
+  display:flex;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap;
+  font-family:var(--fm);font-size:10px;color:var(--t-4);
+}
+.an-cal-legend > div{display:flex;align-items:center;gap:4px;}
+.an-cal-swatch{width:10px;height:10px;border-radius:2px;display:inline-block;}
+.an-cal-swatch.full{background:var(--g-5);}
+.an-cal-swatch.partial{background:rgba(184,212,160,0.35);}
+.an-cal-swatch.missed{background:var(--card-2);border:1px solid var(--b-dim);}
+.an-cal-swatch.today{background:transparent;border:1px solid var(--g-4);box-shadow:0 0 4px rgba(184,212,160,0.5);}
+
+/* Momentum chart */
+.an-trend{
+  float:right;font-family:var(--fm);font-size:11px;letter-spacing:0.08em;
+  color:var(--t-3);text-transform:uppercase;font-weight:400;
+}
+.an-trend.up{color:var(--gr-4);}
+.an-trend.down{color:var(--r-4);}
+.momentum-wrap{margin-top:8px;height:110px;position:relative;}
+.momentum-svg{width:100%;height:100%;overflow:visible;}
+.momentum-line{fill:none;stroke:var(--g-4);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;}
+.momentum-area{fill:url(#momentum-grad);opacity:0.5;}
+.momentum-dot{fill:var(--g-5);}
+.momentum-dot.today{fill:var(--g-6);r:4;filter:drop-shadow(0 0 6px rgba(184,212,160,0.6));}
+.momentum-axis{
+  display:flex;justify-content:space-between;
+  font-family:var(--fm);font-size:9px;color:var(--t-4);
+  margin-top:4px;
+}
+.momentum-axis .today{color:var(--g-4);}
+
+/* Key metrics grid with delta arrows */
+.an-stats-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  padding:0 var(--page-pad);margin-bottom:14px;
+}
+.an-stat{
+  padding:14px;
+  background:var(--card);border:1px solid var(--b-dim);border-radius:var(--radius-md);
+  position:relative;
+}
+.an-stat-val{
+  font-family:var(--fd);font-size:26px;color:var(--g-5);
+  line-height:1;letter-spacing:-0.01em;
+}
+.an-stat-lbl{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.14em;
+  color:var(--t-3);text-transform:uppercase;margin-top:6px;
+}
+.an-stat-delta{
+  font-family:var(--fm);font-size:10px;color:var(--t-3);margin-top:6px;
+  letter-spacing:0.04em;
+}
+.an-stat-delta.up{color:var(--gr-4);}
+.an-stat-delta.down{color:var(--r-4);}
+.an-stat-delta.best::before{content:'★ ';color:var(--g-6);}
+
+/* Priority-task bars (dynamic per user tasks) */
+.pt-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;
+}
+.pt-lbl{flex:1;min-width:0;font-size:13px;color:var(--t-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pt-bar-bg{flex:0 0 40%;height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;}
+.pt-bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--g-3),var(--g-5));
+  transition:width 0.6s ease;box-shadow:0 0 6px rgba(184,212,160,0.35);
+}
+.pt-val{flex:0 0 auto;font-family:var(--fm);font-size:11px;color:var(--g-5);min-width:40px;text-align:right;}
+.pt-empty{font-size:12px;color:var(--t-3);padding:8px 0;line-height:1.5;}
+
+/* Time-of-day chart — 24 hourly bars */
+.an-tod-sub{
+  float:right;font-family:var(--fm);font-size:10px;color:var(--g-4);font-weight:400;
+  letter-spacing:0.06em;
+}
+.tod-chart{
+  display:flex;align-items:flex-end;gap:2px;
+  height:64px;margin-top:8px;
+}
+.tod-bar{
+  flex:1;background:rgba(184,212,160,0.20);
+  border-radius:2px 2px 0 0;min-height:2px;
+  transition:height 0.6s ease;
+}
+.tod-bar.peak{background:var(--g-5);box-shadow:0 0 6px rgba(184,212,160,0.5);}
+.tod-axis{
+  display:flex;justify-content:space-between;
+  font-family:var(--fm);font-size:9px;color:var(--t-4);
+  margin-top:4px;padding:0 2px;
+}
+
+/* Mantra card (editable) */
+.mantra-card{
+  margin:16px var(--page-pad);padding:20px 18px;
+  background:linear-gradient(135deg,rgba(184,212,160,0.05),rgba(184,212,160,0.01));
+  border:1px solid rgba(184,212,160,0.20);
+  border-left:2px solid var(--g-4);
+  border-radius:var(--radius-md);
+  cursor:pointer;transition:background 0.2s;
+}
+.mantra-card:active{background:rgba(184,212,160,0.10);}
+.mantra-lbl{
+  font-family:var(--fm);font-size:9px;letter-spacing:0.22em;
+  color:var(--g-3);text-transform:uppercase;margin-bottom:10px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.mantra-edit{color:var(--t-4);letter-spacing:0.10em;font-size:10px;}
+.mantra-text{
+  font-family:var(--fd);font-size:16px;font-style:italic;
+  color:var(--t-1);line-height:1.55;
+}
+
+/* Task pts anchor (compact) */
+.cmd-pts-anchor{
+  display:flex;align-items:center;gap:10px;
+  margin:0 var(--page-pad) 14px;padding:12px 14px;
+  background:var(--card);border:1px solid var(--b-dim);border-radius:var(--radius-md);
+  font-family:var(--fm);
+}
+.cmd-pts-val{font-family:var(--fd);font-size:22px;color:var(--g-5);}
+.cmd-pts-lbl{font-size:11px;color:var(--t-3);letter-spacing:0.08em;text-transform:uppercase;}
+.cmd-pts-sub{margin-left:auto;font-size:11px;color:var(--t-3);}
+
+/* Card polish — used by all Command sections */
+.an-card{
+  margin:0 var(--page-pad) 14px;padding:14px;
+  background:var(--card);border:1px solid var(--b-dim);border-radius:var(--radius-md);
+}
+.an-card-title{
+  font-family:var(--fm);font-size:11px;letter-spacing:0.18em;
+  color:var(--t-3);text-transform:uppercase;margin-bottom:6px;
+}
+
+/* ═══════════════════════════════════════════════════
    SECTION: PEAK WITHDRAWAL BANNER (H0-72 active)
 ═══════════════════════════════════════════════════ */
 .peak-banner{
@@ -1856,8 +2057,9 @@ body:has(#tab-log.active) .fr-fab{display:none;}
   </div>
 
   <!-- WAR ROOM TAB -->
-  <div id="tab-wr" class="tab-pane">
+  <div id="tab-command" class="tab-pane">
 
+    <!-- SECTION 1: Success Probability Orb -->
     <div class="wr-orb-wrap">
       <div class="orb-outer">
         <div class="orb-rings-outer">
@@ -1875,41 +2077,143 @@ body:has(#tab-log.active) .fr-fab{display:none;}
         </div>
       </div>
       <div class="orb-caption" id="orb-caption">Your outcomes are waiting. Earn them.</div>
+      <div class="orb-delta" id="orb-delta"></div>
     </div>
 
-    <!-- ANCHOR PROGRESS — collapsible task summary -->
-    <div class="wr-anchors" id="wr-anchors">
+    <!-- SECTION 2: Cycle Pulse strip -->
+    <div class="cycle-banner" id="cycle-banner" style="margin-top:6px">
+      <div class="cb-left">
+        <div class="cb-day" id="cb-day">Day — of 21</div>
+        <div class="cb-phase" id="cb-phase">· · ·</div>
+        <div class="cb-tagline" id="cb-tagline"></div>
+      </div>
+      <div class="cb-right">
+        <div class="cb-streak" id="cb-streak">0</div>
+        <div class="cb-streak-lbl">day streak</div>
+      </div>
+    </div>
+    <div style="padding:0 var(--page-pad) 14px">
+      <div class="cb-progress"><div class="cb-progress-fill" id="cb-progress-fill" style="width:0%"></div></div>
+      <div class="cb-days-row">
+        <span>Day 1</span>
+        <span id="cb-cycle-num">Cycle 1</span>
+        <span>Day 21</span>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Streak Hero (giant number + flame that grows with streak) -->
+    <div class="streak-hero" id="streak-hero">
+      <div class="sh-flame" id="sh-flame">🔥</div>
+      <div class="sh-body">
+        <div class="sh-num" id="sh-num">0</div>
+        <div class="sh-lbl">day streak</div>
+      </div>
+      <div class="sh-best" id="sh-best" style="display:none"></div>
+    </div>
+
+    <!-- SECTION 4: Mission Progress -->
+    <div class="wr-progress">
+      <div class="wp-head">
+        <div class="wp-lbl">Mission Progress</div>
+        <div class="wp-pct" id="wp-pct">0%</div>
+      </div>
+      <div class="wp-track"><div class="wp-fill" id="wp-fill" style="width:0%"></div></div>
+      <div class="wp-dates">
+        <div id="wp-start">—</div>
+        <div id="wp-end">—</div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: 21-Day Heatmap -->
+    <div class="an-card">
+      <div class="an-card-title">21-Day Cycle Map</div>
+      <div class="an-calendar" id="an-calendar"></div>
+      <div class="an-cal-legend">
+        <div><span class="an-cal-swatch full"></span>Full day</div>
+        <div><span class="an-cal-swatch partial"></span>Partial</div>
+        <div><span class="an-cal-swatch missed"></span>Missed</div>
+        <div><span class="an-cal-swatch today"></span>Today</div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: Momentum Chart (14-day SVG line) -->
+    <div class="an-card">
+      <div class="an-card-title">Momentum
+        <span class="an-trend" id="momentum-trend"></span>
+      </div>
+      <div class="momentum-wrap">
+        <svg id="momentum-svg" class="momentum-svg" viewBox="0 0 300 100" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="momentum-axis" id="momentum-axis"></div>
+    </div>
+
+    <!-- SECTION 7: Key Metrics Row (4 tiles with trend arrows) -->
+    <div class="an-stats-grid">
+      <div class="an-stat">
+        <div class="an-stat-val" id="an-best">0%</div>
+        <div class="an-stat-lbl">Best day</div>
+        <div class="an-stat-delta" id="an-best-delta"></div>
+      </div>
+      <div class="an-stat">
+        <div class="an-stat-val" id="an-avg">0%</div>
+        <div class="an-stat-lbl">7-day avg</div>
+        <div class="an-stat-delta" id="an-avg-delta"></div>
+      </div>
+      <div class="an-stat">
+        <div class="an-stat-val" id="an-beyond-peak">0</div>
+        <div class="an-stat-lbl">Days beyond peak</div>
+        <div class="an-stat-delta" id="an-beyond-delta"></div>
+      </div>
+      <div class="an-stat">
+        <div class="an-stat-val" id="an-total-pts">0</div>
+        <div class="an-stat-lbl">Total task pts</div>
+        <div class="an-stat-delta" id="an-pts-delta"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 8: Priority Tasks — dynamic 7-day completion per user's priority tasks -->
+    <div class="an-card">
+      <div class="an-card-title">Priority Tasks · 7-Day Completion</div>
+      <div id="priority-tasks-list"></div>
+    </div>
+
+    <!-- SECTION 9: Time-of-Day Pattern -->
+    <div class="an-card">
+      <div class="an-card-title">Most Productive Hours
+        <span class="an-tod-sub" id="an-tod-sub"></span>
+      </div>
+      <div class="tod-chart" id="tod-chart"></div>
+      <div class="tod-axis">
+        <span>0</span><span>6</span><span>12</span><span>18</span><span>23</span>
+      </div>
+    </div>
+
+    <!-- SECTION 10: Editable Mantra (replaces hardcoded Wire Lands) -->
+    <div class="mantra-card" onclick="openMantraEdit()">
+      <div class="mantra-lbl">Your Mantra <span class="mantra-edit">✎ edit</span></div>
+      <div class="mantra-text" id="mantra-text">—</div>
+    </div>
+
+    <!-- Task points anchor (compact) -->
+    <div class="cmd-pts-anchor">
+      <span class="wrs-icon">⚡</span>
+      <span class="cmd-pts-val" id="wr-task-pts">0</span>
+      <span class="cmd-pts-lbl">total task pts</span>
+      <span class="cmd-pts-sub" id="wr-today-done">0 done today</span>
+    </div>
+
+    <!-- Anchor progress (kept, hidden by default; still fed by updateAnchorCard) -->
+    <div class="wr-anchors" id="wr-anchors" style="display:none">
       <div class="wra-header" onclick="toggleAnchor()" style="cursor:pointer">
         <div class="wra-title">Today's Tasks <span class="wra-expand" id="wra-expand">▾</span></div>
-        <div class="wra-score" id="wra-score">0 / 15</div>
+        <div class="wra-score" id="wra-score">0 / 0</div>
       </div>
       <div class="wra-bar-bg" style="margin-bottom:8px">
         <div class="wra-bar-fill wra-bar-t1" id="wra-bar-main" style="width:0%"></div>
       </div>
       <div class="wra-tasks" id="wra-tasks" style="display:none"></div>
     </div>
-
-    <div class="wr-stats" style="grid-template-columns:minmax(0,240px);justify-content:center">
-      <div class="wrs">
-        <div class="wrs-icon">⚡</div>
-        <div class="wrs-val" id="wr-task-pts">0</div>
-        <div class="wrs-lbl">task points</div>
-        <div class="wrs-sub" id="wr-today-done">0 done today</div>
-      </div>
-    </div>
-
-    <div class="wr-outcomes">
-      <div class="wro-track">
-        <div class="wro active">
-          <div class="wro-header">
-            <span class="wro-icon">💰</span>
-            <div class="wro-title">The Wire Lands</div>
-          </div>
-          <div class="wro-body">Your phone buzzes. Zymo's account. Wire transfer confirmed. You are a funded CEO. This moment is being earned right now — every clean hour, every task.</div>
-        </div>
-      </div>
-    </div>
-  </div><!-- end tab-wr -->
+  </div><!-- end tab-command -->
 
   <!-- TASKS TAB -->
   <div id="tab-tasks" class="tab-pane">
@@ -2111,120 +2415,7 @@ body:has(#tab-log.active) .fr-fab{display:none;}
   </div><!-- end tab-fr -->
 
   <!-- LOG / ANALYTICS TAB -->
-  <div id="tab-log" class="tab-pane">
-
-    <!-- 21-DAY CYCLE BANNER (moved here from Freedom — Carr: home page stays quiet) -->
-    <div class="cycle-banner" id="cycle-banner" style="margin-top:14px">
-      <div class="cb-left">
-        <div class="cb-day" id="cb-day">Day — of 21</div>
-        <div class="cb-phase" id="cb-phase">· · ·</div>
-        <div class="cb-tagline" id="cb-tagline"></div>
-      </div>
-      <div class="cb-right">
-        <div class="cb-streak" id="cb-streak">0</div>
-        <div class="cb-streak-lbl">day streak</div>
-      </div>
-    </div>
-    <div style="padding:0 var(--page-pad) 14px">
-      <div class="cb-progress">
-        <div class="cb-progress-fill" id="cb-progress-fill" style="width:0%"></div>
-      </div>
-      <div class="cb-days-row">
-        <span>Day 1</span>
-        <span id="cb-cycle-num">Cycle 1</span>
-        <span>Day 21</span>
-      </div>
-    </div>
-
-    <!-- MISSION PROGRESS (moved here from Freedom) -->
-    <div class="wr-progress">
-      <div class="wp-head">
-        <div class="wp-lbl">Mission Progress</div>
-        <div class="wp-pct" id="wp-pct">0%</div>
-      </div>
-      <div class="wp-track">
-        <div class="wp-fill" id="wp-fill" style="width:0%"></div>
-      </div>
-      <div class="wp-dates">
-        <div id="wp-start">—</div>
-        <div id="wp-end">—</div>
-      </div>
-    </div>
-
-    <!-- Analytics section -->
-    <div class="analytics-wrap">
-      <div class="sec-lbl" style="padding-top:16px">Analytics</div>
-
-      <!-- 21-day calendar heatmap -->
-      <div class="an-card">
-        <div class="an-card-title">21-Day Cycle Map</div>
-        <div class="an-calendar" id="an-calendar"></div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
-          <div style="width:10px;height:10px;border-radius:2px;background:var(--g-5)"></div>
-          <span style="font-size:10px;color:var(--t-4);">Full day</span>
-          <div style="width:10px;height:10px;border-radius:2px;background:var(--g-2);margin-left:8px"></div>
-          <span style="font-size:10px;color:var(--t-4);">Partial</span>
-          <div style="width:10px;height:10px;border-radius:2px;background:var(--card-2);margin-left:8px"></div>
-          <span style="font-size:10px;color:var(--t-4);">Missed</span>
-        </div>
-      </div>
-
-      <!-- 7-day chart -->
-      <div class="an-card">
-        <div class="an-card-title">7-Day Score</div>
-        <div class="an-chart" id="an-chart"></div>
-  
-      </div>
-
-      <!-- Stats grid -->
-      <div class="an-stats-grid">
-        <div class="an-stat">
-          <div class="an-stat-val" id="an-streak">0</div>
-          <div class="an-stat-lbl">Day streak</div>
-        </div>
-        <div class="an-stat">
-          <div class="an-stat-val" id="an-best">0%</div>
-          <div class="an-stat-lbl">Best day</div>
-        </div>
-        <div class="an-stat">
-          <div class="an-stat-val" id="an-avg">0%</div>
-          <div class="an-stat-lbl">7-day avg</div>
-        </div>
-        <div class="an-stat">
-          <div class="an-stat-val" id="an-t1-avg">0%</div>
-          <div class="an-stat-lbl">Daily tasks avg</div>
-        </div>
-      </div>
-
-      <!-- Task completion breakdown -->
-      <div class="an-card">
-        <div class="an-card-title">7-Day Completion</div>
-        <div class="an-tier-row">
-          <div class="an-tier-lbl">⚡ Zymo Fundraising</div>
-          <div class="an-tier-bar-bg">
-            <div class="an-tier-bar-fill an-t1-fill" id="an-t1-bar" style="width:0%"></div>
-          </div>
-          <div class="an-tier-val" id="an-t1-val">0%</div>
-        </div>
-        <div class="an-tier-row">
-          <div class="an-tier-lbl">✨ AIRA</div>
-          <div class="an-tier-bar-bg">
-            <div class="an-tier-bar-fill an-t2-fill" id="an-t2-bar" style="width:0%"></div>
-          </div>
-          <div class="an-tier-val" id="an-t2-val">0%</div>
-        </div>
-      </div>
-
-      <!-- Task pattern -->
-      <div class="an-card">
-        <div class="an-card-title">Most Productive Hour</div>
-        <div class="an-craving-content" id="an-craving-content">Complete tasks to see your most productive time of day.</div>
-      </div>
-    </div>
-
-    <div id="log-stats" style="display:none"></div>
-    <div id="log-list" style="display:none"></div>
-  </div>
+  <!-- tab-log removed — its contents merged into tab-command (Batch 22) -->
 
   <!-- CRAVING SOS FLOATING ACTION BUTTON (Freedom tab only, sticky above bottom-nav) -->
   <button id="fr-fab" class="fr-fab" onclick="openCravingSOS()" aria-label="Craving SOS — start a 3-minute pause">
@@ -2233,11 +2424,11 @@ body:has(#tab-log.active) .fr-fab{display:none;}
   </button>
   <div class="fr-fab-tip" id="fr-fab-tip" role="tooltip">Feeling a craving? Tap here — 3-minute pause.</div>
 
-  <!-- BOTTOM NAV -->
+  <!-- BOTTOM NAV — 3 tabs (Command / Tasks / Freedom) -->
   <nav class="bottom-nav">
-    <button class="nav-btn" onclick="switchTab('wr',this)">
+    <button class="nav-btn" onclick="switchTab('command',this)">
       <div class="nav-icon">◈</div>
-      <div class="nav-label">War Room</div>
+      <div class="nav-label">Command</div>
     </button>
     <button class="nav-btn" onclick="switchTab('tasks',this)">
       <div class="nav-icon">▦</div>
@@ -2246,10 +2437,6 @@ body:has(#tab-log.active) .fr-fab{display:none;}
     <button class="nav-btn active" onclick="switchTab('fr',this)">
       <div class="nav-icon">◉</div>
       <div class="nav-label">Freedom</div>
-    </button>
-    <button class="nav-btn" onclick="switchTab('log',this)">
-      <div class="nav-icon">◫</div>
-      <div class="nav-label">Log</div>
     </button>
   </nav>
 </div><!-- ════════════════════════════════════════
@@ -2276,6 +2463,27 @@ body:has(#tab-log.active) .fr-fab{display:none;}
       </div>
     </div>
     <button class="btn-p" onclick="startNextCycle()">Begin Cycle 2 →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: EDIT MANTRA
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-mantra" onclick="closeOverlayOutside(event,'ov-mantra')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="sheet-title" style="margin-bottom:0">Your Mantra</div>
+      <button onclick="closeOverlay('ov-mantra')" style="font-size:20px;color:var(--t-3);padding:4px 8px;">✕</button>
+    </div>
+    <div style="font-size:12px;color:var(--t-3);margin-bottom:14px;line-height:1.55;">
+      The one sentence you want to read every time you open the app. Make it personal, specific, and something you actually believe.
+    </div>
+    <textarea id="mantra-input" class="f-input" rows="5" style="width:100%;min-height:120px;resize:vertical;font-family:var(--fd);font-size:16px;line-height:1.5;" maxlength="500"></textarea>
+    <div style="font-size:11px;color:var(--t-4);margin-top:4px;margin-bottom:16px;text-align:right;">500 chars max</div>
+    <button class="btn-p" onclick="saveMantra()">Save</button>
+    <button class="btn-s" style="margin-top:8px" onclick="resetMantraToDefault()">Reset to default</button>
+    <button class="btn-s" style="margin-top:8px" onclick="closeOverlay('ov-mantra')">Cancel</button>
   </div>
 </div>
 
@@ -2532,8 +2740,13 @@ const LS = {
   PEAK_CROSSED:   'th_peak_crossed',
   PEAK_CROSSED_AT:'th_peak_crossed_at',
   HURDLES_ACKED:  'th_hurdles_acked',
+  MANTRA:         'th_mantra',
+  PERSONAL_BEST:  'th_personal_best',
   DAY_START:      'th_day_start_',
 };
+
+// Default mantra shown until user edits it.
+const DEFAULT_MANTRA = "Every clean hour is a brick in the person I am becoming. I do not negotiate with the parasite. I am the one who crossed the peak.";
 
 /* ═══════════════════════════════════════════════════
    SECTION: CONSTANTS
@@ -4385,20 +4598,63 @@ function closeBadge(){
 /* ═══════════════════════════════════════════════════
    SECTION: ANALYTICS ENGINE
 ═══════════════════════════════════════════════════ */
-function renderAnalytics(){
+/* ═══════════════════════════════════════════════════
+   SECTION: COMMAND TAB RENDERER (Batch 22)
+   — Merged WR + Log + Analytics into a single narrative page.
+═══════════════════════════════════════════════════ */
+function _buildDaysWindow(nDays){
   const taskLog = getTaskLog();
-  const cravings = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
-  const tasks = getTasks();
-  // 21-day calendar heatmap
+  const allTasksById = {};
+  getTasksAll().forEach(t => { allTasksById[t.id] = t; });
+  const maxToday = Math.max(1, getMaxTaskPerDay());
+  const days = [];
+  for(let i=nDays-1; i>=0; i--){
+    const d = new Date();
+    d.setDate(d.getDate()-i);
+    const key = d.toISOString().slice(0,10);
+    const dayLog = taskLog[key]||{};
+    const doneIds = Object.keys(dayLog).filter(k => k !== '__max');
+    const totalPts = doneIds.reduce((s,tid)=> s + ((allTasksById[tid]?.pts)||0), 0);
+    const doneCnt = doneIds.length;
+    const dayMax = Math.max(1, dayLog.__max || maxToday);
+    const totalPct = Math.round((totalPts/dayMax)*100);
+    days.push({key, date:d, totalPct, totalPts, doneCnt, isToday:i===0});
+  }
+  return days;
+}
+
+function _updatePersonalBest(bestToday){
+  const key = 'best';
+  const cur = parseInt(JSON.parse(localStorage.getItem(LS.PERSONAL_BEST)||'{}')[key]||'0');
+  if(bestToday > cur){
+    const pb = JSON.parse(localStorage.getItem(LS.PERSONAL_BEST)||'{}');
+    pb[key] = bestToday;
+    localStorage.setItem(LS.PERSONAL_BEST, JSON.stringify(pb));
+    return true;
+  }
+  return false;
+}
+
+function _trendArrow(current, prior){
+  if(!prior || prior === 0) return {cls:'', txt:''};
+  const delta = current - prior;
+  if(Math.abs(delta) < 1) return {cls:'', txt:'→ steady'};
+  if(delta > 0) return {cls:'up', txt:'↗ +'+Math.abs(delta).toFixed(0)+'%'};
+  return {cls:'down', txt:'↘ −'+Math.abs(delta).toFixed(0)+'%'};
+}
+
+function renderCommand(){
+  const taskLog = getTaskLog();
+  const allTasksById = {};
+  getTasksAll().forEach(t => { allTasksById[t.id] = t; });
+  const maxToday = Math.max(1, getMaxTaskPerDay());
+
+  // ─── SECTION 4: 21-Day Heatmap ───
   const cal = document.getElementById('an-calendar');
   if(cal && S.missionStart){
     const cycleStart = new Date(S.missionStart);
     cycleStart.setDate(cycleStart.getDate() + (getCycleNum()-1)*CYCLE_DAYS);
     const today = new Date().toISOString().slice(0,10);
-    // History-safe: include archived tasks for pts lookup; use per-day __max snapshot when present
-    const allTasksById = {};
-    getTasksAll().forEach(t => { allTasksById[t.id] = t; });
-    const maxToday = Math.max(1, getMaxTaskPerDay());
     let html = '';
     for(let i=0; i<CYCLE_DAYS; i++){
       const d = new Date(cycleStart);
@@ -4410,8 +4666,9 @@ function renderAnalytics(){
       const pct = Math.round((donePts/dayMax)*100);
       const isFuture = key > today;
       const isToday = key === today;
-      const phase = i<7?1:i<14?2:3;
-      const fillColor = pct>=80?'rgba(184,212,160,'+(((pct/100)*0.8)+0.1)+')':pct>=40?'rgba(184,212,160,'+(pct/100*0.5+0.05)+')':'rgba(184,212,160,0.05)';
+      const fillColor = pct>=80?'rgba(184,212,160,'+(((pct/100)*0.8)+0.1)+')'
+                      :pct>=40?'rgba(184,212,160,'+(pct/100*0.5+0.05)+')'
+                      :'rgba(184,212,160,0.05)';
       html += `<div class="an-cal-day ${isFuture?'future':''} ${isToday?'today':''}">
         <div class="an-cal-fill" style="background:${fillColor}"></div>
         <span class="an-cal-lbl">${i+1}</span>
@@ -4420,186 +4677,236 @@ function renderAnalytics(){
     cal.innerHTML = html;
   }
 
-  // Build last 7 days data (history-safe: include archived tasks + per-day snapshot)
-  const allTasksById7 = {};
-  getTasksAll().forEach(t => { allTasksById7[t.id] = t; });
-  const maxToday7 = Math.max(1, getMaxTaskPerDay());
-  const days = [];
-  for(let i=6; i>=0; i--){
-    const d = new Date();
-    d.setDate(d.getDate()-i);
-    const key = d.toISOString().slice(0,10);
-    const dayLog = taskLog[key]||{};
-    const doneIds = Object.keys(dayLog).filter(k => k !== '__max');
-    const totalPts = doneIds.reduce((s,tid)=> s + ((allTasksById7[tid]?.pts)||0), 0);
-    const doneCnt = doneIds.length;
-    const dayMax = Math.max(1, dayLog.__max || maxToday7);
-    const totalPct = Math.round((totalPts/dayMax)*100);
-    days.push({key, date:d, totalPct, totalPts, doneCnt, isToday:i===0});
-  }
+  // Build 7-day and 14-day windows
+  const days7 = _buildDaysWindow(7);
+  const days14 = _buildDaysWindow(14);
 
-  // 7-day bar chart
-  const chart = document.getElementById('an-chart');
-  const labels = null; // labels now inline
-  if(chart){
-    chart.innerHTML = days.map(d=>{
-      const h = Math.round((d.totalPct/100)*52);
-      const col = d.totalPct>=80?'var(--g-5)':d.totalPct>=50?'var(--g-3)':'var(--g-1)';
-      return `<div class="an-bar-wrap">
-        <div class="an-bar-outer">
-          <div style="height:${h}px;background:${col};border-radius:3px 3px 0 0;transition:height 0.6s ease;"></div>
-        </div>
-        <div style="font-family:var(--fm);font-size:9px;color:${d.isToday?'var(--g-4)':'var(--t-4)'};text-align:center;margin-top:3px;">${d.isToday?'Today':d.date.toLocaleDateString('en-IN',{weekday:'short'})}</div>
-      </div>`;
-    }).join('');
-  }
-  if(labels){
-    labels.innerHTML = days.map(d=>{
-      const lbl = d.isToday ? 'Today' : d.date.toLocaleDateString('en-IN',{weekday:'short'});
-      return `<div class="an-chart-lbl ${d.isToday?'today':''}">${lbl}</div>`;
-    }).join('');
-  }
-
-  // Stats
-  const activeDays = days.filter(d=>d.totalPct>0);
-  const avg7 = activeDays.length ? Math.round(activeDays.reduce((s,d)=>s+d.totalPct,0)/activeDays.length) : 0;
-  const best = activeDays.length ? Math.max(...activeDays.map(d=>d.totalPct)) : 0;
-  const t1avg = activeDays.length ? Math.round(activeDays.reduce((s,d)=>s+d.doneCnt,0)/activeDays.length) : 0;
-
-  // Streak — consecutive days with any Tier 1 completion
-  let streak = 0;
-  for(let i=days.length-1; i>=0; i--){
-    if(days[i].totalPts > 0) streak++;
-    else if(i < days.length-1) break; // gap in streak
-  }
-
-  setText('an-streak', streak);
-  setText('an-best', best+'%');
-  setText('an-avg', avg7+'%');
-  setText('an-t1-avg', Math.round(activeDays.reduce((s,d)=>s+(d.doneCnt||0),0)/(activeDays.length||1))+' tasks');
-
-  // Key task completion rates over 7 days
-  let zymoCount = 0, airaCount = 0;
-  days.forEach(d=>{ const dl=taskLog[d.key]||{}; if(dl['zymo-fundraising']) zymoCount++; if(dl['aira']) airaCount++; });
-  const zymoPct = Math.round((zymoCount/7)*100);
-  const airaPct = Math.round((airaCount/7)*100);
-  const b1 = document.getElementById('an-t1-bar');
-  const b2 = document.getElementById('an-t2-bar');
-  if(b1) b1.style.width = zymoPct+'%';
-  if(b2) b2.style.width = airaPct+'%';
-  setText('an-t1-val', zymoPct+'%');
-  setText('an-t2-val', airaPct+'%');
-
-  // Most productive hour
-  const cc = document.getElementById('an-craving-content');
-  if(cc){
-    const hourCounts = {};
-    Object.values(taskLog).forEach(dayLog=>{
-      Object.values(dayLog).forEach(ts=>{
-        if(ts && typeof ts === 'number'){
-          const h = new Date(ts).getHours();
-          hourCounts[h] = (hourCounts[h]||0)+1;
-        }
-      });
+  // ─── SECTION 5: Momentum SVG (14-day line/area) ───
+  const svg = document.getElementById('momentum-svg');
+  const axis = document.getElementById('momentum-axis');
+  const trendEl = document.getElementById('momentum-trend');
+  if(svg){
+    const W=300, H=100;
+    const stepX = days14.length > 1 ? W/(days14.length-1) : W;
+    const pts = days14.map((d,i)=>({x: i*stepX, y: H - (d.totalPct/100)*H, d}));
+    const linePath = pts.map((p,i)=> (i===0?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+    const areaPath = linePath + ` L${W},${H} L0,${H} Z`;
+    let inner = `<defs><linearGradient id="momentum-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--g-5)" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="var(--g-5)" stop-opacity="0"/>
+    </linearGradient></defs>`;
+    inner += `<path class="momentum-area" d="${areaPath}"/>`;
+    inner += `<path class="momentum-line" d="${linePath}"/>`;
+    pts.forEach(p=>{
+      inner += `<circle class="momentum-dot ${p.d.isToday?'today':''}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${p.d.isToday?4:2.5}"/>`;
     });
-    if(!Object.keys(hourCounts).length){
-      cc.textContent = 'Complete tasks to see your most productive time of day.';
+    svg.innerHTML = inner;
+  }
+  if(axis){
+    axis.innerHTML = days14.map(d => `<span class="${d.isToday?'today':''}">${d.isToday?'Today':d.date.getDate()}</span>`).join('');
+  }
+  if(trendEl){
+    const first7avg = days14.slice(0,7).reduce((s,d)=>s+d.totalPct,0)/7;
+    const last7avg = days14.slice(7).reduce((s,d)=>s+d.totalPct,0)/7;
+    const delta = Math.round(last7avg - first7avg);
+    if(days14.every(d=>d.totalPct===0)){
+      trendEl.className = 'an-trend';
+      trendEl.textContent = '';
+    } else if(delta > 3){
+      trendEl.className = 'an-trend up';
+      trendEl.textContent = '↗ +'+delta+'% vs prior 7d';
+    } else if(delta < -3){
+      trendEl.className = 'an-trend down';
+      trendEl.textContent = '↘ −'+Math.abs(delta)+'% vs prior 7d';
     } else {
-      const topH = Object.entries(hourCounts).sort((a,b)=>b[1]-a[1])[0];
-      const h = parseInt(topH[0]);
-      const period = h<6?'early morning':h<12?'morning':h<17?'afternoon':h<20?'evening':'night';
-      cc.innerHTML = `Most tasks completed in <strong>${period}</strong> (${h}:00–${h+1}:00)<br>Total completions: <strong>${Object.values(hourCounts).reduce((s,v)=>s+v,0)}</strong>`;
+      trendEl.className = 'an-trend';
+      trendEl.textContent = '→ steady';
     }
   }
 
-}
+  // ─── SECTION 6: Key Metrics Row (best / avg / days-beyond-peak / total pts) ───
+  const activeDays = days7.filter(d=>d.totalPct>0);
+  const avg7 = activeDays.length ? Math.round(activeDays.reduce((s,d)=>s+d.totalPct,0)/activeDays.length) : 0;
+  const best7 = activeDays.length ? Math.max(...activeDays.map(d=>d.totalPct)) : 0;
+  const totalPts = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
+  const cleanHrsNow = S.missionStart ? Math.max(0,(Date.now()-getQuitTs())/3600000) : 0;
+  const daysBeyondPeak = cleanHrsNow >= PEAK_END_HOURS ? Math.floor((cleanHrsNow - PEAK_END_HOURS)/24) : 0;
 
-/* ═══════════════════════════════════════════════════
-   SECTION: LOG RENDERER — Insightful redesign
-═══════════════════════════════════════════════════ */
-function renderLog(){
-  const cravings = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
-  const ss = document.getElementById('log-stats');
-  const ll = document.getElementById('log-list');
-  if(!ss||!ll) return;
+  // Prior-7d comparison window (days 8-14 ago)
+  const days14Full = _buildDaysWindow(14);
+  const prior7 = days14Full.slice(0,7).filter(d=>d.totalPct>0);
+  const avgPrior7 = prior7.length ? Math.round(prior7.reduce((s,d)=>s+d.totalPct,0)/prior7.length) : 0;
+  const bestPrior7 = prior7.length ? Math.max(...prior7.map(d=>d.totalPct)) : 0;
 
-  const total = cravings.length;
-  const resisted = cravings.filter(c=>c.resisted).length;
-  const relapses = cravings.filter(c=>c.type==='relapse').length;
-  const resistRate = total > 0 ? Math.round((resisted/total)*100) : 100;
-
-  // Hardest hour analysis
-  const hourCounts = {};
-  cravings.forEach(c=>{
-    const h = new Date(c.ts).getHours();
-    hourCounts[h] = (hourCounts[h]||0)+1;
-  });
-  let hardestHour = null;
-  let maxCount = 0;
-  Object.entries(hourCounts).forEach(([h,cnt])=>{ if(cnt>maxCount){maxCount=cnt;hardestHour=parseInt(h);} });
-  const hardestStr = hardestHour !== null ? `${hardestHour}:00–${hardestHour+1}:00` : '—';
-
-  // Today's cravings
-  const todayStr = todayKey();
-  const todayCravings = cravings.filter(c=>new Date(c.ts).toISOString().slice(0,10)===todayStr);
-  const todayResisted = todayCravings.filter(c=>c.resisted).length;
-
-  // Clean days
-  const cleanDays = S.missionStart ? Math.floor((Date.now()-getQuitTs())/86400000) : 0;
-
-  // Task points earned
-  const taskPts = parseInt(localStorage.getItem(LS.TASK_PTS_TOTAL)||'0');
-
-  ss.innerHTML = `
-    <div class="log-insight-grid">
-      <div class="log-insight-card log-insight-main">
-        <div class="lic-icon">🛡️</div>
-        <div class="lic-val">${resistRate}%</div>
-        <div class="lic-lbl">Resistance rate</div>
-      </div>
-      <div class="log-insight-card">
-        <div class="lic-icon">⚡</div>
-        <div class="lic-val">${resisted}</div>
-        <div class="lic-lbl">Resisted total</div>
-      </div>
-      <div class="log-insight-card">
-        <div class="lic-icon">📅</div>
-        <div class="lic-val">${todayResisted}/${todayCravings.length}</div>
-        <div class="lic-lbl">Today</div>
-      </div>
-      <div class="log-insight-card">
-        <div class="lic-icon">🕐</div>
-        <div class="lic-val">${hardestStr}</div>
-        <div class="lic-lbl">Hardest hour</div>
-      </div>
-    </div>
-    ${relapses > 0 ? `<div class="log-relapse-note">⚠️ ${relapses} relapse${relapses>1?'s':''} logged. Each one taught you something.</div>` : ''}
-  `;
-
-  if(!cravings.length){
-    ll.innerHTML='<div class="log-empty">No cravings logged yet.<br>The parasite hasn\'t dared to challenge you.</div>';
-    return;
+  setText('an-best', best7+'%');
+  const bestPB = _updatePersonalBest(best7);
+  const bestDeltaEl = document.getElementById('an-best-delta');
+  if(bestDeltaEl){
+    if(bestPB && best7 > 0){
+      bestDeltaEl.className = 'an-stat-delta best';
+      bestDeltaEl.textContent = 'New personal best';
+    } else {
+      const t = _trendArrow(best7, bestPrior7);
+      bestDeltaEl.className = 'an-stat-delta ' + t.cls;
+      bestDeltaEl.textContent = t.txt || 'vs prior 7d';
+    }
+  }
+  setText('an-avg', avg7+'%');
+  const avgDeltaEl = document.getElementById('an-avg-delta');
+  if(avgDeltaEl){
+    const t = _trendArrow(avg7, avgPrior7);
+    avgDeltaEl.className = 'an-stat-delta ' + t.cls;
+    avgDeltaEl.textContent = t.txt || 'vs prior 7d';
+  }
+  setText('an-beyond-peak', daysBeyondPeak);
+  const beyondDeltaEl = document.getElementById('an-beyond-delta');
+  if(beyondDeltaEl){
+    beyondDeltaEl.className = 'an-stat-delta ' + (daysBeyondPeak>0?'up':'');
+    beyondDeltaEl.textContent = daysBeyondPeak > 0 ? 'Peak crossed' : 'Not yet';
+  }
+  setText('an-total-pts', totalPts.toLocaleString());
+  const ptsDeltaEl = document.getElementById('an-pts-delta');
+  if(ptsDeltaEl){
+    const todayPts = days7[days7.length-1] ? days7[days7.length-1].totalPts : 0;
+    ptsDeltaEl.className = 'an-stat-delta ' + (todayPts>0?'up':'');
+    ptsDeltaEl.textContent = todayPts>0 ? '+'+todayPts+' today' : 'nothing yet today';
   }
 
-  const grouped={};
-  [...cravings].reverse().forEach(c=>{
-    const k=new Date(c.ts).toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'short'});
-    if(!grouped[k]) grouped[k]=[];
-    grouped[k].push(c);
-  });
+  // ─── SECTION 3: Streak Hero ───
+  const streak = getStreak();
+  setText('sh-num', streak);
+  const flameEl = document.getElementById('sh-flame');
+  if(flameEl){
+    flameEl.className = 'sh-flame' + (streak>=21 ? ' gold' : streak>=7 ? ' big' : '');
+    flameEl.textContent = streak>=21 ? '🔱' : '🔥';
+  }
+  const shBest = document.getElementById('sh-best');
+  if(shBest){
+    const pb = JSON.parse(localStorage.getItem(LS.PERSONAL_BEST)||'{}');
+    const streakBest = parseInt(pb.streak||'0');
+    if(streak > streakBest && streak > 0){
+      pb.streak = streak;
+      localStorage.setItem(LS.PERSONAL_BEST, JSON.stringify(pb));
+      shBest.style.display = 'inline-block';
+      shBest.textContent = '★ Personal best';
+    } else if(streakBest > 0){
+      shBest.style.display = 'inline-block';
+      shBest.textContent = 'best: '+streakBest+'d';
+    } else {
+      shBest.style.display = 'none';
+    }
+  }
 
-  ll.innerHTML='<div class="log-group">'+Object.entries(grouped).map(([day,items])=>`
-    <div class="log-day-lbl">${day} · ${items.filter(e=>e.resisted).length}/${items.length} resisted</div>
-    ${items.map(e=>`<div class="log-entry">
-      <div class="le-icon">${e.type==='relapse'?'💔':e.type==='surfed'?'🌊':e.type==='slip'?'⚠️':e.resisted?'✅':'⚡'}</div>
-      <div>
-        <div class="le-title">${e.type==='relapse'?'Relapse — Streak Reset':e.type==='surfed'?'Craving Surfed':e.type==='slip'?'Slip — Streak Intact':e.resisted?'Craving Resisted':'Craving Hit'}</div>
-        <div class="le-time">${new Date(e.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div>
-        ${e.note?'<div class="le-note">'+e.note+'</div>':''}
-      </div>
-    </div>`).join('')}
-  `).join('')+'</div>';
+  // ─── Orb delta (vs 7-day avg %) ───
+  const orbDeltaEl = document.getElementById('orb-delta');
+  if(orbDeltaEl){
+    const currentProb = calcProb();
+    const priorAvg = avgPrior7;
+    if(priorAvg > 0){
+      const delta = Math.round(currentProb - priorAvg);
+      if(Math.abs(delta) >= 2){
+        orbDeltaEl.innerHTML = delta > 0
+          ? '<span class="up">↗ +'+delta+'%</span> vs prior 7d avg'
+          : '<span class="down">↘ '+delta+'%</span> vs prior 7d avg';
+      } else {
+        orbDeltaEl.innerHTML = '→ steady vs prior 7d';
+      }
+    } else {
+      orbDeltaEl.innerHTML = '';
+    }
+  }
+
+  // ─── SECTION 7: Priority tasks (dynamic per user's tasks) ───
+  const ptEl = document.getElementById('priority-tasks-list');
+  if(ptEl){
+    const priorityTasks = getActiveTasks().filter(t => t.priority);
+    if(priorityTasks.length === 0){
+      ptEl.innerHTML = '<div class="pt-empty">No priority tasks set. Mark tasks as priority via ✏️ Edit to see them tracked here.</div>';
+    } else {
+      ptEl.innerHTML = priorityTasks.map(t => {
+        const doneDays = days7.filter(d => {
+          const dl = taskLog[d.key] || {};
+          return dl[t.id];
+        }).length;
+        const pct = Math.round((doneDays/7)*100);
+        const icon = t.priorityIcon || '✦';
+        return `<div class="pt-row">
+          <div class="pt-lbl">${icon} ${escapeHtml(t.name)}</div>
+          <div class="pt-bar-bg"><div class="pt-bar-fill" style="width:${pct}%"></div></div>
+          <div class="pt-val">${pct}%</div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // ─── SECTION 8: Time-of-Day Pattern (24 hourly bars, from task_log timestamps) ───
+  const todEl = document.getElementById('tod-chart');
+  const todSub = document.getElementById('an-tod-sub');
+  if(todEl){
+    const hourCounts = new Array(24).fill(0);
+    Object.values(taskLog).forEach(dayLog => {
+      Object.entries(dayLog).forEach(([k,ts]) => {
+        if(k === '__max') return;
+        if(ts && typeof ts === 'number'){
+          const h = new Date(ts).getHours();
+          hourCounts[h]++;
+        }
+      });
+    });
+    const maxCount = Math.max(...hourCounts, 1);
+    const peakHour = hourCounts.indexOf(maxCount);
+    const total = hourCounts.reduce((s,c)=>s+c,0);
+    todEl.innerHTML = hourCounts.map((c,h) => {
+      const height = Math.round((c/maxCount)*100);
+      return `<div class="tod-bar ${c===maxCount && c>0 ?'peak':''}" style="height:${height}%" title="${h}:00 · ${c} completions"></div>`;
+    }).join('');
+    if(todSub){
+      if(total === 0){
+        todSub.textContent = '';
+      } else {
+        const period = peakHour<6?'early morning':peakHour<12?'morning':peakHour<17?'afternoon':peakHour<20?'evening':'night';
+        todSub.textContent = '· peak '+peakHour+':00 ('+period+')';
+      }
+    }
+  }
+
+  // ─── SECTION 10: Mantra ───
+  const mantraEl = document.getElementById('mantra-text');
+  if(mantraEl){
+    const m = localStorage.getItem(LS.MANTRA) || DEFAULT_MANTRA;
+    mantraEl.textContent = m;
+  }
 }
+
+// Backward-compat shims — old callers still fire, all now unified
+function renderAnalytics(){ renderCommand(); }
+function renderLog(){ renderCommand(); }
+
+/* Mantra edit */
+function openMantraEdit(){
+  const cur = localStorage.getItem(LS.MANTRA) || DEFAULT_MANTRA;
+  const ta = document.getElementById('mantra-input');
+  if(ta) ta.value = cur;
+  openOverlay('ov-mantra');
+}
+function saveMantra(){
+  const ta = document.getElementById('mantra-input');
+  if(!ta) return;
+  const v = ta.value.trim();
+  if(!v){ alert('Mantra cannot be empty.'); return; }
+  localStorage.setItem(LS.MANTRA, v);
+  closeOverlay('ov-mantra');
+  renderCommand();
+}
+function resetMantraToDefault(){
+  if(!confirm('Reset your mantra to the default?')) return;
+  localStorage.removeItem(LS.MANTRA);
+  const ta = document.getElementById('mantra-input');
+  if(ta) ta.value = DEFAULT_MANTRA;
+  renderCommand();
+}
+
+/* renderLog + renderAnalytics are now thin aliases → renderCommand (Batch 22). */
 
 /* ═══════════════════════════════════════════════════
    SECTION: SMOKED / RELAPSE
@@ -4646,7 +4953,7 @@ function switchTab(name, el){
     const stage = getWormStage((Date.now()-ss2)/3600000);
     if(stage !== S.lastWormStage){ S.lastWormStage=stage; renderWorm(stage); }
   }
-  if(name==='log'){ renderLog(); renderAnalytics(); }
+  if(name==='command'){ renderCommand(); }
 }
 
 /* ═══════════════════════════════════════════════════
