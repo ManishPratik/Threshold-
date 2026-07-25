@@ -2958,7 +2958,7 @@ const MILESTONES = [
   {mins:4320,  emoji:'💪',  title:'Peak Withdrawal Passed', desc:'72 hours. The hardest phase is behind you. Nicotine fully cleared from blood.'},
   {mins:10080, emoji:'🌬️', title:'1 Week — Lungs Clearing', desc:'Cilia regenerating in lungs. Each breath is measurably cleaner than last week.'},
   {mins:30240, emoji:'🫀',  title:'3 Weeks — Traces Gone',  desc:'No traces of nicotine anywhere in your body. The parasite is completely dead.'},
-  {mins:43200, emoji:'🌟',  title:'1 Month — Heart Risk ↓', desc:'Circulation improved. Lung function increasing. Jupiter entered Cancer this week.'},
+  {mins:43200, emoji:'🌟',  title:'1 Month — Heart Risk ↓', desc:'Circulation improved. Lung function increasing. Your body has adapted to life without the drug.'},
 ];
 
 /* ═══════════════════════════════════════════════════
@@ -3609,7 +3609,7 @@ function updateWarRoom(){
     sphere.style.boxShadow = `0 0 ${20+prob}px ${glow}, inset 0 0 40px rgba(0,0,0,0.4)`;
   }
   // Orb caption
-  const captions = ['Mission ignited. Every second counts.','The ember is lit. Keep going.','The fire is building. Don\'t stop now.','Jupiter is watching. Push through.','The door is open. Walk through it.'];
+  const captions = ['Mission ignited. Every second counts.','The ember is lit. Keep going.','The fire is building. Don\'t stop now.','Keep pushing. Every hour is proof.','The door is open. Walk through it.'];
   const ci = prob<2?0:prob<30?1:prob<60?2:prob<80?3:4;
   setText('orb-caption', captions[ci]);
 
