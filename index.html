@@ -899,6 +899,102 @@ margin-bottom:10px;
   .pc-mountain{animation:none;}
 }
 
+/* ═══════════════════════════════════════════════════
+   SECTION: HURDLES CHAIN (post-peak progression, item #5)
+═══════════════════════════════════════════════════ */
+.hurdles-chain{
+  margin:0 var(--page-pad) 18px;
+  padding:14px;
+  background:linear-gradient(135deg, rgba(184,212,160,0.06), rgba(184,212,160,0.01));
+  border:1px solid rgba(184,212,160,0.18);
+  border-radius:var(--radius-md);
+}
+.hc-header{margin-bottom:12px;}
+.hc-title{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.22em;
+  color:var(--g-4);text-transform:uppercase;font-weight:600;
+  margin-bottom:4px;
+}
+.hc-sub{font-size:11.5px;color:var(--t-3);line-height:1.5;}
+.hc-track{
+  display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:none;margin-bottom:10px;
+}
+.hc-track::-webkit-scrollbar{display:none;}
+.hc-pill{
+  flex-shrink:0;
+  padding:8px 12px;
+  background:rgba(184,212,160,0.10);
+  border:1px solid rgba(184,212,160,0.28);
+  border-radius:999px;
+  font-family:var(--fm);font-size:10px;letter-spacing:0.10em;
+  color:var(--g-5);text-transform:uppercase;
+  display:flex;align-items:center;gap:6px;
+  cursor:pointer;transition:background 0.2s;
+}
+.hc-pill:active{background:rgba(184,212,160,0.20);}
+.hc-pill-icon{font-size:14px;line-height:1;}
+.hc-pill-arrow{color:var(--t-4);font-size:16px;margin:0 2px;flex-shrink:0;}
+.hc-next{
+  padding:10px 12px;
+  background:var(--card);
+  border:1px dashed rgba(184,212,160,0.28);
+  border-radius:var(--radius-sm);
+  display:flex;align-items:center;gap:10px;
+}
+.hc-next-icon{font-size:18px;line-height:1;opacity:0.7;}
+.hc-next-body{flex:1;min-width:0;}
+.hc-next-title{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.16em;
+  color:var(--t-3);text-transform:uppercase;
+}
+.hc-next-count{font-size:13px;color:var(--t-1);margin-top:2px;font-family:var(--fm);}
+
+/* Hurdle-cross overlay */
+#ov-hurdle-cross{align-items:center;justify-content:center;}
+.hurdle-cross-box{
+  margin:20px;padding:28px 22px 22px;
+  background:var(--card);
+  border:1px solid rgba(184,212,160,0.30);
+  border-radius:var(--radius-xl);
+  max-width:420px;text-align:center;
+  box-shadow:0 0 60px rgba(184,212,160,0.20), 0 20px 60px rgba(0,0,0,0.55);
+  animation:pc-in 0.55s cubic-bezier(.16,.9,.28,1.15);
+}
+.hc-eyebrow{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.22em;
+  color:var(--g-4);text-transform:uppercase;margin-bottom:14px;
+}
+.hc-icon{
+  font-size:44px;line-height:1;margin-bottom:10px;
+  filter:drop-shadow(0 0 16px rgba(184,212,160,0.55));
+}
+.hc-title-x{
+  font-family:var(--fd);font-size:30px;color:var(--t-1);
+  line-height:1.05;letter-spacing:-0.02em;margin-bottom:10px;
+  background:linear-gradient(180deg,var(--g-6),var(--g-4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hc-headline{
+  font-family:var(--fd);font-size:15px;font-style:italic;
+  color:var(--t-1);line-height:1.45;margin-bottom:16px;
+}
+.hc-body{
+  font-size:13px;color:var(--t-2);line-height:1.6;
+  text-align:left;margin-bottom:14px;
+}
+.hc-ratchet{
+  padding:12px 14px;margin-bottom:18px;
+  background:rgba(120,200,140,0.06);
+  border:1px solid var(--b-dim);border-left:2px solid var(--gr-4);
+  border-radius:var(--radius-sm);
+  font-size:12.5px;color:var(--t-2);line-height:1.55;text-align:left;
+}
+.hc-ratchet strong{color:var(--gr-4);font-weight:500;}
+@media (prefers-reduced-motion:reduce){
+  .hurdle-cross-box{animation:none;}
+}
+
 /* Chamber gets an ambient throb during peak — reinforces "you are inside the storm" */
 .chamber.in-peak{
   animation:chamber-peak-throb 4.2s ease-in-out infinite;
@@ -1877,6 +1973,16 @@ body:has(#tab-log.active) .fr-fab{display:none;}
       <span class="pcb-arrow">›</span>
     </div>
 
+    <!-- HURDLES CHAIN — post-peak progression, each cleared hurdle a sunk-cost anchor. Items #5-6. -->
+    <div class="hurdles-chain" id="hurdles-chain" style="display:none">
+      <div class="hc-header">
+        <div class="hc-title">Hurdles Cleared</div>
+        <div class="hc-sub" id="hc-sub">Each one is smaller than the peak you already crossed.</div>
+      </div>
+      <div class="hc-track" id="hc-track"></div>
+      <div class="hc-next" id="hc-next"></div>
+    </div>
+
     <!-- VITALS ROW — 3 numbers that matter, above the fold -->
     <div class="fr-vitals">
       <div class="fv-card">
@@ -2174,6 +2280,22 @@ body:has(#tab-log.active) .fr-fab{display:none;}
 </div>
 
 <!-- ════════════════════════════════════════
+     OVERLAY: HURDLE CROSSED (post-peak chain, item #5-6)
+     — Data-driven: title/body/vow set by openHurdleCross(id)
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-hurdle-cross">
+  <div class="hurdle-cross-box">
+    <div class="hc-eyebrow" id="hc-x-eyebrow">HURDLE CLEARED</div>
+    <div class="hc-icon" id="hc-x-icon">🚩</div>
+    <div class="hc-title-x" id="hc-x-title">Milestone</div>
+    <div class="hc-headline" id="hc-x-headline"></div>
+    <div class="hc-body" id="hc-x-body"></div>
+    <div class="hc-ratchet" id="hc-x-ratchet"></div>
+    <button class="btn-p" onclick="acknowledgeCurrentHurdle()">Locked in. Keep going.</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
      OVERLAY: PEAK CROSSED (fires once at H72)
 ════════════════════════════════════════ -->
 <div class="overlay" id="ov-peak-crossed">
@@ -2409,6 +2531,7 @@ const LS = {
   STREAK_TASKS:   'th_streak_tasks',
   PEAK_CROSSED:   'th_peak_crossed',
   PEAK_CROSSED_AT:'th_peak_crossed_at',
+  HURDLES_ACKED:  'th_hurdles_acked',
   DAY_START:      'th_day_start_',
 };
 
@@ -2894,6 +3017,124 @@ function openPeakCrossedReminder(){
   openOverlay('ov-peak-crossed');
 }
 
+/* ═══════════════════════════════════════════════════
+   SECTION: HURDLES CHAIN (post-peak, items #5-6)
+   Each hurdle is smaller than the peak (H72). The ratchet-framing
+   copy explicitly references peak crossed as the anchor.
+═══════════════════════════════════════════════════ */
+const HURDLES = [
+  {id:'week1',  hrs:168,  icon:'🚩', label:'One Week',
+   headline:'Seven days smoke-free.',
+   body:'The habit loops are starting to fire without their old reward. Your body has learned that the cue arrives, and nothing follows. That is un-learning.',
+   ratchet:'You crossed peak withdrawal 4 days ago. <strong>This hurdle was smaller.</strong> The next one is smaller still.'},
+  {id:'week2',  hrs:336,  icon:'🛡️', label:'Two Weeks',
+   headline:'Two weeks. The wiring is changing.',
+   body:'Dopamine receptors are recalibrating toward baseline production. What used to require a cigarette now generates its own quiet reward — a full breath, a completed task, a walk finished.',
+   ratchet:'The peak took 72 hours of chemistry to cross. <strong>You just gave 14 days of habit-rewriting.</strong> Discipline, not chemistry — and you have more of it than you thought.'},
+  {id:'month1', hrs:720,  icon:'🔑', label:'One Month',
+   headline:'One full month. Habit territory.',
+   body:'Cravings now are memory-triggered, not chemical. A place, a stress, a mood remembers what used to happen and asks. But your body no longer needs it. That gap between the ask and the need is where freedom lives.',
+   ratchet:'<strong>Peak was chemistry — you crossed it in 3 days.</strong> This was habit — you just crossed 30. If you smoke now, you undo both.'},
+  {id:'month3', hrs:2160, icon:'🌊', label:'Three Months',
+   headline:'Baseline reset.',
+   body:'Nervous system fully recalibrated. Sleep, focus, mood, breath — the baseline you have now is what a non-smoker feels every day. This is not effort. This is who you are.',
+   ratchet:'You are further from smoking than most people who quit ever get. <strong>The hardest hurdle was 90 days ago.</strong> Everything since has been maintenance.'},
+  {id:'month6', hrs:4320, icon:'💎', label:'Six Months',
+   headline:'Six months. Rare air.',
+   body:'Most people who attempt to quit relapse within the first 6 months. You are past that statistical wall. Neural rewire is deep. The identity is locked.',
+   ratchet:'<strong>You already crossed something much harder than any craving you will ever face again.</strong> A single cigarette from here erases six months of proof. It will not.'},
+  {id:'year1',  hrs:8760, icon:'🏛️', label:'One Year',
+   headline:'One full year of freedom.',
+   body:'You are not a former smoker. You are a non-smoker who used to smoke. The distinction is permanent. Your body has forgotten how to be dependent on this.',
+   ratchet:'<strong>Peak withdrawal was 362 days ago.</strong> You crossed the biggest chemical hurdle before this year even started. Everything since has been evidence of who you are now.'},
+];
+
+function getAckedHurdles(){
+  try { return JSON.parse(localStorage.getItem(LS.HURDLES_ACKED)||'[]'); }
+  catch(e){ return []; }
+}
+function setAckedHurdles(arr){
+  localStorage.setItem(LS.HURDLES_ACKED, JSON.stringify(arr));
+}
+
+let _pendingHurdleId = null;
+
+function updateHurdles(cleanHrs){
+  const chain = document.getElementById('hurdles-chain');
+  if(!chain) return;
+  // Hurdles only surface after peak (H72). Before that, the peak banner owns the top.
+  if(cleanHrs < PEAK_END_HOURS){
+    chain.style.display = 'none';
+    return;
+  }
+  chain.style.display = 'block';
+
+  const acked = getAckedHurdles();
+  const crossed = HURDLES.filter(h => cleanHrs >= h.hrs);
+  const next = HURDLES.find(h => cleanHrs < h.hrs);
+
+  // Render cleared strip
+  const track = document.getElementById('hc-track');
+  if(track){
+    if(crossed.length === 0){
+      track.innerHTML = '<div style="font-size:11px;color:var(--t-3);padding:6px 2px;">No hurdles cleared yet. First one lands at 1 week.</div>';
+    } else {
+      track.innerHTML = crossed.map((h,i) => {
+        const arrow = i > 0 ? '<span class="hc-pill-arrow">›</span>' : '';
+        return arrow + `<div class="hc-pill" onclick="openHurdleCross('${h.id}')"><span class="hc-pill-icon">${h.icon}</span>${escapeHtml(h.label)}</div>`;
+      }).join('');
+    }
+  }
+
+  // Render next hurdle countdown
+  const nextEl = document.getElementById('hc-next');
+  if(nextEl){
+    if(!next){
+      nextEl.innerHTML = '<div class="hc-next-icon">✓</div><div class="hc-next-body"><div class="hc-next-title">All named hurdles cleared</div><div class="hc-next-count">Keep going. This is who you are now.</div></div>';
+    } else {
+      const remaining = next.hrs - cleanHrs;
+      const days = Math.floor(remaining / 24);
+      const hrs = Math.floor(remaining % 24);
+      const countTxt = days >= 1 ? (days + 'd ' + hrs + 'h to go') : (hrs + 'h to go');
+      nextEl.innerHTML =
+        `<div class="hc-next-icon">${next.icon}</div>` +
+        `<div class="hc-next-body">` +
+          `<div class="hc-next-title">Next: ${escapeHtml(next.label)}</div>` +
+          `<div class="hc-next-count">${countTxt}</div>` +
+        `</div>`;
+    }
+  }
+
+  // Fire celebration for any newly-crossed hurdle not yet acked
+  const unAcked = crossed.find(h => !acked.includes(h.id));
+  if(unAcked && !_pendingHurdleId){
+    openHurdleCross(unAcked.id);
+  }
+}
+
+function openHurdleCross(id){
+  const h = HURDLES.find(x => x.id === id);
+  if(!h) return;
+  _pendingHurdleId = id;
+  document.getElementById('hc-x-eyebrow').textContent = h.label.toUpperCase() + ' · CLEARED';
+  document.getElementById('hc-x-icon').textContent = h.icon;
+  document.getElementById('hc-x-title').textContent = h.label;
+  document.getElementById('hc-x-headline').textContent = h.headline;
+  document.getElementById('hc-x-body').textContent = h.body;
+  document.getElementById('hc-x-ratchet').innerHTML = h.ratchet;
+  openOverlay('ov-hurdle-cross');
+  if(navigator.vibrate) navigator.vibrate([60, 40, 60]);
+}
+function acknowledgeCurrentHurdle(){
+  if(!_pendingHurdleId){ closeOverlay('ov-hurdle-cross'); return; }
+  const acked = getAckedHurdles();
+  if(!acked.includes(_pendingHurdleId)) acked.push(_pendingHurdleId);
+  setAckedHurdles(acked);
+  _pendingHurdleId = null;
+  closeOverlay('ov-hurdle-cross');
+  updateHurdles((Date.now() - getQuitTs()) / 3600000);
+}
+
 // Live nicotine remaining, from half-life pharmacology (t½ = 2h).
 // Matches the app's HOURLY_MSGS at H2/H12/H24 exactly.
 function nicotinePctRemaining(cleanHrs){
@@ -3204,6 +3445,8 @@ function updateFreedom(){
   updateChamber(cleanHrs);
   // Peak withdrawal banner (H0-72 window)
   updatePeakBanner(cleanHrs);
+  // Post-peak hurdles chain (items #5-6)
+  updateHurdles(cleanHrs);
 
   // Natural high meter — 3 months = 100% (horizontal bar in vitals card)
   const nhPct = Math.min(100, (cleanHrs/(24*90))*100);
