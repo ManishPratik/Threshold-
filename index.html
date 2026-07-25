@@ -1196,6 +1196,59 @@ margin-bottom:10px;
   .hurdle-cross-box{animation:none;}
 }
 
+/* ═══════════════════════════════════════════════════
+   SECTION: EDITABLE CARDS (Batch 25) — pencil affordance
+═══════════════════════════════════════════════════ */
+.editable-card{position:relative;cursor:pointer;transition:background 0.15s;}
+.editable-card:active{background:rgba(184,212,160,0.05);}
+.edit-pencil{
+  display:inline-block;margin-left:8px;
+  font-size:12px;color:var(--t-4);letter-spacing:0.08em;
+  vertical-align:middle;
+}
+.edit-pencil-tr{
+  position:absolute;top:10px;right:12px;margin-left:0;
+  font-size:13px;color:var(--t-4);opacity:0.7;
+}
+.edit-pencil-inline{
+  font-size:11px;color:var(--t-4);margin-left:6px;cursor:pointer;
+  padding:2px 6px;border-radius:6px;
+}
+.edit-pencil-inline:active{background:rgba(184,212,160,0.10);}
+.wro-header-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 var(--page-pad) 10px;cursor:pointer;
+}
+.wro-header-lbl{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.22em;
+  color:var(--g-3);text-transform:uppercase;font-weight:600;
+}
+
+/* Outcomes-manage rows (like block-manage) */
+.om-row{
+  display:flex;align-items:center;gap:8px;
+  padding:8px;background:var(--bg-2);border-radius:var(--radius-sm);
+  border:1px solid var(--b-dim);
+}
+.om-icon{
+  flex:0 0 50px;padding:8px 6px;background:var(--bg-3);
+  border:1px solid var(--b-dim);color:var(--t-1);
+  font-size:14px;border-radius:8px;text-align:center;
+}
+.om-title{
+  flex:1;padding:8px 10px;background:var(--bg-3);
+  border:1px solid var(--b-dim);color:var(--t-1);
+  font-size:13px;border-radius:8px;
+}
+.om-up,.om-dn,.om-del{
+  background:transparent;border:1px solid var(--b-dim);color:var(--t-3);
+  width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
+}
+.om-up:disabled,.om-dn:disabled{opacity:0.3;cursor:default;}
+.om-del{color:var(--r-4);border-color:rgba(208,48,48,0.25);}
+.om-del:active{background:rgba(208,48,48,0.1);}
+
 /* Chamber gets an ambient throb during peak — reinforces "you are inside the storm" */
 .chamber.in-peak{
   animation:chamber-peak-throb 4.2s ease-in-out infinite;
@@ -2254,54 +2307,45 @@ body:has(#tab-tasks.active) .fr-fab{display:none;}
       </div>
     </div>
 
-    <!-- MOTIVATIONAL URGENCY (moved from War Room) -->
-    <div class="wr-urgency">
+    <!-- MOTIVATIONAL QUOTE (user-editable) -->
+    <div class="wr-urgency editable-card" onclick="openEditText('FR_QUOTE')">
       <div class="wu-text" id="wu-text">"Each hour that passes is one less thing the trap gets to hold over you."</div>
+      <span class="edit-pencil">✎</span>
     </div>
 
-    <!-- BODY/ENERGY OUTCOMES (moved from War Room outcomes carousel) -->
-    <div class="wr-outcomes">
-      <div class="wro-track" style="min-height:auto">
-        <div class="wro active" style="position:relative;margin-bottom:10px;">
-          <div class="wro-header">
-            <span class="wro-icon">⚡</span>
-            <div class="wro-title">Returning to Baseline</div>
-          </div>
-          <div class="wro-body" id="wro-body-peak">Your body is climbing back to the state it had before nicotine hijacked it. The fog, the tightness, the low-grade tiredness — those were the drug, not you.</div>
-        </div>
-        <div class="wro active" style="position:relative;">
-          <div class="wro-header">
-            <span class="wro-icon">🔥</span>
-            <div class="wro-title">Nothing to Chase</div>
-          </div>
-          <div class="wro-body">A non-smoker does not spend the day thinking about cigarettes. You are becoming that person again — the version of you who does not need this to feel normal.</div>
-        </div>
+    <!-- OUTCOMES — user-authored list of futures they're building toward -->
+    <div class="wr-outcomes" id="fr-outcomes-wrap">
+      <div class="wro-header-row" onclick="openOutcomesManage()">
+        <span class="wro-header-lbl">Your Outcomes</span>
+        <span class="edit-pencil">✎ manage</span>
       </div>
+      <div class="wro-track" id="fr-outcomes-list" style="min-height:auto"></div>
     </div>
 
-    <!-- NON-SMOKER PLEDGE — permanent, prominent -->
-    <div class="fr-pledge">
+    <!-- NON-SMOKER PLEDGE — title fixed, body user-editable -->
+    <div class="fr-pledge editable-card" onclick="openEditText('PLEDGE_BODY')">
       <div class="frp-icon">🚭</div>
       <div class="frp-content">
         <div class="frp-title">You are a non-smoker.</div>
-        <div class="frp-body">I have escaped the trap. Cigarettes gave me nothing to begin with. There is nothing to miss.<br><br>My quit date is <strong id="pledge-quit-date">—</strong>.</div>
+        <div class="frp-body"><span id="pledge-body-text">—</span><br><br>My quit date is <strong id="pledge-quit-date">—</strong>.</div>
       </div>
+      <span class="edit-pencil edit-pencil-tr">✎</span>
     </div>
 
-    <!-- LAPSE-RECOVERY CARD (Marlatt: slip != relapse) -->
+    <!-- LAPSE-RECOVERY CARD — body user-editable, button stays -->
     <div class="fr-lapse">
-      <div class="fr-lapse-title">If today doesn't go clean</div>
-      <div class="fr-lapse-body">A slip is not a return. It is a data point. Log the trigger and continue. A single lapse only becomes relapse if you decide it does.</div>
+      <div class="fr-lapse-title">If today doesn't go clean <span class="edit-pencil-inline" onclick="event.stopPropagation();openEditText('LAPSE_BODY')">✎</span></div>
+      <div class="fr-lapse-body" id="lapse-body-text">A slip is not a return. It is a data point. Log the trigger and continue. A single lapse only becomes relapse if you decide it does.</div>
       <button class="fr-lapse-btn" onclick="openOverlay('ov-slip')">Log a slip (streak intact)</button>
     </div>
 
-    <!-- EDUCATION ACCORDION — Dopamine science + Milestones + Timeline collapsed under <details> -->
+    <!-- EDUCATION ACCORDION — Dopamine (body + truth both editable) + Milestones + Timeline -->
     <div class="fr-learn">
       <details class="fr-learn-block" id="learn-dopamine">
         <summary>The Dopamine Trap — Science</summary>
         <div class="fr-learn-body">
-          <div class="fd-body">Nicotine does not give your brain pleasure. It <strong>hijacks your natural dopamine system</strong>, lowers your baseline, then charges you a cigarette every 45 minutes to feel normal again.<br><br>Between cigarettes, you feel <strong>worse than a non-smoker</strong>. The "relief" from smoking is just returning to the baseline a non-smoker has for free — all the time.</div>
-          <div class="fd-truth">"Smoking right now will not make you feel good. It will make you feel slightly less bad — for 4 minutes. Then worse than you feel right now."</div>
+          <div class="fd-body editable-card" onclick="openEditText('DOPAMINE_BODY')"><span id="dopamine-body-text">—</span><span class="edit-pencil">✎</span></div>
+          <div class="fd-truth editable-card" onclick="openEditText('DOPAMINE_TRUTH')"><span id="dopamine-truth-text">—</span><span class="edit-pencil">✎</span></div>
         </div>
       </details>
 
@@ -2373,6 +2417,51 @@ body:has(#tab-tasks.active) .fr-fab{display:none;}
       </div>
     </div>
     <button class="btn-p" onclick="startNextCycle()">Begin Cycle 2 →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: GENERIC EDIT TEXT
+     — used for wu-text quote, pledge body, lapse body, dopamine body,
+       dopamine truth, and outcome bodies. Config set by openEditText().
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-edit-text" onclick="closeOverlayOutside(event,'ov-edit-text')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="sheet-title" id="et-title" style="margin-bottom:0">Edit</div>
+      <button onclick="closeOverlay('ov-edit-text')" style="font-size:20px;color:var(--t-3);padding:4px 8px;">✕</button>
+    </div>
+    <div id="et-hint" style="font-size:12px;color:var(--t-3);margin-bottom:14px;line-height:1.55;"></div>
+    <textarea id="et-input" class="f-input" rows="6" style="width:100%;min-height:140px;resize:vertical;font-size:14px;line-height:1.55;" maxlength="800"></textarea>
+    <div style="font-size:11px;color:var(--t-4);margin-top:4px;margin-bottom:16px;text-align:right;">800 chars max</div>
+    <button class="btn-p" onclick="saveEditText()">Save</button>
+    <button class="btn-s" style="margin-top:8px" onclick="resetEditTextToDefault()">Reset to default</button>
+    <button class="btn-s" style="margin-top:8px" onclick="closeOverlay('ov-edit-text')">Cancel</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERLAY: OUTCOMES MANAGE (list with add/edit/delete)
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-outcomes-manage" onclick="closeOverlayOutside(event,'ov-outcomes-manage')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div class="sheet-title" style="margin-bottom:0">Your Outcomes</div>
+      <button onclick="closeOverlay('ov-outcomes-manage')" style="font-size:20px;color:var(--t-3);padding:4px 8px;">✕</button>
+    </div>
+    <div style="font-size:12px;color:var(--t-3);margin-bottom:14px;line-height:1.55;">
+      The specific futures you are building toward. What you want life to look like once cigarettes are no longer part of it.
+    </div>
+    <div id="om-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;max-height:52vh;overflow-y:auto;"></div>
+    <div class="om-new" style="display:flex;gap:8px;align-items:stretch;padding-top:12px;border-top:1px solid var(--b-dim);">
+      <input id="om-new-icon" class="f-input" style="flex:0 0 60px;text-align:center;" placeholder="🎯" maxlength="4"/>
+      <input id="om-new-title" class="f-input" style="flex:1;" placeholder="New outcome title (e.g. Marathon in 2027)"/>
+      <button class="btn-p" style="flex:0 0 auto;padding:10px 14px;" onclick="addOutcomeFromManage()">+ Add</button>
+    </div>
+    <button class="btn-s" style="margin-top:14px" onclick="closeOverlay('ov-outcomes-manage')">Done</button>
+    <button class="btn-s" style="margin-top:8px" onclick="resetOutcomesToDefault()">Reset to defaults</button>
   </div>
 </div>
 
@@ -2652,11 +2741,27 @@ const LS = {
   HURDLES_ACKED:  'th_hurdles_acked',
   MANTRA:         'th_mantra',
   PERSONAL_BEST:  'th_personal_best',
+  FR_QUOTE:       'th_fr_quote',
+  PLEDGE_BODY:    'th_pledge_body',
+  LAPSE_BODY:     'th_lapse_body',
+  DOPAMINE_BODY:  'th_dopamine_body',
+  DOPAMINE_TRUTH: 'th_dopamine_truth',
+  OUTCOMES:       'th_outcomes',
   DAY_START:      'th_day_start_',
 };
 
-// Default mantra shown until user edits it.
+// Defaults shown until the user edits them. Every Freedom-tab card is
+// backed by an LS key — these are only the fallbacks.
 const DEFAULT_MANTRA = "Every clean hour is a brick in the person I am becoming. I do not negotiate with the parasite. I am the one who crossed the peak.";
+const DEFAULT_FR_QUOTE = "Each hour that passes is one less thing the trap gets to hold over you.";
+const DEFAULT_PLEDGE_BODY = "I have escaped the trap. Cigarettes gave me nothing to begin with. There is nothing to miss.";
+const DEFAULT_LAPSE_BODY = "A slip is not a return. It is a data point. Log the trigger and continue. A single lapse only becomes relapse if you decide it does.";
+const DEFAULT_DOPAMINE_BODY = "Nicotine does not give your brain pleasure. It hijacks your natural dopamine system, lowers your baseline, then charges you a cigarette every 45 minutes to feel normal again.\n\nBetween cigarettes, you feel worse than a non-smoker. The 'relief' from smoking is just returning to the baseline a non-smoker has for free — all the time.";
+const DEFAULT_DOPAMINE_TRUTH = "Smoking right now will not make you feel good. It will make you feel slightly less bad — for 4 minutes. Then worse than you feel right now.";
+const DEFAULT_OUTCOMES = [
+  {id:'oc-baseline', icon:'⚡', title:'Returning to Baseline', body:'Your body is climbing back to the state it had before nicotine hijacked it. The fog, the tightness, the low-grade tiredness — those were the drug, not you.'},
+  {id:'oc-nothing',  icon:'🔥', title:'Nothing to Chase',     body:'A non-smoker does not spend the day thinking about cigarettes. You are becoming that person again — the version of you who does not need this to feel normal.'},
+];
 
 /* ═══════════════════════════════════════════════════
    SECTION: CONSTANTS
@@ -3570,6 +3675,8 @@ function updateFreedom(){
   updatePeakBanner(cleanHrs);
   // Post-peak hurdles chain (items #5-6)
   updateHurdles(cleanHrs);
+  // User-editable text slots (item Batch 25)
+  renderFreedomEditables();
 
   // Natural high meter — 3 months = 100% (horizontal bar in vitals card)
   const nhPct = Math.min(100, (cleanHrs/(24*90))*100);
@@ -4791,6 +4898,177 @@ function renderCommand(){
 // Backward-compat shims — old callers still fire, all now unified
 function renderAnalytics(){ renderCommand(); }
 function renderLog(){ renderCommand(); }
+
+/* ═══════════════════════════════════════════════════
+   SECTION: EDITABLE FREEDOM-TAB CONTENT (Batch 25)
+   — Generic ov-edit-text overlay + outcomes list.
+     Every card on Freedom is now user-authored.
+═══════════════════════════════════════════════════ */
+const _EDIT_TEXT_CFG = {
+  FR_QUOTE:       {lsKey:'FR_QUOTE',      title:'Motivational Quote', hint:'One sentence that greets you on Freedom tab — the thing you want in your head when you open the app.', def:DEFAULT_FR_QUOTE},
+  PLEDGE_BODY:    {lsKey:'PLEDGE_BODY',   title:'Your Pledge',        hint:'First-person. Why you quit. What smoking gave you (nothing) vs what it took. Read this out loud when it feels heavy.', def:DEFAULT_PLEDGE_BODY},
+  LAPSE_BODY:     {lsKey:'LAPSE_BODY',    title:'Lapse Response',     hint:'What you tell yourself if today does not go clean. Framing matters more than the slip.', def:DEFAULT_LAPSE_BODY},
+  DOPAMINE_BODY:  {lsKey:'DOPAMINE_BODY', title:'Dopamine Trap',      hint:'The mechanism you want to remember about why nicotine feels like relief but is actually a bill.', def:DEFAULT_DOPAMINE_BODY},
+  DOPAMINE_TRUTH: {lsKey:'DOPAMINE_TRUTH',title:'The Truth Line',     hint:'The one-line rebuttal to a craving. Blunt. Specific. Uncomfortable if it works.', def:DEFAULT_DOPAMINE_TRUTH},
+  OUTCOME_BODY:   {lsKey:null,            title:'Outcome',            hint:'What this specific future looks like. Concrete beats abstract.', def:''}, // used per-outcome via _editingOutcomeId
+};
+let _pendingEditKey = null;
+let _editingOutcomeId = null;
+
+function openEditText(cfgKey, outcomeId){
+  const cfg = _EDIT_TEXT_CFG[cfgKey];
+  if(!cfg) return;
+  _pendingEditKey = cfgKey;
+  _editingOutcomeId = outcomeId || null;
+  document.getElementById('et-title').textContent = cfg.title;
+  document.getElementById('et-hint').textContent = cfg.hint;
+  const ta = document.getElementById('et-input');
+  if(cfgKey === 'OUTCOME_BODY'){
+    const oc = getOutcomes().find(x => x.id === outcomeId);
+    ta.value = oc ? (oc.title + '\n\n' + oc.body) : '';
+    document.getElementById('et-hint').textContent = 'Line 1 = title (short). Rest = body. Blank line separates them.';
+  } else {
+    ta.value = localStorage.getItem(LS[cfg.lsKey]) || cfg.def;
+  }
+  openOverlay('ov-edit-text');
+}
+function saveEditText(){
+  if(!_pendingEditKey) return;
+  const v = document.getElementById('et-input').value.trim();
+  if(!v){ alert('Cannot save empty text.'); return; }
+  if(_pendingEditKey === 'OUTCOME_BODY' && _editingOutcomeId){
+    const arr = getOutcomes();
+    const i = arr.findIndex(x => x.id === _editingOutcomeId);
+    if(i >= 0){
+      const parts = v.split(/\n\s*\n/);
+      arr[i].title = (parts[0]||'Untitled').trim();
+      arr[i].body  = (parts.slice(1).join('\n\n')||'').trim();
+      setOutcomes(arr);
+    }
+  } else {
+    const cfg = _EDIT_TEXT_CFG[_pendingEditKey];
+    localStorage.setItem(LS[cfg.lsKey], v);
+  }
+  _pendingEditKey = null;
+  _editingOutcomeId = null;
+  closeOverlay('ov-edit-text');
+  renderFreedomEditables();
+  renderOutcomes();
+}
+function resetEditTextToDefault(){
+  if(!_pendingEditKey) return;
+  if(!confirm('Reset this to the default text? Your current version will be lost.')) return;
+  if(_pendingEditKey === 'OUTCOME_BODY'){
+    _pendingEditKey = null; _editingOutcomeId = null;
+    closeOverlay('ov-edit-text');
+    return;
+  }
+  const cfg = _EDIT_TEXT_CFG[_pendingEditKey];
+  localStorage.removeItem(LS[cfg.lsKey]);
+  document.getElementById('et-input').value = cfg.def;
+  renderFreedomEditables();
+}
+
+/* Outcomes CRUD */
+function getOutcomes(){
+  const raw = localStorage.getItem(LS.OUTCOMES);
+  if(!raw){
+    localStorage.setItem(LS.OUTCOMES, JSON.stringify(DEFAULT_OUTCOMES));
+    return DEFAULT_OUTCOMES.slice();
+  }
+  try { return JSON.parse(raw) || []; } catch(e){ return DEFAULT_OUTCOMES.slice(); }
+}
+function setOutcomes(arr){ localStorage.setItem(LS.OUTCOMES, JSON.stringify(arr)); }
+function renderOutcomes(){
+  const listEl = document.getElementById('fr-outcomes-list');
+  if(!listEl) return;
+  const outcomes = getOutcomes();
+  if(outcomes.length === 0){
+    listEl.innerHTML = '<div style="padding:14px;color:var(--t-3);font-size:13px;text-align:center;">No outcomes yet. Tap ✎ manage to add one.</div>';
+    return;
+  }
+  listEl.innerHTML = outcomes.map(oc => `
+    <div class="wro active editable-card" style="position:relative;margin-bottom:10px;" onclick="openEditText('OUTCOME_BODY','${oc.id}')">
+      <div class="wro-header">
+        <span class="wro-icon">${oc.icon||'✦'}</span>
+        <div class="wro-title">${escapeHtml(oc.title)}</div>
+      </div>
+      <div class="wro-body">${escapeHtml(oc.body)}</div>
+      <span class="edit-pencil edit-pencil-tr">✎</span>
+    </div>
+  `).join('');
+}
+function openOutcomesManage(){
+  renderOutcomesManageList();
+  openOverlay('ov-outcomes-manage');
+}
+function renderOutcomesManageList(){
+  const wrap = document.getElementById('om-list');
+  if(!wrap) return;
+  const arr = getOutcomes();
+  wrap.innerHTML = arr.length ? arr.map((oc,i) => `
+    <div class="om-row">
+      <input class="om-icon" type="text" value="${escapeHtml(oc.icon||'')}" maxlength="4" oninput="onOutcomeIconChange('${oc.id}', this.value)"/>
+      <input class="om-title" type="text" value="${escapeHtml(oc.title)}" oninput="onOutcomeTitleChange('${oc.id}', this.value)"/>
+      <button class="om-up" onclick="onOutcomeReorder('${oc.id}', ${i-1})" ${i===0?'disabled':''}>▲</button>
+      <button class="om-dn" onclick="onOutcomeReorder('${oc.id}', ${i+1})" ${i===arr.length-1?'disabled':''}>▼</button>
+      <button class="om-del" onclick="onOutcomeDelete('${oc.id}')">🗑</button>
+    </div>
+  `).join('') : '<div style="color:var(--t-3);font-size:12px;padding:8px 0;">No outcomes yet.</div>';
+}
+function onOutcomeIconChange(id, v){
+  const arr = getOutcomes(); const i = arr.findIndex(x=>x.id===id);
+  if(i>=0){ arr[i].icon = v || '✦'; setOutcomes(arr); renderOutcomes(); }
+}
+function onOutcomeTitleChange(id, v){
+  const arr = getOutcomes(); const i = arr.findIndex(x=>x.id===id);
+  if(i>=0){ arr[i].title = v.trim() || 'Untitled'; setOutcomes(arr); renderOutcomes(); }
+}
+function onOutcomeReorder(id, newIndex){
+  const arr = getOutcomes(); const cur = arr.findIndex(x=>x.id===id);
+  if(cur<0) return;
+  const [o] = arr.splice(cur,1);
+  arr.splice(Math.max(0,Math.min(newIndex, arr.length)), 0, o);
+  setOutcomes(arr); renderOutcomes(); renderOutcomesManageList();
+}
+function onOutcomeDelete(id){
+  if(!confirm('Delete this outcome?')) return;
+  const arr = getOutcomes().filter(x => x.id !== id);
+  setOutcomes(arr); renderOutcomes(); renderOutcomesManageList();
+}
+function addOutcomeFromManage(){
+  const icon = document.getElementById('om-new-icon').value.trim() || '✦';
+  const title = document.getElementById('om-new-title').value.trim();
+  if(!title){ alert('Outcome title required'); return; }
+  const arr = getOutcomes();
+  arr.push({id:_uid('oc'), icon, title, body:'Tap the ✎ on this card to describe what this future looks like in detail.'});
+  setOutcomes(arr);
+  document.getElementById('om-new-icon').value = '';
+  document.getElementById('om-new-title').value = '';
+  renderOutcomesManageList();
+  renderOutcomes();
+}
+function resetOutcomesToDefault(){
+  if(!confirm('Reset outcomes to the two starter cards? Your custom outcomes will be lost.')) return;
+  setOutcomes(DEFAULT_OUTCOMES.map(o=>({...o})));
+  renderOutcomes();
+  renderOutcomesManageList();
+}
+
+/* Set editable text on all Freedom-tab slots from LS (called from updateFreedom) */
+function renderFreedomEditables(){
+  const q = document.getElementById('wu-text');
+  if(q) q.textContent = '"' + (localStorage.getItem(LS.FR_QUOTE) || DEFAULT_FR_QUOTE) + '"';
+  const p = document.getElementById('pledge-body-text');
+  if(p) p.textContent = localStorage.getItem(LS.PLEDGE_BODY) || DEFAULT_PLEDGE_BODY;
+  const l = document.getElementById('lapse-body-text');
+  if(l) l.textContent = localStorage.getItem(LS.LAPSE_BODY) || DEFAULT_LAPSE_BODY;
+  const db = document.getElementById('dopamine-body-text');
+  if(db) db.textContent = localStorage.getItem(LS.DOPAMINE_BODY) || DEFAULT_DOPAMINE_BODY;
+  const dt = document.getElementById('dopamine-truth-text');
+  if(dt) dt.textContent = localStorage.getItem(LS.DOPAMINE_TRUTH) || DEFAULT_DOPAMINE_TRUTH;
+  renderOutcomes();
+}
 
 /* Mantra edit */
 function openMantraEdit(){
