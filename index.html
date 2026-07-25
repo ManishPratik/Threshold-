@@ -1239,9 +1239,8 @@ margin-bottom:10px;
 }
 /* Visibility: show only on Freedom tab. Requires Safari 15.4+ / Chrome 105+ (PWA target range). */
 body:has(#tab-fr.active) .fr-fab{display:flex;}
-body:has(#tab-wr.active) .fr-fab,
-body:has(#tab-tasks.active) .fr-fab,
-body:has(#tab-log.active) .fr-fab{display:none;}
+body:has(#tab-command.active) .fr-fab,
+body:has(#tab-tasks.active) .fr-fab{display:none;}
 .fr-fab:active{transform:scale(0.94);}
 .fr-fab-icon{font-size:22px;line-height:1;}
 .fr-fab-count{font-family:var(--fm);font-size:9px;letter-spacing:0.06em;color:var(--t-2);}
@@ -1492,98 +1491,9 @@ body:has(#tab-log.active) .fr-fab{display:none;}
 /* ═══════════════════════════════════════════════════
    SECTION: LOG TAB
 ═══════════════════════════════════════════════════ */
-/* ═══════════════════════════════════════════════════
-   SECTION: ANALYTICS TAB
-═══════════════════════════════════════════════════ */
-.analytics-wrap{padding:0 var(--page-pad);}
-.an-card{
-  background:var(--card);border:1px solid var(--b-dim);
-  border-radius:var(--radius-md);padding:14px;margin-bottom:10px;
-}
-.an-card-title{
-  font-family:var(--fb);font-size:11px;font-weight:600;
-  color:var(--t-3);text-transform:uppercase;letter-spacing:0.06em;
-  margin-bottom:12px;
-}
-/* 7-day bar chart */
-.an-chart{
-  display:flex;align-items:flex-end;gap:6px;
-  height:60px;margin-bottom:6px;
-}
-.an-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
-.an-bar-outer{width:100%;background:var(--card-2);border-radius:3px;overflow:hidden;height:52px;display:flex;flex-direction:column;justify-content:flex-end;}
-.an-bar-t1{background:linear-gradient(180deg,var(--g-5),var(--g-2));border-radius:3px 3px 0 0;transition:height 0.6s ease;}
-.an-bar-t2{background:rgba(184,212,160,0.25);border-radius:0;transition:height 0.6s ease;}
-.an-chart-labels{display:flex;gap:6px;}
-.an-chart-lbl{flex:1;text-align:center;font-family:var(--fm);font-size:9px;color:var(--t-4);}
-.an-chart-lbl.today{color:var(--g-4);}
-/* Stats grid */
-.an-stats-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;margin-bottom:10px;
-}
-.an-stat{
-  background:var(--card);border:1px solid var(--b-dim);
-  border-radius:var(--radius-md);padding:14px;text-align:center;
-}
-.an-stat-val{font-family:var(--fd);font-size:24px;color:var(--g-5);line-height:1;margin-bottom:4px;}
-.an-stat-lbl{font-family:var(--fb);font-size:11px;color:var(--t-3);}
-/* Tier bars */
-.an-tier-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.an-tier-lbl{font-size:12px;color:var(--t-2);min-width:120px;}
-.an-tier-bar-bg{flex:1;height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;}
-.an-tier-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
-.an-t1-fill{background:linear-gradient(90deg,var(--g-2),var(--g-5));}
-.an-t2-fill{background:rgba(184,212,160,0.4);}
-.an-tier-val{font-family:var(--fm);font-size:11px;color:var(--g-3);min-width:32px;text-align:right;}
-/* Craving content */
-.an-craving-content{font-size:13px;color:var(--t-2);line-height:1.7;}
-.log-insight-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;padding:16px var(--page-pad) 12px;
-}
-.log-insight-card{
-  background:var(--card);border:1px solid var(--b-dim);
-  border-radius:var(--radius-md);padding:14px 12px;text-align:center;
-}
-.log-insight-main{
-  grid-column:1/-1;
-  background:linear-gradient(135deg,rgba(184,212,160,0.08),rgba(184,212,160,0.02));
-  border-color:rgba(184,212,160,0.15);
-}
-.lic-icon{font-size:18px;margin-bottom:4px;line-height:1;}
-.lic-val{font-family:var(--fd);font-size:24px;color:var(--g-5);line-height:1;margin-bottom:3px;}
-.log-insight-main .lic-val{font-size:32px;}
-.lic-lbl{font-family:var(--fb);font-size:11px;color:var(--t-3);}
-.log-relapse-note{
-  margin:0 var(--page-pad) 8px;
-  background:rgba(168,32,32,0.08);border:1px solid rgba(168,32,32,0.15);
-  border-radius:var(--radius-sm);padding:10px 14px;
-  font-size:12px;color:var(--r-3);
-}
-.log-stats{display:none;}/* hidden — replaced by insight grid */
-.log-stat{
-  background:var(--card);border:1px solid var(--b-dim);
-  border-radius:var(--radius-sm);padding:8px 14px;
-  font-size:12px;color:var(--t-2);
-}
-.log-stat span{color:var(--g-5);font-weight:600;}
-.log-group{padding:0 var(--page-pad) 4px;}
-.log-day-lbl{
-  font-family:var(--fb);font-size:11px;font-weight:600;
-  color:var(--t-4);padding:12px 0 8px;text-transform:uppercase;
-  letter-spacing:0.05em;
-}
-.log-entry{
-  background:var(--card);border:1px solid var(--b-dim);
-  border-radius:var(--radius-md);padding:12px 14px;
-  display:flex;gap:11px;margin-bottom:8px;
-}
-.le-icon{font-size:16px;min-width:20px;margin-top:1px;line-height:1;}
-.le-title{font-size:13px;font-weight:500;color:var(--t-1);}
-.le-time{font-family:var(--fm);font-size:10px;color:var(--t-3);margin-top:2px;}
-.le-note{font-size:11px;color:var(--t-2);margin-top:3px;font-style:italic;}
-.log-empty{text-align:center;padding:48px var(--page-pad);color:var(--t-3);font-size:14px;line-height:1.8;}
+/* Analytics + Log tab CSS removed in Batch 23 — the Command tab CSS at
+   the top of this stylesheet (search: 'SECTION: COMMAND TAB') carries
+   the current styles for .an-card / .an-stats-grid / .an-stat / etc. */
 
 /* ═══════════════════════════════════════════════════
    SECTION: OVERLAYS & MODALS
