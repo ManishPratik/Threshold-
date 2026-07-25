@@ -809,6 +809,96 @@ margin-bottom:10px;
   box-shadow:0 0 8px rgba(208,48,48,0.45);
 }
 
+/* Peak-crossed permanent badge — sage/gold pill that replaces the peak-banner slot */
+.peak-crossed-badge{
+  margin:0 var(--page-pad) 16px;
+  padding:12px 14px;
+  background:linear-gradient(135deg, rgba(184,212,160,0.12), rgba(120,200,140,0.05));
+  border:1px solid rgba(184,212,160,0.35);
+  border-radius:var(--radius-md);
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;
+  box-shadow:0 0 24px rgba(120,200,140,0.10);
+  transition:background 0.2s;
+}
+.peak-crossed-badge:active{background:linear-gradient(135deg, rgba(184,212,160,0.20), rgba(120,200,140,0.10));}
+.pcb-icon{
+  font-size:26px;line-height:1;flex-shrink:0;
+  filter:drop-shadow(0 0 8px rgba(120,200,140,0.55));
+}
+.pcb-body{flex:1;min-width:0;}
+.pcb-title{
+  font-family:var(--fm);font-size:11px;letter-spacing:0.22em;
+  color:var(--gr-4);text-transform:uppercase;font-weight:600;
+  margin-bottom:2px;
+}
+.pcb-sub{font-size:12.5px;color:var(--t-2);line-height:1.4;}
+.pcb-arrow{color:var(--t-3);font-size:20px;flex-shrink:0;}
+
+/* Peak-crossed overlay — full-screen celebration */
+#ov-peak-crossed{align-items:center;justify-content:center;}
+.peak-cross-box{
+  margin:20px;padding:32px 24px 24px;
+  background:var(--card);
+  border:1px solid rgba(184,212,160,0.35);
+  border-radius:var(--radius-xl);
+  max-width:420px;text-align:center;
+  box-shadow:0 0 80px rgba(120,200,140,0.25), 0 20px 60px rgba(0,0,0,0.6);
+  animation:pc-in 0.6s cubic-bezier(.16,.9,.28,1.15);
+}
+@keyframes pc-in{
+  from{opacity:0;transform:scale(0.9) translateY(20px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+.pc-eyebrow{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.24em;
+  color:var(--g-4);text-transform:uppercase;margin-bottom:16px;
+}
+.pc-mountain{
+  font-size:56px;line-height:1;margin-bottom:12px;
+  filter:drop-shadow(0 0 20px rgba(120,200,140,0.65));
+  animation:pc-mountain-glow 3s ease-in-out infinite;
+}
+@keyframes pc-mountain-glow{
+  0%,100%{filter:drop-shadow(0 0 20px rgba(120,200,140,0.65));}
+  50%{filter:drop-shadow(0 0 32px rgba(184,212,160,0.9));}
+}
+.pc-title{
+  font-family:var(--fd);font-size:38px;color:var(--t-1);
+  line-height:1;letter-spacing:-0.02em;margin-bottom:12px;
+  background:linear-gradient(180deg,var(--g-6),var(--g-4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.pc-headline{
+  font-family:var(--fd);font-size:17px;font-style:italic;
+  color:var(--t-1);line-height:1.45;margin-bottom:18px;
+}
+.pc-body{
+  font-size:13.5px;color:var(--t-2);line-height:1.65;
+  text-align:left;margin-bottom:18px;
+}
+.pc-body em{font-style:italic;color:var(--g-5);font-weight:500;}
+.pc-vow{
+  margin-bottom:22px;padding:14px 16px;
+  background:rgba(184,212,160,0.06);
+  border:1px solid var(--b-dim);
+  border-left:2px solid var(--g-4);
+  border-radius:var(--radius-sm);
+  text-align:left;
+}
+.pc-vow-lbl{
+  font-family:var(--fm);font-size:9px;letter-spacing:0.18em;
+  color:var(--g-3);text-transform:uppercase;margin-bottom:6px;
+}
+.pc-vow-text{
+  font-family:var(--fd);font-size:14px;font-style:italic;
+  color:var(--t-1);line-height:1.55;
+}
+@media (prefers-reduced-motion:reduce){
+  .peak-cross-box{animation:none;}
+  .pc-mountain{animation:none;}
+}
+
 /* Chamber gets an ambient throb during peak — reinforces "you are inside the storm" */
 .chamber.in-peak{
   animation:chamber-peak-throb 4.2s ease-in-out infinite;
@@ -1777,6 +1867,16 @@ body:has(#tab-log.active) .fr-fab{display:none;}
       </div>
     </div>
 
+    <!-- PEAK-CROSSED PERMANENT BADGE — replaces the banner once H72 is crossed. Item #4. -->
+    <div class="peak-crossed-badge" id="peak-crossed-badge" style="display:none" onclick="openPeakCrossedReminder()">
+      <span class="pcb-icon">⛰</span>
+      <div class="pcb-body">
+        <div class="pcb-title">Peak Crossed</div>
+        <div class="pcb-sub" id="pcb-sub">You already did the hardest thing.</div>
+      </div>
+      <span class="pcb-arrow">›</span>
+    </div>
+
     <!-- VITALS ROW — 3 numbers that matter, above the fold -->
     <div class="fr-vitals">
       <div class="fv-card">
@@ -2074,6 +2174,26 @@ body:has(#tab-log.active) .fr-fab{display:none;}
 </div>
 
 <!-- ════════════════════════════════════════
+     OVERLAY: PEAK CROSSED (fires once at H72)
+════════════════════════════════════════ -->
+<div class="overlay" id="ov-peak-crossed">
+  <div class="peak-cross-box">
+    <div class="pc-eyebrow">72 HOURS · NICOTINE FULLY CLEARED</div>
+    <div class="pc-mountain">⛰</div>
+    <div class="pc-title">Peak Crossed.</div>
+    <div class="pc-headline">You just did the hardest thing this quit will ever ask of you.</div>
+    <div class="pc-body">
+      The parasite is dead. Nicotine — the actual drug — has been fully eliminated from your bloodstream. What you feel from here on is <em>habit</em>, not <em>chemistry</em>. Habit can be rewired. Chemistry could not be negotiated with — and you just crossed it anyway.
+    </div>
+    <div class="pc-vow">
+      <div class="pc-vow-lbl">Read this to yourself:</div>
+      <div class="pc-vow-text">"If I ever think about smoking again, I remember: I already did the hardest thing. Anything after this is smaller than what I already crossed."</div>
+    </div>
+    <button class="btn-p" onclick="acknowledgePeakCrossed()">I understand. I will not go back.</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
      OVERLAY: SLIP (log-a-slip vs full-relapse choice)
      Marlatt AVE counter: slip preserves streak, only user-confirmed
      relapse resets. Distinct from confirmSmoked().
@@ -2287,6 +2407,8 @@ const LS = {
   TASKS_CUSTOM:   'th_tasks_custom',
   BLOCKS_CUSTOM:  'th_blocks_custom',
   STREAK_TASKS:   'th_streak_tasks',
+  PEAK_CROSSED:   'th_peak_crossed',
+  PEAK_CROSSED_AT:'th_peak_crossed_at',
   DAY_START:      'th_day_start_',
 };
 
@@ -2700,14 +2822,32 @@ const PEAK_END_HOURS = 72;
 function updatePeakBanner(cleanHrs){
   const banner = document.getElementById('peak-banner');
   const chamber = document.getElementById('chamber');
+  const badge = document.getElementById('peak-crossed-badge');
+  const pcbSub = document.getElementById('pcb-sub');
   if(!banner) return;
 
   if(cleanHrs >= PEAK_END_HOURS){
     banner.style.display = 'none';
     if(chamber) chamber.classList.remove('in-peak');
+    // Show permanent post-peak badge + fire one-time celebration overlay
+    if(badge) badge.style.display = 'flex';
+    if(pcbSub){
+      const daysSincePeak = Math.floor((cleanHrs - PEAK_END_HOURS)/24);
+      pcbSub.textContent = daysSincePeak === 0
+        ? 'You already did the hardest thing. Do not go back.'
+        : 'You already did the hardest thing — ' + daysSincePeak + ' day' + (daysSincePeak===1?'':'s') + ' beyond peak.';
+    }
+    if(!localStorage.getItem(LS.PEAK_CROSSED)){
+      // Fire the celebration once
+      localStorage.setItem(LS.PEAK_CROSSED_AT, Date.now());
+      openOverlay('ov-peak-crossed');
+      if(navigator.vibrate) navigator.vibrate([80, 60, 80, 60, 200]);
+    }
     return;
   }
 
+  // Still inside peak
+  if(badge) badge.style.display = 'none';
   banner.style.display = 'block';
   if(chamber) chamber.classList.add('in-peak');
 
@@ -2743,6 +2883,15 @@ function updatePeakBanner(cleanHrs){
       subEl.textContent = 'You have already crossed the deepest hours. What remains is the tail. Close this window and you have permanently crossed the biggest hurdle of the entire quit.';
     }
   }
+}
+
+function acknowledgePeakCrossed(){
+  localStorage.setItem(LS.PEAK_CROSSED, '1');
+  closeOverlay('ov-peak-crossed');
+}
+function openPeakCrossedReminder(){
+  // Tapping the badge re-opens the celebration — used as an anti-relapse anchor
+  openOverlay('ov-peak-crossed');
 }
 
 // Live nicotine remaining, from half-life pharmacology (t½ = 2h).
