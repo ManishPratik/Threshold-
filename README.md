@@ -136,8 +136,31 @@ Run it whenever you add or refactor a chunk.
 - **24** — Full-Relapse reset actually resets everything smoking-related (was writing to a dead key).
 - **25** — Every Freedom-tab card user-editable (mantra, quote, pledge, lapse, dopamine body + truth, outcomes).
 - **27** — Launch screen every slot user-editable, blank by default with placeholder hints, outcomes unlimited and shared with Freedom.
+- **28** — Add `README.md` (this file) as handoff doc for next contributor.
+- **29** — Audit fixes: removed orphan `.launch-outcomes` + `.oc-1/2/3` CSS; fixed `wu-text` override bug (Command tab's `updateWarRoom` was overwriting the user-edited motivational quote every second with `phase.urgency`).
+- **30** — Deleted dead `VISIONS` and `URGENCY` arrays (declared but zero consumers) + orphan `S.visionIdx` state field. Personal Zymo/Manish/Jupiter content no longer lives in source at all.
+- **31** — Genericised the last two personal-astrology strings that actually rendered: MILESTONES 1-Month body and one of the 5 orb-caption rotations. Grep confirms no personal strings remain in executable JS.
 
 Full commit history: `git log --oneline`.
+
+---
+
+## Current audit status (as of Batch 31)
+
+Running the 12-check audit script (see `## The CSS-override trap` above for what it covers) returns clean on every check:
+
+- JS parses without error
+- Zero duplicate HTML ids
+- Div balance 347 opens = 347 closes
+- 13 unique overlays
+- 3 tab-panes ↔ 3 switchTab branches (`command` / `tasks` / `fr`)
+- Zero onclick handlers reference undefined functions
+- 27 LS keys declared, all 27 used, none undeclared, none unused
+- Zero CSS class definitions duplicated outside `@media` blocks
+- Zero personal-content strings (Jupiter / Manish / Wire Lands / Magnetic Force / Peak Presence) remain in executable JS after stripping comments
+- Only "Zymo" references are the 4 owner-tagged science-anchor strings in PHASES + HOURLY_MSGS + the DEFAULT_TASKS seed entry
+
+Two false-positive missing DOM targets — `getElementById('tab-'+name)` and `getElementById('cs-stage-'+n)` — are dynamic-id concatenations, not real bugs.
 
 ---
 
