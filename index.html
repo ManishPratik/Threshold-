@@ -1224,6 +1224,53 @@ margin-bottom:10px;
   color:var(--g-3);text-transform:uppercase;font-weight:600;
 }
 
+/* Launch-screen editable slots — placeholder styling when blank */
+.editable-launch{position:relative;cursor:pointer;transition:background 0.15s;}
+.editable-launch.is-empty > span:first-child,
+.editable-launch.is-empty .la-text,
+.editable-launch.is-empty #ld-text{
+  color:var(--t-4);font-style:italic;opacity:0.75;
+}
+.launch-fill-hint{
+  display:flex;align-items:center;gap:10px;
+  margin:0 var(--page-pad) 20px;padding:12px 14px;
+  background:linear-gradient(135deg, rgba(184,212,160,0.10), rgba(184,212,160,0.03));
+  border:1px dashed rgba(184,212,160,0.32);
+  border-radius:var(--radius-md);
+}
+.lfh-icon{font-size:16px;color:var(--g-5);flex-shrink:0;}
+.lfh-text{font-size:12px;color:var(--t-2);line-height:1.5;}
+
+.launch-outcomes-wrap{padding:24px var(--page-pad) 0;}
+.launch-outcomes-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:10px;cursor:pointer;padding:0 2px;
+}
+.loh-lbl{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.22em;
+  color:var(--g-3);text-transform:uppercase;font-weight:600;
+}
+.loh-manage{
+  font-family:var(--fm);font-size:11px;color:var(--g-4);
+  letter-spacing:0.06em;
+}
+.launch-outcomes{padding:0;display:flex;flex-direction:column;gap:12px;}
+
+/* Empty-state card (used by both launch and Freedom outcomes) */
+.outcomes-empty{
+  padding:28px 20px;text-align:center;
+  background:var(--card);border:1px dashed rgba(184,212,160,0.28);
+  border-radius:var(--radius-lg);cursor:pointer;
+  transition:background 0.15s,border-color 0.15s;
+}
+.outcomes-empty:active{background:rgba(184,212,160,0.05);border-color:rgba(184,212,160,0.45);}
+.oe-icon{font-size:32px;color:var(--g-4);margin-bottom:10px;line-height:1;}
+.oe-title{
+  font-family:var(--fd);font-size:17px;color:var(--t-1);margin-bottom:6px;
+}
+.oe-sub{font-size:12.5px;color:var(--t-3);line-height:1.55;margin-bottom:16px;}
+.oe-btn{width:auto;padding:10px 20px;display:inline-block;}
+
 /* Outcomes-manage rows (like block-manage) */
 .om-row{
   display:flex;align-items:center;gap:8px;
@@ -1934,46 +1981,49 @@ body:has(#tab-tasks.active) .fr-fab{display:none;}
      SCREEN: LAUNCH
 ════════════════════════════════════════ -->
 <div id="s-launch" class="screen active">
-  <div class="launch-eyebrow">Jupiter in Cancer · 10th House · Execute Now</div>
-  <div class="launch-hero"><div class="launch-title">THRESHOLD</div><div class="launch-tagline" id="launch-tagline">do or die</div></div>
-  
+  <!-- FILL-TO-PERSONALISE HINT — visible while any launch slot is blank -->
+  <div class="launch-fill-hint" id="launch-fill-hint">
+    <span class="lfh-icon">✎</span>
+    <span class="lfh-text">Tap any greyed field to make this yours. This is your app — no one else's story goes here.</span>
+  </div>
 
-  <div class="launch-outcomes">
-    <div class="oc oc-1">
-      <div class="oc-glow"></div>
-      <div class="oc-num">01</div>
-      <span class="oc-icon">💰</span>
-      <div class="oc-title">The Wire Lands</div>
-      <div class="oc-body">Your phone buzzes. Wire transfer confirmed — Zymo's account. The number has more zeros than anything with your name on it. You built this from scratch. You are a funded CEO.</div>
-      <div class="oc-tag">Zymo Fundraising Round</div>
-    </div>
-    <div class="oc oc-2">
-      <div class="oc-glow"></div>
-      <div class="oc-num">02</div>
-      <span class="oc-icon">⚡</span>
-      <div class="oc-title">Peak Presence</div>
-      <div class="oc-body">Full lungs. Zero fog. Sharp mind. You walk into a room and something is different — you carry yourself differently. Clear-eyed. Dangerous in the best way. This is what discipline does to a man's body and energy.</div>
-      <div class="oc-tag">Physical Peak · Mental Clarity</div>
-    </div>
-    <div class="oc oc-3">
-      <div class="oc-glow"></div>
-      <div class="oc-num">03</div>
-      <span class="oc-icon">🔥</span>
-      <div class="oc-title">Magnetic Force</div>
-      <div class="oc-body">Confidence is a scent. Women respond to a man who controls his world. A man building something real, who doesn't need a cigarette to calm his nerves. That man is magnetic. That man is you.</div>
-      <div class="oc-tag">Presence · Attraction · Power</div>
+  <!-- EYEBROW (editable) -->
+  <div class="launch-eyebrow editable-card editable-launch" id="launch-eyebrow-el" onclick="openEditText('LAUNCH_EYEBROW')">
+    <span id="launch-eyebrow-text"></span>
+    <span class="edit-pencil">✎</span>
+  </div>
+
+  <!-- TITLE (fixed brand) + TAGLINE (editable) -->
+  <div class="launch-hero">
+    <div class="launch-title">THRESHOLD</div>
+    <div class="launch-tagline editable-card editable-launch" id="launch-tagline-el" onclick="openEditText('LAUNCH_TAGLINE')">
+      <span id="launch-tagline-text"></span>
+      <span class="edit-pencil">✎</span>
     </div>
   </div>
 
-  <div class="launch-astro">
+  <!-- OUTCOMES (dynamic, unlimited, shared with Freedom tab) -->
+  <div class="launch-outcomes-wrap">
+    <div class="launch-outcomes-head" onclick="openOutcomesManage()">
+      <span class="loh-lbl">Your Outcomes</span>
+      <span class="loh-manage">+ manage</span>
+    </div>
+    <div class="launch-outcomes" id="launch-outcomes-list"></div>
+  </div>
+
+  <!-- ASTRO / CONTEXT paragraph (editable, optional) -->
+  <div class="launch-astro editable-card editable-launch" id="launch-astro-el" onclick="openEditText('LAUNCH_ASTRO')">
     <div class="la-icon">🪐</div>
-    <div class="la-text">Jupiter is now in Cancer — exalted in your 10th house. This is the most powerful career transit you will see for 12 years. It is active right now. The only variable is what you do today.</div>
+    <div class="la-text" id="launch-astro-text"></div>
+    <span class="edit-pencil edit-pencil-tr">✎</span>
   </div>
 
-  <div class="launch-decl">
+  <!-- DECLARATION (editable) -->
+  <div class="launch-decl editable-card editable-launch" id="launch-decl-el" onclick="openEditText('LAUNCH_DECL')">
     <div class="ld-line"></div>
-    <div class="ld-text" id="ld-text">These days<br>are not coming back.</div>
+    <div class="ld-text" id="ld-text"></div>
     <div class="ld-line"></div>
+    <span class="edit-pencil edit-pencil-tr">✎</span>
   </div>
 
   <div class="launch-form">
@@ -2731,6 +2781,10 @@ const LS = {
   DOPAMINE_BODY:  'th_dopamine_body',
   DOPAMINE_TRUTH: 'th_dopamine_truth',
   OUTCOMES:       'th_outcomes',
+  LAUNCH_EYEBROW: 'th_launch_eyebrow',
+  LAUNCH_TAGLINE: 'th_launch_tagline',
+  LAUNCH_ASTRO:   'th_launch_astro',
+  LAUNCH_DECL:    'th_launch_decl',
   DAY_START:      'th_day_start_',
 };
 
@@ -2742,10 +2796,17 @@ const DEFAULT_PLEDGE_BODY = "I have escaped the trap. Cigarettes gave me nothing
 const DEFAULT_LAPSE_BODY = "A slip is not a return. It is a data point. Log the trigger and continue. A single lapse only becomes relapse if you decide it does.";
 const DEFAULT_DOPAMINE_BODY = "Nicotine does not give your brain pleasure. It hijacks your natural dopamine system, lowers your baseline, then charges you a cigarette every 45 minutes to feel normal again.\n\nBetween cigarettes, you feel worse than a non-smoker. The 'relief' from smoking is just returning to the baseline a non-smoker has for free — all the time.";
 const DEFAULT_DOPAMINE_TRUTH = "Smoking right now will not make you feel good. It will make you feel slightly less bad — for 4 minutes. Then worse than you feel right now.";
-const DEFAULT_OUTCOMES = [
-  {id:'oc-baseline', icon:'⚡', title:'Returning to Baseline', body:'Your body is climbing back to the state it had before nicotine hijacked it. The fog, the tightness, the low-grade tiredness — those were the drug, not you.'},
-  {id:'oc-nothing',  icon:'🔥', title:'Nothing to Chase',     body:'A non-smoker does not spend the day thinking about cigarettes. You are becoming that person again — the version of you who does not need this to feel normal.'},
-];
+// Outcomes seed is empty — user writes their own via the manage sheet.
+// This lives on both the launch screen and the Freedom tab (same LS.OUTCOMES).
+const DEFAULT_OUTCOMES = [];
+
+// Launch-screen editable slots — placeholders shown when blank (never persisted
+// as content; only used as the input placeholder attribute so the launch page
+// starts truly empty for a fresh user).
+const PLACEHOLDER_LAUNCH_EYEBROW = 'Tap ✎ to write your context tagline (e.g. "Year of Freedom · Q3 Execute")';
+const PLACEHOLDER_LAUNCH_TAGLINE = 'Your one-line driving mantra';
+const PLACEHOLDER_LAUNCH_ASTRO   = 'Optional — timing, astrology, deadline, personal context. Whatever makes the moment feel real.';
+const PLACEHOLDER_LAUNCH_DECL    = 'Your closing declaration (e.g. "These days are not coming back.")';
 
 /* ═══════════════════════════════════════════════════
    SECTION: CONSTANTS
@@ -4894,7 +4955,11 @@ const _EDIT_TEXT_CFG = {
   LAPSE_BODY:     {lsKey:'LAPSE_BODY',    title:'Lapse Response',     hint:'What you tell yourself if today does not go clean. Framing matters more than the slip.', def:DEFAULT_LAPSE_BODY},
   DOPAMINE_BODY:  {lsKey:'DOPAMINE_BODY', title:'Dopamine Trap',      hint:'The mechanism you want to remember about why nicotine feels like relief but is actually a bill.', def:DEFAULT_DOPAMINE_BODY},
   DOPAMINE_TRUTH: {lsKey:'DOPAMINE_TRUTH',title:'The Truth Line',     hint:'The one-line rebuttal to a craving. Blunt. Specific. Uncomfortable if it works.', def:DEFAULT_DOPAMINE_TRUTH},
-  OUTCOME_BODY:   {lsKey:null,            title:'Outcome',            hint:'What this specific future looks like. Concrete beats abstract.', def:''}, // used per-outcome via _editingOutcomeId
+  LAUNCH_EYEBROW: {lsKey:'LAUNCH_EYEBROW',title:'Context Tagline',    hint:'A short line above the app name — timing, deadline, cycle, whatever anchors this attempt in your calendar.', def:''},
+  LAUNCH_TAGLINE: {lsKey:'LAUNCH_TAGLINE',title:'Driving Mantra',     hint:'Under the app name. One line. What you want in your head when you open this.', def:''},
+  LAUNCH_ASTRO:   {lsKey:'LAUNCH_ASTRO',  title:'Context Paragraph',  hint:'Optional. Timing, meaning, personal astrology, life context — anything that makes this moment feel like the moment.', def:''},
+  LAUNCH_DECL:    {lsKey:'LAUNCH_DECL',   title:'Closing Declaration',hint:'The line you want on-screen right before you tap IGNITE. Short. Final. Yours.', def:''},
+  OUTCOME_BODY:   {lsKey:null,            title:'Outcome',            hint:'What this specific future looks like. Concrete beats abstract.', def:''},
 };
 let _pendingEditKey = null;
 let _editingOutcomeId = null;
@@ -4938,6 +5003,7 @@ function saveEditText(){
   closeOverlay('ov-edit-text');
   renderFreedomEditables();
   renderOutcomes();
+  renderLaunchScreen();
 }
 function resetEditTextToDefault(){
   if(!_pendingEditKey) return;
@@ -4953,34 +5019,39 @@ function resetEditTextToDefault(){
   renderFreedomEditables();
 }
 
-/* Outcomes CRUD */
+/* Outcomes CRUD — shared source for launch screen AND Freedom tab */
 function getOutcomes(){
   const raw = localStorage.getItem(LS.OUTCOMES);
-  if(!raw){
-    localStorage.setItem(LS.OUTCOMES, JSON.stringify(DEFAULT_OUTCOMES));
-    return DEFAULT_OUTCOMES.slice();
-  }
-  try { return JSON.parse(raw) || []; } catch(e){ return DEFAULT_OUTCOMES.slice(); }
+  if(!raw) return []; // blank slate by design — user writes their own
+  try { return JSON.parse(raw) || []; } catch(e){ return []; }
 }
 function setOutcomes(arr){ localStorage.setItem(LS.OUTCOMES, JSON.stringify(arr)); }
-function renderOutcomes(){
-  const listEl = document.getElementById('fr-outcomes-list');
-  if(!listEl) return;
-  const outcomes = getOutcomes();
-  if(outcomes.length === 0){
-    listEl.innerHTML = '<div style="padding:14px;color:var(--t-3);font-size:13px;text-align:center;">No outcomes yet. Tap ✎ manage to add one.</div>';
-    return;
-  }
-  listEl.innerHTML = outcomes.map(oc => `
-    <div class="wro active editable-card" style="position:relative;margin-bottom:10px;" onclick="openEditText('OUTCOME_BODY','${oc.id}')">
-      <div class="wro-header">
-        <span class="wro-icon">${oc.icon||'✦'}</span>
-        <div class="wro-title">${escapeHtml(oc.title)}</div>
-      </div>
-      <div class="wro-body">${escapeHtml(oc.body)}</div>
-      <span class="edit-pencil edit-pencil-tr">✎</span>
+
+function _outcomeCardHtml(oc){
+  return `<div class="wro active editable-card" style="position:relative;margin-bottom:10px;" onclick="openEditText('OUTCOME_BODY','${oc.id}')">
+    <div class="wro-header">
+      <span class="wro-icon">${oc.icon||'✦'}</span>
+      <div class="wro-title">${escapeHtml(oc.title)}</div>
     </div>
-  `).join('');
+    <div class="wro-body">${escapeHtml(oc.body)}</div>
+    <span class="edit-pencil edit-pencil-tr">✎</span>
+  </div>`;
+}
+function _outcomesEmptyHtml(context){
+  return `<div class="outcomes-empty" onclick="openOutcomesManage()">
+    <div class="oe-icon">✦</div>
+    <div class="oe-title">No outcomes yet</div>
+    <div class="oe-sub">The specific futures you are building toward. Tap here to add your first.</div>
+    <button class="btn-p oe-btn" onclick="event.stopPropagation();openOutcomesManage()">+ Add outcome</button>
+  </div>`;
+}
+function renderOutcomes(){
+  const outcomes = getOutcomes();
+  const cards = outcomes.length ? outcomes.map(_outcomeCardHtml).join('') : _outcomesEmptyHtml('freedom');
+  const listEl = document.getElementById('fr-outcomes-list');
+  if(listEl) listEl.innerHTML = cards;
+  const launchListEl = document.getElementById('launch-outcomes-list');
+  if(launchListEl) launchListEl.innerHTML = outcomes.length ? outcomes.map(_outcomeCardHtml).join('') : _outcomesEmptyHtml('launch');
 }
 function openOutcomesManage(){
   renderOutcomesManageList();
@@ -5051,6 +5122,35 @@ function renderFreedomEditables(){
   if(db) db.textContent = localStorage.getItem(LS.DOPAMINE_BODY) || DEFAULT_DOPAMINE_BODY;
   const dt = document.getElementById('dopamine-truth-text');
   if(dt) dt.textContent = localStorage.getItem(LS.DOPAMINE_TRUTH) || DEFAULT_DOPAMINE_TRUTH;
+  renderOutcomes();
+}
+
+/* Launch screen editables — blank by default; placeholder shown when unset */
+function renderLaunchScreen(){
+  const set = (id, val, placeholder, isEmptyClass) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(val && val.trim()){
+      el.textContent = val;
+      const parent = el.closest('.editable-launch');
+      if(parent) parent.classList.remove('is-empty');
+      return false;
+    } else {
+      el.textContent = placeholder;
+      const parent = el.closest('.editable-launch');
+      if(parent) parent.classList.add('is-empty');
+      return true;
+    }
+  };
+  const emptyStates = [
+    set('launch-eyebrow-text', localStorage.getItem(LS.LAUNCH_EYEBROW), PLACEHOLDER_LAUNCH_EYEBROW),
+    set('launch-tagline-text', localStorage.getItem(LS.LAUNCH_TAGLINE), PLACEHOLDER_LAUNCH_TAGLINE),
+    set('launch-astro-text',   localStorage.getItem(LS.LAUNCH_ASTRO),   PLACEHOLDER_LAUNCH_ASTRO),
+    set('ld-text',             localStorage.getItem(LS.LAUNCH_DECL),    PLACEHOLDER_LAUNCH_DECL),
+  ];
+  const hasBlank = emptyStates.some(Boolean) || getOutcomes().length === 0;
+  const hint = document.getElementById('launch-fill-hint');
+  if(hint) hint.style.display = hasBlank ? 'flex' : 'none';
   renderOutcomes();
 }
 
@@ -5235,12 +5335,9 @@ function showApp(){
 }
 
 function updateDeadlineDisplays(){
-  // Launch screen tagline
-  const tagline = document.getElementById('launch-tagline');
-  if(tagline) tagline.textContent = 'Jupiter in Cancer · Your 10th House';
-  const ldText = document.getElementById('ld-text');
-  if(ldText) ldText.innerHTML = 'Jupiter is in your 10th house.<br>Execute every day.';
-  // Update mandate and pledge dates dynamically from stored quit time
+  // Launch screen editables (tagline, eyebrow, astro, decl) are owned by
+  // renderLaunchScreen() — no longer hardcoded here.
+  // Update pledge date dynamically from stored quit time.
   if(!S.missionStart) return;
   const qd = new Date(getQuitTs());
   const dateStr = qd.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' at '+qd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
@@ -5269,8 +5366,7 @@ function init(){
     }
     // Show launch screen — user ignites properly
     document.getElementById('in-pack').value = S.packCost;
-    // Pre-fill quit date as 6th June 2026 00:00
-    // No pre-fill — user enters their own quit date
+    renderLaunchScreen();
   }
 }
 
