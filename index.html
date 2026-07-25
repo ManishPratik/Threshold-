@@ -1786,25 +1786,9 @@ body:has(#tab-tasks.active) .fr-fab{display:none;}
 .cc-stat-val{font-family:var(--fd);font-size:20px;color:var(--g-5);line-height:1;}
 .cc-stat-lbl{font-family:var(--fb);font-size:10px;color:var(--t-4);margin-top:3px;}
 
-/* Calendar heatmap */
-.an-calendar{
-  display:grid;grid-template-columns:repeat(7,1fr);
-  gap:4px;margin-bottom:12px;
-}
-.an-cal-day{
-  aspect-ratio:1;border-radius:4px;
-  background:var(--card-2);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--fm);font-size:8px;color:var(--t-4);
-  position:relative;
-}
-.an-cal-day.future{opacity:0.2;}
-.an-cal-day.today{border:1px solid var(--g-4);}
-.an-cal-fill{
-  position:absolute;inset:0;border-radius:4px;
-  transition:opacity 0.3s;
-}
-.an-cal-lbl{position:relative;z-index:1;}
+/* .an-calendar / .an-cal-* removed in Batch 26 — orphan overrode the
+   new Command-tab styles at the top of this stylesheet (same class of
+   bug fixed in Batch 23). */
 .fr-pledge{
   margin:0 var(--page-pad) 16px;
   background:linear-gradient(135deg,rgba(168,32,32,0.1),rgba(168,32,32,0.04));
