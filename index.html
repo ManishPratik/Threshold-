@@ -3005,29 +3005,40 @@ function updateAnchorCard(tdLog){
 function _uid(prefix){ return prefix + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,7); }
 
 function _migrateIfNeeded(){
-  // If new schema keys are absent, seed from DEFAULT_TASKS + DEFAULT_BLOCKS.
-  // Legacy TASKS_CUSTOM format was {id:{name,mins}} (object). New format is an array.
+  // Task seeding policy:
+  //   - Legacy user (LS.TASKS_CUSTOM present in old object format) → reseed
+  //     DEFAULT_TASKS with their name/mins overrides preserved (don't lose data).
+  //   - Existing user (mission already ignited but no TASKS_CUSTOM at all) →
+  //     write empty array (respect "nothing fixed"); their old defaults sat in
+  //     memory only via DEFAULT_TASKS reads, so empty is the truthful new state.
+  //   - Fresh install (no MISSION_START at all) → write empty array. User will
+  //     see the empty-state card and can tap "Load starter pack" if desired.
+  //
+  // Blocks always seed to DEFAULT_BLOCKS so the user has structure to add into.
   const raw = localStorage.getItem(LS.TASKS_CUSTOM);
-  let needsSeed = false;
-  if(!raw){ needsSeed = true; }
-  else {
+  if(raw){
+    // Something is stored — is it the legacy object format?
     try {
       const parsed = JSON.parse(raw);
-      if(!Array.isArray(parsed)) needsSeed = true; // legacy object → reseed
-    } catch(e){ needsSeed = true; }
-  }
-  if(needsSeed){
-    // Legacy name/mins overrides preserved when reseeding
-    let legacy = {};
-    if(raw){ try{ const p=JSON.parse(raw); if(p && typeof p==='object' && !Array.isArray(p)) legacy=p; }catch(e){} }
-    const seeded = DEFAULT_TASKS.map(t => ({
-      ...t,
-      name: (legacy[t.id]?.name) || t.name,
-      mins: (legacy[t.id]?.mins) || t.mins,
-      archived: false,
-      created_at: Date.now(),
-    }));
-    localStorage.setItem(LS.TASKS_CUSTOM, JSON.stringify(seeded));
+      if(!Array.isArray(parsed)){
+        // Legacy {id:{name,mins}} → reseed DEFAULT_TASKS with overrides
+        const legacy = (parsed && typeof parsed==='object') ? parsed : {};
+        const seeded = DEFAULT_TASKS.map(t => ({
+          ...t,
+          name: (legacy[t.id]?.name) || t.name,
+          mins: (legacy[t.id]?.mins) || t.mins,
+          archived: false,
+          created_at: Date.now(),
+        }));
+        localStorage.setItem(LS.TASKS_CUSTOM, JSON.stringify(seeded));
+      }
+    } catch(e){
+      // Corrupt JSON — start empty
+      localStorage.setItem(LS.TASKS_CUSTOM, '[]');
+    }
+  } else {
+    // Nothing stored — start blank slate for both fresh and existing users
+    localStorage.setItem(LS.TASKS_CUSTOM, '[]');
   }
   if(!localStorage.getItem(LS.BLOCKS_CUSTOM)){
     localStorage.setItem(LS.BLOCKS_CUSTOM, JSON.stringify(DEFAULT_BLOCKS.map(b=>({...b}))));
