@@ -4822,16 +4822,51 @@ function resetMantraToDefault(){
    SECTION: SMOKED / RELAPSE
 ═══════════════════════════════════════════════════ */
 function confirmSmoked(){
-  if(confirm('Reset your smoke-free streak? Smoking points will be wiped.')){
-    localStorage.setItem(LS.SMOKING_START, Date.now());
-    localStorage.setItem(LS.BADGES_SHOWN,'[]');
-    S.shownBadges=[];
-    const log=JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
-    log.push({ts:Date.now(),resisted:false,note:'Smoked — streak reset',type:'relapse'});
-    localStorage.setItem(LS.CRAVING_LOG,JSON.stringify(log));
-    updateFreedom(); updateWarRoom(); renderLog();
-    alert('Streak reset. The cycle breaks NOW. Start again — this moment is Day Zero.');
-  }
+  const warn = 'Full relapse — reset EVERYTHING?\n\n' +
+    'This wipes ALL smoking-related progress:\n' +
+    '• Smoke-free timer → back to 0\n' +
+    '• 21-day cycle & mission → restart from Day 1\n' +
+    '• Peak-crossed status & celebration → cleared\n' +
+    '• Hurdles chain → all re-earnable\n' +
+    '• Health milestone badges → re-earnable\n\n' +
+    'Kept: your task list, task history, task points, mantra, craving log.\n\n' +
+    'This is the deterrent. Are you sure?';
+  if(!confirm(warn)) return;
+
+  const now = Date.now();
+
+  // Reset all smoking-timer / mission-progression state
+  localStorage.setItem(LS.QUIT_TIME,       now);
+  localStorage.setItem(LS.SMOKING_START,   now);
+  localStorage.setItem(LS.MISSION_START,   now);
+  localStorage.setItem(LS.BADGES_SHOWN,    '[]');
+  localStorage.removeItem(LS.PEAK_CROSSED);
+  localStorage.removeItem(LS.PEAK_CROSSED_AT);
+  localStorage.removeItem(LS.HURDLES_ACKED);
+
+  // In-memory state must mirror the wipe
+  S.missionStart = now;
+  S.shownBadges  = [];
+  S.lastWormStage = -1;
+  _lastChamberStage = -1;
+  _chamberInitialized = false;
+  _pendingHurdleId = null;
+
+  // Craving log gets the relapse as a new history entry (kept, not wiped)
+  const log = JSON.parse(localStorage.getItem(LS.CRAVING_LOG)||'[]');
+  log.push({ts:now, resisted:false, note:'Smoked — full relapse. Everything reset.', type:'relapse'});
+  localStorage.setItem(LS.CRAVING_LOG, JSON.stringify(log));
+
+  // Re-render every visual surface
+  updateFreedom();
+  updateWarRoom();
+  updateCycleBanner();
+  renderCommand();
+  renderTasks();
+  // Force worm to re-render from stage 1 (the sticky lastWormStage guard was reset above)
+  renderWorm(1);
+
+  alert('Everything reset. This moment is Day Zero. The parasite is full-strength again — and so are you. Begin.');
 }
 
 /* ═══════════════════════════════════════════════════
