@@ -3130,27 +3130,9 @@ const DAILY_MSGS = [
   {icon:'🚀',  hour:'Day 30+', text:'You have done it. The parasite is dead. This is your new permanent baseline.',    feel:'Everything from here is compounding. Health, clarity, energy — all of it keeps improving.'},
 ];
 
-/* ═══════════════════════════════════════════════════
-   SECTION: VISION CARDS (Theatre of the Mind)
-═══════════════════════════════════════════════════ */
-const VISIONS = [
-  {icon:'💰', title:'The Wire Lands', body:'Your phone buzzes. Wire transfer confirmed — Zymo\'s account. The number has more zeros than anything with your name on it. You built this from scratch. You are a funded CEO. This moment was earned one clean hour at a time.'},
-  {icon:'⚡', title:'Peak Presence', body:'Full lungs. Zero fog. You walk into a room and something shifts. Clear-eyed. Voice carries. Dangerous in the best way. This is what staying clean does to a man\'s body and energy.'},
-  {icon:'🔥', title:'Magnetic Force', body:'A man who controls his world needs no effort to attract. Women feel the difference. You don\'t need the cigarette. You never needed it. The discipline you\'re showing right now is the most attractive thing about you.'},
-];
-
-/* ═══════════════════════════════════════════════════
-   SECTION: URGENCY MESSAGES
-═══════════════════════════════════════════════════ */
-const URGENCY = [
-  'These days are not coming back. Jupiter aligns like this once in 12 years. Every hour you wait is probability bleeding away.',
-  'The Zymo round does not close itself. Every task you skip is a door you leave unopened.',
-  'Half the day is gone. The other half decides everything. Get back to work, Manish.',
-  'Tonight still counts. Jupiter does not care about excuses. Neither should you.',
-  'A man who controls his habits controls his destiny. This hour is the test.',
-  'There are no neutral days in this window. Today either worked for you or against you.',
-  'Jupiter is in your 10th house. Every day you execute compounds the transit.','Every day you show up is a day you didn\'t waste the most powerful transit of the next 12 years.',
-];
+/* VISIONS + URGENCY arrays removed in Batch 30 — declared but never read
+   by any code path. Contained personal Zymo/Manish/Jupiter content that
+   was outside the user-editable path anyway. Deletion is pure cleanup. */
 
 /* ═══════════════════════════════════════════════════
    SECTION: STATE
@@ -3158,7 +3140,6 @@ const URGENCY = [
 const S = {
   missionStart: null,
   packCost: 250,
-  visionIdx: 0,
   shownBadges: [],
   lastWormStage: -1,   // Track worm stage — only re-render on change
   lastBadgeCheck: 0,   // Throttle badge checks to once per minute
