@@ -2057,7 +2057,8 @@ body:has(#tab-log.active) .fr-fab{display:none;}
     </div>
     <button class="btn-s" style="width:100%;margin-bottom:8px;text-align:left;padding-left:16px" onclick="closeOverlay('ov-task-settings');openBlockManage()">🗂  Manage blocks</button>
     <button class="btn-s" style="width:100%;margin-bottom:8px;text-align:left;padding-left:16px" onclick="closeOverlay('ov-task-settings');openStreakPicker()">🔥  Pick streak tasks</button>
-    <button class="btn-s" style="width:100%;margin-bottom:16px;text-align:left;padding-left:16px;color:var(--r-4);border-color:rgba(208,48,48,0.35)" onclick="closeOverlay('ov-task-settings');confirmResetTasksToDefaults()">↺  Reset to starter pack</button>
+    <button class="btn-s" style="width:100%;margin-bottom:8px;text-align:left;padding-left:16px" onclick="closeOverlay('ov-task-settings');confirmResetTasksToDefaults()">↺  Reset to starter pack (15 defaults)</button>
+    <button class="btn-s" style="width:100%;margin-bottom:16px;text-align:left;padding-left:16px;color:var(--r-4);border-color:rgba(208,48,48,0.35)" onclick="closeOverlay('ov-task-settings');confirmClearAllTasks()">🧹  Clear all tasks (blank slate)</button>
     <button class="btn-s" style="width:100%" onclick="closeOverlay('ov-task-settings')">Close</button>
   </div>
 </div>
@@ -3607,6 +3608,15 @@ function confirmLoadStarter(){
 function confirmResetTasksToDefaults(){
   if(!confirm('Reset all tasks and blocks to the built-in starter pack? Completion history stays intact.')) return;
   loadStarterPack();
+  renderTasks();
+  updateWarRoom();
+  renderAnalytics();
+}
+function confirmClearAllTasks(){
+  if(!confirm('Clear ALL tasks and start with a blank slate?\n\n• Tasks: removed\n• Blocks: kept (Morning / Deep Work / Night)\n• Completion history: kept intact\n\nYou can add new tasks or load the starter pack afterwards.')) return;
+  localStorage.setItem(LS.TASKS_CUSTOM, '[]');
+  // Also clear streak-task selection since referenced ids no longer exist
+  localStorage.removeItem(LS.STREAK_TASKS);
   renderTasks();
   updateWarRoom();
   renderAnalytics();
