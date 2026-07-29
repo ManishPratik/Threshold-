@@ -1,0 +1,13 @@
+.surface {
+  display: block;
+}
+
+.tone-base {
+  background-color: var(--color-surface-base);
+}
+.tone-subtle {
+  background-color: var(--color-surface-subtle);
+}
+.tone-inset {
+  background-color: var(--color-surface-inset);
+}
