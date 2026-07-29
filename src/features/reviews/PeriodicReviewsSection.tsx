@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Heading, Text } from '@shared/ui';
+import { Button, Card, Text } from '@shared/ui';
 import type { ReviewKind, Review } from '@data/types/Review';
 import type { ISODate } from '@shared/lib/date';
 import { formatPeriodLabel } from './periods';
@@ -55,9 +55,12 @@ export function PeriodicReviewsSection({ today, onOpen }: PeriodicReviewsSection
 
   return (
     <section className={styles.section} aria-labelledby="reviews-heading">
-      <Heading level={2} visualLevel={3} id="reviews-heading" className={styles.heading}>
+      <div className={styles.divider} aria-hidden="true">
+        <span>What deserves attention</span>
+      </div>
+      <h2 id="reviews-heading" className="visually-hidden">
         Reviews
-      </Heading>
+      </h2>
       <div className={styles.grid}>
         {rows.map((row) => (
           <ReviewRowCard
@@ -99,13 +102,13 @@ function ReviewRowCard({ row, today, onOpen, onSignalRefresh }: CardProps) {
   return (
     <Card padding="md" className={styles.card} as="article" aria-labelledby={`review-${row.kind}-heading`}>
       <div className={styles.top}>
-        <div>
-          <Text size="xs" variant="muted" className={styles.eyebrow}>
+        <div className={styles.head}>
+          <Text size="xs" as="span" className={styles.eyebrow}>
             {formatPeriodLabel(row.kind, row.periodStart, today)}
           </Text>
-          <Heading level={3} visualLevel={4} id={`review-${row.kind}-heading`} className={styles.rowTitle}>
+          <h3 id={`review-${row.kind}-heading`} className={styles.rowTitle}>
             {KIND_LABEL[row.kind]}
-          </Heading>
+          </h3>
         </div>
         <span className={`${styles.pill} ${styles[`pill-${status}`]}`}>{statusText}</span>
       </div>
@@ -113,6 +116,7 @@ function ReviewRowCard({ row, today, onOpen, onSignalRefresh }: CardProps) {
         <Button
           type="button"
           variant={status === 'not-started' ? 'primary' : 'secondary'}
+          size="sm"
           onClick={() => {
             onSignalRefresh();
             onOpen();

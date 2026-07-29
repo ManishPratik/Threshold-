@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Card, Heading, Text } from '@shared/ui';
+import { Button, Card, Text } from '@shared/ui';
 import { formatShortDate } from '@shared/lib/date';
 import { projectDraft, type MissionDraft } from './missionContractService';
 import styles from './ReviewMissionScreen.module.css';
@@ -24,12 +24,12 @@ export function ReviewMissionScreen({
 
   return (
     <Card padding="lg" className={styles.card} as="section" aria-labelledby="review-heading">
-      <Text size="sm" variant="muted" className={styles.eyebrow}>
-        Review your contract
-      </Text>
-      <Heading level={1} id="review-heading" className={styles.heading}>
-        {draft.title.trim()}
-      </Heading>
+      <div className={styles.header}>
+        <p className={styles.kicker}>Review your contract</p>
+        <h1 id="review-heading" className={styles.heading}>
+          {draft.title.trim()}
+        </h1>
+      </div>
 
       <dl className={styles.list}>
         <div className={styles.row}>
@@ -57,9 +57,9 @@ export function ReviewMissionScreen({
       </Text>
 
       {errorMessage && (
-        <Text variant="secondary" role="alert" className={styles.error}>
+        <p className={styles.error} role="alert">
           {errorMessage}
-        </Text>
+        </p>
       )}
 
       <div className={styles.actions}>

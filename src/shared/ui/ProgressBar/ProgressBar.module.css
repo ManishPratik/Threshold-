@@ -8,7 +8,8 @@
 
 .fill {
   height: 100%;
-  background-color: var(--color-accent);
+  background: linear-gradient(90deg, #d97a4a, var(--color-accent));
   border-radius: inherit;
-  transition: width var(--duration-medium) var(--easing-standard);
+  transition: width 420ms var(--easing-standard);
+  will-change: width;
 }

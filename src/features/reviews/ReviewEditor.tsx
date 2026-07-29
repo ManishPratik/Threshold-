@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Button, Card, Heading, Text, TextArea } from '@shared/ui';
+import { Button, Card, Text, TextArea } from '@shared/ui';
 import type { ReviewKind, ReviewAnswer } from '@data/types/Review';
 import type { ISODate } from '@shared/lib/date';
 import { promptsFor } from './prompts';
@@ -110,15 +110,13 @@ export function ReviewEditor({
 
   const label = formatPeriodLabel(kind, periodStart, today);
 
+  const HeadingTag = variant === 'card' ? 'h1' : 'h2';
+
   const body = (
     <>
       <header className={styles.header}>
-        <Text size="xs" variant="muted" className={styles.eyebrow}>
-          {label}
-        </Text>
-        <Heading level={variant === 'card' ? 1 : 2} visualLevel={variant === 'card' ? 2 : 4} className={styles.title}>
-          {KIND_HEADING[kind]}
-        </Heading>
+        <p className={styles.eyebrow}>{label}</p>
+        <HeadingTag className={styles.title}>{KIND_HEADING[kind]}</HeadingTag>
         {submittedAlready && (
           <Text size="sm" variant="secondary" className={styles.submittedFlag}>
             Previously submitted — amending is fine.
@@ -128,7 +126,7 @@ export function ReviewEditor({
 
       <div className={styles.form}>
         {loading ? (
-          <Text variant="secondary">Loading…</Text>
+          <p className={styles.loading}>Loading…</p>
         ) : (
           prompts.map((p) => (
             <TextArea
@@ -175,5 +173,5 @@ export function ReviewEditor({
       </Card>
     );
   }
-  return <div className={styles.card}>{body}</div>;
+  return <div className={styles.inline}>{body}</div>;
 }

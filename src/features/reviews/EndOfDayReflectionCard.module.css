@@ -1,6 +1,9 @@
 .card {
   width: 100%;
-  background-color: var(--color-surface-subtle);
+  background-color: transparent;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -16,10 +19,19 @@
 .textGroup {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 2px;
   min-width: 0;
+}
+
+.textGroup > :first-child {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: var(--tracking-normal);
 }
 
 .subtitle {
   margin: 0;
+  color: var(--color-text-muted);
 }

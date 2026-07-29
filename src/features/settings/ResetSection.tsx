@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Button, Card, Heading, Text } from '@shared/ui';
+import { Button, Card, Text } from '@shared/ui';
 import { resetAllData } from '@data/db/reset';
 import styles from './ResetSection.module.css';
 
 /**
  * Danger zone: wipe the entire IndexedDB store. Two-step confirmation.
- * On completion, the page is reloaded so the app boots against a fresh DB
- * (bootstrap seed re-runs, per ADR 0006).
+ * The card stays visually quiet by default (warm dashed border) and only
+ * escalates its styling when the user opts into the confirmation step,
+ * per the "no bright red everywhere" rule in the Settings brief.
  */
 export function ResetSection() {
   const [confirming, setConfirming] = useState(false);
@@ -19,7 +20,6 @@ export function ResetSection() {
     void (async () => {
       try {
         await resetAllData();
-        // Force a clean boot so getDb() re-opens and the seed re-runs.
         window.location.reload();
       } catch (e) {
         setRunning(false);
@@ -29,48 +29,49 @@ export function ResetSection() {
   };
 
   return (
-    <section className={styles.section} aria-labelledby="reset-heading">
-      <div className={styles.header}>
-        <Heading level={2} visualLevel={3} id="reset-heading" className={styles.title}>
-          Danger zone
-        </Heading>
-      </div>
+    <Card
+      padding="md"
+      className={styles.card}
+      as="article"
+      aria-labelledby="reset-heading"
+      data-confirming={confirming || undefined}
+    >
+      <p className={styles.kicker} id="reset-heading">
+        Reset all data
+      </p>
+      <Text variant="secondary" className={styles.body}>
+        This removes every mission, routine, note, day log, promise event, snapshot,
+        and review on this device. The app returns to its fresh-install state. It
+        cannot be undone.
+      </Text>
 
-      <Card padding="md" className={styles.card} as="article">
-        <Text variant="secondary" className={styles.body}>
-          Reset all data removes every mission, routine, note, day log, promise
-          event, snapshot, and review on this device. The app returns to its
-          fresh-install state. This cannot be undone.
-        </Text>
+      {error && (
+        <p className={styles.error} role="alert">
+          {error}
+        </p>
+      )}
 
-        {error && (
-          <p className={styles.error} role="alert">
-            {error}
-          </p>
-        )}
-
-        <div className={styles.actions}>
-          {confirming ? (
-            <>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setConfirming(false)}
-                disabled={running}
-              >
-                Cancel
-              </Button>
-              <Button type="button" variant="danger" onClick={doReset} disabled={running}>
-                {running ? 'Resetting…' : 'Yes, delete everything'}
-              </Button>
-            </>
-          ) : (
-            <Button type="button" variant="danger" onClick={() => setConfirming(true)}>
-              Reset all data
+      <div className={styles.actions}>
+        {confirming ? (
+          <>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setConfirming(false)}
+              disabled={running}
+            >
+              Cancel
             </Button>
-          )}
-        </div>
-      </Card>
-    </section>
+            <Button type="button" variant="danger" onClick={doReset} disabled={running}>
+              {running ? 'Resetting…' : 'Yes, delete everything'}
+            </Button>
+          </>
+        ) : (
+          <Button type="button" variant="secondary" onClick={() => setConfirming(true)}>
+            Reset all data
+          </Button>
+        )}
+      </div>
+    </Card>
   );
 }

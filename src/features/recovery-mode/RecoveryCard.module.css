@@ -1,7 +1,10 @@
 .card {
   width: 100%;
   background-color: var(--color-warning-subtle);
-  border: 1px solid var(--color-warning);
+  border: 1px solid #efd9b3;
+  border-left: 4px solid var(--color-warning);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -9,13 +12,17 @@
 
 .title {
   margin: 0;
+  font-family: var(--font-serif);
   font-size: var(--text-xl);
-  line-height: var(--lh-xl);
+  line-height: 1.15;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-tight);
   color: var(--color-text-primary);
 }
 
 .body {
   margin: 0;
+  color: var(--color-text-secondary);
 }
 
 .actions {

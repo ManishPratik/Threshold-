@@ -1,4 +1,4 @@
-import { Button, Card, Heading, Text } from '@shared/ui';
+import { Button, Card, Text } from '@shared/ui';
 import type { Note } from '@data/types/Note';
 import { formatShortDate } from '@shared/lib/date';
 import styles from './NoteCard.module.css';
@@ -9,7 +9,7 @@ export interface NoteCardProps {
   onDelete: () => void;
 }
 
-const BODY_SNIPPET_LENGTH = 180;
+const BODY_SNIPPET_LENGTH = 220;
 
 function snippet(body: string): string {
   const trimmed = body.trim();
@@ -23,17 +23,14 @@ export function NoteCard({ note, onEdit, onDelete }: NoteCardProps) {
     <Card padding="md" className={styles.card} as="article" aria-labelledby={`note-${note.id}`}>
       <div className={styles.header}>
         <div className={styles.titleGroup}>
-          <Heading
-            level={2}
-            visualLevel={4}
-            id={`note-${note.id}`}
-            className={styles.title}
-          >
+          <p className={styles.meta}>
+            <span className={styles.metaKicker}>Updated</span>
+            <span aria-hidden="true" className={styles.metaDot} />
+            <span>{formatShortDate(updatedDate)}</span>
+          </p>
+          <h2 id={`note-${note.id}`} className={styles.title}>
             {note.title}
-          </Heading>
-          <Text size="xs" variant="muted" className={styles.meta}>
-            Updated {formatShortDate(updatedDate)}
-          </Text>
+          </h2>
         </div>
         <div className={styles.actions}>
           <Button type="button" variant="ghost" size="sm" onClick={onEdit}>
@@ -46,7 +43,7 @@ export function NoteCard({ note, onEdit, onDelete }: NoteCardProps) {
       </div>
 
       {note.body.trim().length > 0 && (
-        <Text size="sm" variant="secondary" className={styles.snippet}>
+        <Text size="md" variant="secondary" className={styles.snippet}>
           {snippet(note.body)}
         </Text>
       )}

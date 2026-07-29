@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Card, Heading, Text } from '@shared/ui';
+import { Button, Card, Text } from '@shared/ui';
 import type { Note } from '@data/types/Note';
 import { listActiveNotes, restoreNote, softDeleteNote } from './knowledgeService';
 import { NoteCard } from './NoteCard';
@@ -108,22 +108,30 @@ export function KnowledgeVault() {
     );
   }
 
+  const count = notes.length;
+  const kickerText =
+    count === 0 ? 'The vault' : `${count} note${count === 1 ? '' : 's'}`;
+  const subtitleText =
+    count === 0
+      ? 'Capture the first thing worth remembering.'
+      : 'Books, quotes, ideas — anything worth keeping close.';
+
   return (
     <div className={styles.wrap}>
       <header className={styles.header}>
-        <div>
-          <Heading level={1} className={styles.title}>
-            Knowledge
-          </Heading>
-          <Text size="sm" variant="secondary" className={styles.subtitle}>
-            {notes.length === 0
-              ? 'No notes yet. Capture the first thing worth remembering.'
-              : `${notes.length} note${notes.length === 1 ? '' : 's'}`}
+        <div className={styles.headline}>
+          <span className={styles.kicker}>{kickerText}</span>
+          <h1 className={styles.title}>
+            Knowledge<span className={styles.titlePunct}>.</span>
+          </h1>
+          <Text size="md" variant="secondary" className={styles.subtitle}>
+            {subtitleText}
           </Text>
         </div>
         <Button
           type="button"
           variant="primary"
+          size="md"
           onClick={() => setMode({ kind: 'edit', note: null })}
         >
           New note
@@ -149,9 +157,10 @@ export function KnowledgeVault() {
 
       {notes.length === 0 ? (
         <Card padding="lg" className={styles.emptyCard}>
-          <Text variant="secondary">
+          <p className={styles.emptyEyebrow}>Nothing to see yet</p>
+          <p className={styles.emptyBody}>
             Notes live here. Books, quotes, ideas — anything you want to keep close.
-          </Text>
+          </p>
         </Card>
       ) : (
         <ul className={styles.list}>

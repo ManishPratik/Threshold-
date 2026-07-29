@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, Card, Heading, Text, TextArea, TextField } from '@shared/ui';
+import { Button, Card, TextArea, TextField } from '@shared/ui';
 import {
   DURATION_PRESETS,
   MISSION_TITLE_MAX,
@@ -58,12 +58,15 @@ export function CreateMissionForm({ initialDraft, onCancel, onSubmit }: CreateMi
 
   return (
     <Card padding="lg" className={styles.card} as="section" aria-labelledby="create-heading">
-      <Heading level={1} id="create-heading" className={styles.heading}>
-        Your mission
-      </Heading>
-      <Text variant="secondary" className={styles.subheading}>
-        A promise, not a to-do. You will see this every day.
-      </Text>
+      <div className={styles.header}>
+        <p className={styles.kicker}>The contract</p>
+        <h1 id="create-heading" className={styles.heading}>
+          Your mission<span className={styles.punct}>.</span>
+        </h1>
+        <p className={styles.subheading}>
+          A promise, not a to-do. You will see this every day.
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit} className={styles.form} noValidate>
         <TextField

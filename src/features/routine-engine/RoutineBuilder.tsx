@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, Card, Heading, Text, TextField } from '@shared/ui';
+import { Button, Card, TextField } from '@shared/ui';
 import type { Routine } from '@data/types/Routine';
 import { BlockEditor } from './BlockEditor';
 import {
@@ -109,78 +109,83 @@ export function RoutineBuilder({ existing, onSaved, onCancel }: RoutineBuilderPr
 
   return (
     <Card padding="lg" className={styles.card} as="section" aria-labelledby="builder-heading">
-      <Heading level={1} id="builder-heading" className={styles.heading}>
-        {existing ? 'Edit your routine' : 'Build your routine'}
-      </Heading>
-      <Text variant="secondary" className={styles.subheading}>
-        Arrange your day. You can rearrange or edit any block later.
-      </Text>
-
-      <TextField
-        label="Routine name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        maxLength={ROUTINE_NAME_MAX}
-        errorText={nameError}
-        className={styles.nameField}
-      />
-
-      <div className={styles.blocksHeader}>
-        <span className={styles.blocksLabel}>Blocks</span>
-        {blocksError && (
-          <span className={styles.blocksError} role="alert">
-            {blocksError}
-          </span>
-        )}
+      <div className={styles.header}>
+        <p className={styles.kicker}>{existing ? 'Editing' : 'Your day'}</p>
+        <h1 id="builder-heading" className={styles.heading}>
+          {existing ? 'Edit your routine' : 'Build your routine'}<span className={styles.punct}>.</span>
+        </h1>
+        <p className={styles.subheading}>
+          Arrange your day. You can rearrange or edit any block later.
+        </p>
       </div>
 
-      <div className={styles.blocksList}>
-        {blocks.map((b, i) => {
-          const blockErrors = touched ? blockErrorsFor(errors, i) : undefined;
-          return (
-            <BlockEditor
-              key={b.id ?? i}
-              block={b}
-              index={i}
-              canMoveUp={i > 0}
-              canMoveDown={i < blocks.length - 1}
-              onChange={(updates) => updateBlock(i, updates)}
-              onMoveUp={() => moveBlock(i, -1)}
-              onMoveDown={() => moveBlock(i, 1)}
-              onDelete={() => deleteBlock(i)}
-              errors={blockErrors}
-            />
-          );
-        })}
-      </div>
+      <div className={styles.body}>
+        <TextField
+          label="Routine name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          maxLength={ROUTINE_NAME_MAX}
+          errorText={nameError}
+          className={styles.nameField}
+        />
 
-      <div className={styles.addRow}>
-        <Button type="button" variant="secondary" onClick={addBlock}>
-          + Add block
-        </Button>
-      </div>
+        <div className={styles.blocksHeader}>
+          <span className={styles.blocksLabel}>Blocks</span>
+          {blocksError && (
+            <span className={styles.blocksError} role="alert">
+              {blocksError}
+            </span>
+          )}
+        </div>
 
-      {serverError && (
-        <Text variant="secondary" role="alert" className={styles.serverError}>
-          {serverError}
-        </Text>
-      )}
+        <div className={styles.blocksList}>
+          {blocks.map((b, i) => {
+            const blockErrors = touched ? blockErrorsFor(errors, i) : undefined;
+            return (
+              <BlockEditor
+                key={b.id ?? i}
+                block={b}
+                index={i}
+                canMoveUp={i > 0}
+                canMoveDown={i < blocks.length - 1}
+                onChange={(updates) => updateBlock(i, updates)}
+                onMoveUp={() => moveBlock(i, -1)}
+                onMoveDown={() => moveBlock(i, 1)}
+                onDelete={() => deleteBlock(i)}
+                errors={blockErrors}
+              />
+            );
+          })}
+        </div>
 
-      <div className={styles.actions}>
-        {onCancel && (
-          <Button type="button" variant="ghost" onClick={onCancel} disabled={saving}>
-            Cancel
+        <div className={styles.addRow}>
+          <Button type="button" variant="secondary" onClick={addBlock}>
+            + Add block
           </Button>
+        </div>
+
+        {serverError && (
+          <p className={styles.serverError} role="alert">
+            {serverError}
+          </p>
         )}
-        <Button
-          type="button"
-          variant="primary"
-          size="lg"
-          onClick={handleSave}
-          disabled={touched && !canSave}
-        >
-          {saving ? 'Saving…' : existing ? 'Save routine' : 'Activate routine'}
-        </Button>
+
+        <div className={styles.actions}>
+          {onCancel && (
+            <Button type="button" variant="ghost" onClick={onCancel} disabled={saving}>
+              Cancel
+            </Button>
+          )}
+          <Button
+            type="button"
+            variant="primary"
+            size="lg"
+            onClick={handleSave}
+            disabled={touched && !canSave}
+          >
+            {saving ? 'Saving…' : existing ? 'Save routine' : 'Activate routine'}
+          </Button>
+        </div>
       </div>
     </Card>
   );

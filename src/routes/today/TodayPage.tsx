@@ -16,7 +16,7 @@ type Mode = 'view' | 'create-mission' | 'edit-routine';
 
 /**
  * The Today experience. Composes:
- *   MissionSummary  →  CurrentFocus (hero)  →  ProgressSummary  →  EndOfDay.
+ *   Greeting → MissionSummary → CurrentFocus (hero) → Progress → EndOfDay.
  *
  * Three macro-modes: view (normal), create-mission (Mission Contract flow),
  * and edit-routine (Routine Builder). Mode swaps replace the whole main region
@@ -106,6 +106,8 @@ export function TodayPage() {
 
   return (
     <ShellPage>
+      <Greeting mission={view.mission} />
+
       <MissionSummaryCard
         mission={view.mission}
         todayDayLog={view.dayLog}
@@ -115,6 +117,10 @@ export function TodayPage() {
       />
 
       {showRecoveryCard && <RecoveryCard onBegin={view.start} />}
+
+      <div className={styles.focusEyebrow} aria-hidden="true">
+        <span>Your only focus</span>
+      </div>
 
       <CurrentFocusCard
         block={view.progress.currentBlock}
@@ -149,11 +155,33 @@ export function TodayPage() {
 
 function ShellPage({ children }: { children: React.ReactNode }) {
   return (
-    <section className={styles.page} aria-labelledby="today-heading">
-      <h1 id="today-heading" className="visually-hidden">
-        Today
-      </h1>
+    <section className={styles.page} aria-label="Today">
       {children}
     </section>
+  );
+}
+
+/** Editorial greeting anchor — time-of-day + calendar date. */
+function Greeting({ mission }: { mission: { title: string } }) {
+  const now = new Date();
+  const hour = now.getHours();
+  const salute =
+    hour < 5 ? 'Still up' : hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const dateLabel = now.toLocaleDateString(undefined, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  });
+
+  return (
+    <div className={styles.greeting}>
+      <span className={styles.kicker}>{dateLabel}</span>
+      <h1 className={styles.greetingTitle}>
+        {salute}<span className={styles.greetingPunct}>.</span>
+      </h1>
+      <p className={styles.greetingSub}>
+        Today's promise: <span className={styles.greetingMission}>{mission.title}</span>
+      </p>
+    </div>
   );
 }

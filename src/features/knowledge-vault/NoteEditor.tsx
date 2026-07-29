@@ -92,7 +92,7 @@ export function NoteEditor({ existing, onSaved, onCancel }: NoteEditorProps) {
           value={tagsInput}
           onChange={(e) => setTagsInput(e.target.value)}
           errorText={touched ? errorByField['tags'] : undefined}
-          helperText="Comma-separated. Lowercased and deduplicated on save."
+          helperText="Comma-separated. Case doesn't matter."
           placeholder="reading, focus"
         />
 
