@@ -1,0 +1,6 @@
+<!-- Maskable icon: content sits inside the 80% safe zone (52-460 of 512).
+     Full bleed background so OS masks (circle, squircle, teardrop) don't reveal transparency. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0a0a0a"/>
+  <circle cx="256" cy="256" r="64" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,120 @@
+/* CSS custom properties — the runtime source of truth for components.
+ * Keep in sync with src/design-system/tokens/*.ts.
+ * Components consume via var(--color-*) etc., never hardcoded values.
+ */
+
+:root {
+  /* Colors — Surfaces */
+  --color-surface-base: #ffffff;
+  --color-surface-subtle: #fafafa;
+  --color-surface-elevated: #ffffff;
+  --color-surface-inset: #f5f5f5;
+
+  /* Colors — Foreground */
+  --color-text-primary: #0a0a0a;
+  --color-text-secondary: #4a4a4a;
+  --color-text-muted: #6b7280;
+  --color-text-inverse: #ffffff;
+
+  /* Colors — Borders */
+  --color-border-subtle: #e5e7eb;
+  --color-border-strong: #d1d5db;
+  --color-border-focus: #2563eb;
+
+  /* Colors — Accent */
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-pressed: #1e40af;
+  --color-accent-subtle: #eff6ff;
+
+  /* Colors — Semantic */
+  --color-success: #15803d;
+  --color-success-subtle: #f0fdf4;
+  --color-warning: #b45309;
+  --color-warning-subtle: #fffbeb;
+  --color-danger: #b91c1c;
+  --color-danger-subtle: #fef2f2;
+  --color-info: #0369a1;
+  --color-info-subtle: #f0f9ff;
+  --color-overlay: rgba(10, 10, 10, 0.5);
+
+  /* Spacing (4pt base) */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+
+  --lh-xs: 16px;
+  --lh-sm: 20px;
+  --lh-md: 24px;
+  --lh-lg: 28px;
+  --lh-xl: 28px;
+  --lh-2xl: 32px;
+  --lh-3xl: 36px;
+  --lh-4xl: 44px;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+
+  /* Radii */
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-pill: 9999px;
+
+  /* Motion */
+  --duration-instant: 0ms;
+  --duration-fast: 120ms;
+  --duration-medium: 180ms;
+  --duration-slow: 240ms;
+
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --easing-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+
+  /* Shadows */
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px 0 rgba(10, 10, 10, 0.04);
+  --shadow-md: 0 2px 4px 0 rgba(10, 10, 10, 0.06), 0 1px 2px 0 rgba(10, 10, 10, 0.04);
+  --shadow-lg: 0 8px 16px -4px rgba(10, 10, 10, 0.08), 0 4px 8px -4px rgba(10, 10, 10, 0.06);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.35);
+
+  /* Layout */
+  --layout-max-content-width: 720px;
+  --layout-nav-height: 56px;
+  --layout-nav-height-desktop: 64px;
+}

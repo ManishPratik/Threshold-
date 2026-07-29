@@ -1,0 +1,19 @@
+.card {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.label {
+  margin: 0;
+}
+
+.bar {
+  margin: 0;
+}

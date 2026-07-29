@@ -1,0 +1,70 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: var(--color-surface-base);
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-surface-elevated);
+  border-bottom: 1px solid var(--color-border-subtle);
+  height: var(--layout-nav-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+}
+
+.navList {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: var(--layout-max-content-width);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition: color var(--duration-fast) var(--easing-standard),
+    background-color var(--duration-fast) var(--easing-standard);
+}
+
+.navLink:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-subtle);
+}
+
+.navLinkActive,
+.navLinkActive:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-accent-subtle);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--layout-max-content-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+  outline: none; /* focus ring supplied by :focus-visible on other elements */
+}
+
+@media (min-width: 768px) {
+  .nav {
+    height: var(--layout-nav-height-desktop);
+    padding: 0 var(--space-6);
+  }
+  .main {
+    padding: var(--space-8) var(--space-6);
+  }
+}

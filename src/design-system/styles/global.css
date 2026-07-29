@@ -1,0 +1,67 @@
+/* Global app-level styles — imports the reset and token layer. */
+
+@import './reset.css';
+@import './tokens.css';
+
+html {
+  color-scheme: light;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: var(--lh-md);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-base);
+}
+
+/* Visible keyboard focus — never remove without providing a replacement.
+ * Applies only to keyboard focus, not mouse clicks. */
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Respect user's motion preference — WCAG AA requirement. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Screen-reader-only utility — for labels on icon-only buttons etc. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link target — jumps to main content, keyboard users' first Tab. */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: var(--space-2);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-strong);
+  z-index: 100;
+  transition: top var(--duration-fast) var(--easing-standard);
+}
+.skip-link:focus {
+  top: var(--space-2);
+}
