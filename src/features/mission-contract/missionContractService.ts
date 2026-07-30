@@ -22,17 +22,23 @@ export type DurationPreset = (typeof DURATION_PRESETS)[number];
 
 export const MISSION_TITLE_MAX = 80;
 export const MISSION_WHY_MAX = 500;
+export const MISSION_REFUSE_MAX = 200;
+export const MISSION_REWARD_MAX = 200;
 export const MISSION_DURATION_MIN_DAYS = 1;
 export const MISSION_DURATION_MAX_DAYS = 365;
 
 export interface MissionDraft {
   title: string;
   why: string;
+  /** V2 contract addition — required at creation, editable post-activation. */
+  refuseToLose: string;
+  /** V2 contract addition — optional at creation, editable post-activation. */
+  reward?: string | undefined;
   durationDays: number;
 }
 
 export interface DraftValidationError {
-  field: 'title' | 'why' | 'durationDays';
+  field: 'title' | 'why' | 'refuseToLose' | 'reward' | 'durationDays';
   message: string;
 }
 
@@ -40,6 +46,7 @@ export interface DraftValidationError {
 export interface EditableMissionFields {
   notes: string;
   reward: string;
+  refuseToLose: string;
 }
 
 const LOCKED_FIELDS = [
@@ -79,6 +86,28 @@ export function validateDraft(draft: MissionDraft): DraftValidationError[] {
     errors.push({
       field: 'why',
       message: `Keep it under ${MISSION_WHY_MAX} characters.`,
+    });
+  }
+
+  const refuseToLose = draft.refuseToLose.trim();
+  if (refuseToLose.length === 0) {
+    errors.push({
+      field: 'refuseToLose',
+      message: 'Name what you are refusing to lose — this is your anchor on hard days.',
+    });
+  } else if (refuseToLose.length > MISSION_REFUSE_MAX) {
+    errors.push({
+      field: 'refuseToLose',
+      message: `Keep it under ${MISSION_REFUSE_MAX} characters.`,
+    });
+  }
+
+  // Reward is optional at creation; only length is checked when provided.
+  const reward = (draft.reward ?? '').trim();
+  if (reward.length > MISSION_REWARD_MAX) {
+    errors.push({
+      field: 'reward',
+      message: `Keep it under ${MISSION_REWARD_MAX} characters.`,
     });
   }
 
@@ -158,7 +187,8 @@ export async function activateNewMission(
     status: 'active',
     targetMetrics: { targetDays: projection.totalDays },
     notes: '',
-    reward: '',
+    reward: (draft.reward ?? '').trim(),
+    refuseToLose: draft.refuseToLose.trim(),
     activatedAt: now,
   };
 
@@ -174,15 +204,17 @@ export async function activateNewMission(
 // ────────────────────────────────────────────────────────────
 
 /**
- * Applies edits limited to notes + reward. Any other field in the input
- * is rejected — the mutability rule (ADR 0007) is enforced here.
+ * Applies edits limited to notes, reward, and refuseToLose. Any other field
+ * in the input is rejected — the mutability rule (ADR 0007) is enforced here.
+ * refuseToLose was added by the V2 contract redesign; it is editable because
+ * "what you're protecting" may evolve over the life of a mission.
  */
 export async function updateActiveMissionEditable(
   missionId: string,
   edits: Partial<EditableMissionFields> & Record<string, unknown>,
 ): Promise<Mission> {
   const forbidden = Object.keys(edits).filter(
-    (k) => k !== 'notes' && k !== 'reward',
+    (k) => k !== 'notes' && k !== 'reward' && k !== 'refuseToLose',
   );
   if (forbidden.length > 0) {
     throw new MissionContractError(
@@ -203,6 +235,8 @@ export async function updateActiveMissionEditable(
     updatedAt: nowIso(),
     notes: typeof edits.notes === 'string' ? edits.notes : current.notes,
     reward: typeof edits.reward === 'string' ? edits.reward : current.reward,
+    refuseToLose:
+      typeof edits.refuseToLose === 'string' ? edits.refuseToLose : current.refuseToLose,
   };
   await missionRepository.put(updated);
   return updated;

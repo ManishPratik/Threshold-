@@ -155,7 +155,9 @@
 
 .row {
   display: grid;
-  grid-template-columns: 88px 1fr;
+  /* Widened from 88px so "Refusing to lose" (longest V2 label, ~15 chars
+   * uppercase with tracking) fits on one line without wrapping. */
+  grid-template-columns: 120px 1fr;
   gap: var(--space-3);
   align-items: start;
 }

@@ -42,8 +42,12 @@ export function ReviewMissionScreen({
 
       <dl className={styles.list}>
         <div className={styles.row}>
-          <dt className={styles.term}>Why</dt>
+          <dt className={styles.term}>Why now</dt>
           <dd className={styles.def}>{draft.why.trim()}</dd>
+        </div>
+        <div className={styles.row}>
+          <dt className={styles.term}>Refusing to lose</dt>
+          <dd className={styles.def}>{draft.refuseToLose.trim()}</dd>
         </div>
         <div className={styles.row}>
           <dt className={styles.term}>Duration</dt>
@@ -59,10 +63,16 @@ export function ReviewMissionScreen({
           <dt className={styles.term}>End</dt>
           <dd className={styles.def}>{formatShortDate(projection.endDate)}</dd>
         </div>
+        {draft.reward && draft.reward.trim() !== '' && (
+          <div className={styles.row}>
+            <dt className={styles.term}>Honour</dt>
+            <dd className={styles.def}>{draft.reward.trim()}</dd>
+          </div>
+        )}
       </dl>
 
       <Text variant="secondary" className={styles.warning}>
-        Once you commit, only Notes and Reward can be changed. Everything else is locked.
+        Once you commit, only Notes, Reward, and what you're refusing to lose can be changed. Everything else is locked.
       </Text>
 
       {errorMessage && (

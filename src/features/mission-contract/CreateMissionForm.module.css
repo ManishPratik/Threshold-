@@ -69,8 +69,49 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-6);
   position: relative;
+}
+
+/* Each section = one input + its "Need inspiration?" affordance. Grouped so
+ * the affordance sits tight to its input, not floating between sections. */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Detachment for the optional Honour section. Sits below Duration with a
+ * quiet "Optional" divider so it reads as an addendum, not part of the
+ * contract. Extra top space + a subtler background pulls it visually apart
+ * without breaking the card. */
+.optionalBlock {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.optionalHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.optionalDivider {
+  flex: 1 1 auto;
+  height: 1px;
+  background-color: var(--color-border-subtle);
+}
+
+.optionalLabel {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 .fieldset {

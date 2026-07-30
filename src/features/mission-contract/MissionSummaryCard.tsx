@@ -23,8 +23,9 @@ export interface MissionSummaryCardProps {
 
 /**
  * Compact by default, expandable on tap. Expansion reveals why + dates +
- * inline editors for Notes and Reward (the only two editable fields after
- * activation, per ADR 0007).
+ * inline editors for Notes, Honour (reward), and — on V2 missions — what
+ * the user is refusing to lose. Those three are the only editable fields
+ * after activation, per ADR 0007 as extended in Phase 3 of the V2 contract.
  *
  * When the mission is bootstrap, an additional "Create your own" CTA appears
  * so the user can replace scaffolding with their real contract.
@@ -108,16 +109,28 @@ function Details({
   mission: Mission;
   onMissionUpdated?: ((m: Mission) => void) | undefined;
 }) {
+  // refuseToLose is a V2 contract field. Legacy missions created before the
+  // redesign have no value for it — the row is hidden entirely so no visual
+  // gap appears on older data (per Phase 3 backward-compat rule).
+  const hasRefuseToLose = typeof mission.refuseToLose === 'string' && mission.refuseToLose.length > 0;
   return (
     <dl className={styles.dl}>
-      <ReadOnlyRow label="Why" value={mission.statement} />
+      <ReadOnlyRow label="Why now" value={mission.statement} />
+      {hasRefuseToLose && (
+        <EditableRow
+          label="Refusing to lose"
+          field="refuseToLose"
+          mission={mission}
+          onSaved={(m) => onMissionUpdated?.(m)}
+        />
+      )}
       <ReadOnlyRow label="Start" value={formatShortDate(mission.startDate)} />
       <ReadOnlyRow
         label="End"
         value={mission.endDate ? formatShortDate(mission.endDate) : '—'}
       />
       <EditableRow
-        label="Reward"
+        label="Honour"
         field="reward"
         mission={mission}
         onSaved={(m) => onMissionUpdated?.(m)}
@@ -148,7 +161,7 @@ function EditableRow({
   onSaved,
 }: {
   label: string;
-  field: 'notes' | 'reward';
+  field: 'notes' | 'reward' | 'refuseToLose';
   mission: Mission;
   onSaved: (m: Mission) => void;
 }) {

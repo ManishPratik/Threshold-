@@ -63,36 +63,78 @@ beforeEach(() => {
 });
 
 describe('validateDraft', () => {
-  it('accepts a well-formed draft', () => {
-    expect(validateDraft({ title: 'A', why: 'B', durationDays: 40 })).toEqual([]);
+  it('accepts a well-formed draft (with refuseToLose, no reward)', () => {
+    expect(
+      validateDraft({ title: 'A', why: 'B', refuseToLose: 'R', durationDays: 40 }),
+    ).toEqual([]);
+  });
+
+  it('accepts a well-formed draft including optional reward', () => {
+    expect(
+      validateDraft({
+        title: 'A',
+        why: 'B',
+        refuseToLose: 'R',
+        reward: 'weekend trip',
+        durationDays: 40,
+      }),
+    ).toEqual([]);
   });
 
   it('rejects empty title', () => {
-    const errs = validateDraft({ title: '  ', why: 'B', durationDays: 40 });
+    const errs = validateDraft({ title: '  ', why: 'B', refuseToLose: 'R', durationDays: 40 });
     expect(errs.map((e) => e.field)).toContain('title');
   });
 
   it('rejects empty why', () => {
-    const errs = validateDraft({ title: 'A', why: '', durationDays: 40 });
+    const errs = validateDraft({ title: 'A', why: '', refuseToLose: 'R', durationDays: 40 });
     expect(errs.map((e) => e.field)).toContain('why');
   });
 
+  it('rejects empty refuseToLose', () => {
+    const errs = validateDraft({ title: 'A', why: 'B', refuseToLose: '  ', durationDays: 40 });
+    expect(errs.map((e) => e.field)).toContain('refuseToLose');
+  });
+
+  it('allows reward to be omitted or empty', () => {
+    expect(
+      validateDraft({ title: 'A', why: 'B', refuseToLose: 'R', durationDays: 40 }),
+    ).toEqual([]);
+    expect(
+      validateDraft({ title: 'A', why: 'B', refuseToLose: 'R', reward: '', durationDays: 40 }),
+    ).toEqual([]);
+    expect(
+      validateDraft({ title: 'A', why: 'B', refuseToLose: 'R', reward: '   ', durationDays: 40 }),
+    ).toEqual([]);
+  });
+
   it('rejects out-of-range duration', () => {
-    expect(validateDraft({ title: 'A', why: 'B', durationDays: 0 })).toHaveLength(1);
-    expect(validateDraft({ title: 'A', why: 'B', durationDays: 400 })).toHaveLength(1);
-    expect(validateDraft({ title: 'A', why: 'B', durationDays: 1.5 })).toHaveLength(1);
+    expect(
+      validateDraft({ title: 'A', why: 'B', refuseToLose: 'R', durationDays: 0 }),
+    ).toHaveLength(1);
+    expect(
+      validateDraft({ title: 'A', why: 'B', refuseToLose: 'R', durationDays: 400 }),
+    ).toHaveLength(1);
+    expect(
+      validateDraft({ title: 'A', why: 'B', refuseToLose: 'R', durationDays: 1.5 }),
+    ).toHaveLength(1);
   });
 
   it('accepts every documented preset', () => {
     for (const d of DURATION_PRESETS) {
-      expect(validateDraft({ title: 'A', why: 'B', durationDays: d })).toEqual([]);
+      expect(
+        validateDraft({ title: 'A', why: 'B', refuseToLose: 'R', durationDays: d }),
+      ).toEqual([]);
     }
   });
 });
 
 describe('projectDraft', () => {
   it('endDate = startDate + (durationDays - 1)', () => {
-    const p = projectDraft({ title: '', why: '', durationDays: 40 }, '2026-01-01');
+    const p = projectDraft(
+      { title: '', why: '', refuseToLose: '', durationDays: 40 },
+      '2026-01-01',
+    );
     expect(p.startDate).toBe('2026-01-01');
     expect(p.endDate).toBe('2026-02-09');
     expect(p.totalDays).toBe(40);
@@ -100,28 +142,48 @@ describe('projectDraft', () => {
 });
 
 describe('activateNewMission', () => {
-  it('persists a mission, purges bootstrap, and ensures today log', async () => {
+  it('persists refuseToLose + optional reward + trimmed fields', async () => {
     (missionRepository.getActive as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
     (dayLogRepository.getOrCreateForToday as ReturnType<typeof vi.fn>).mockResolvedValue({});
     (missionRepository.put as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
 
     const result = await activateNewMission(
-      { title: 'Do the thing', why: 'It matters', durationDays: 40 },
+      {
+        title: '  Do the thing  ',
+        why: '  It matters  ',
+        refuseToLose: '  my health  ',
+        reward: '  weekend trip  ',
+        durationDays: 40,
+      },
       '2026-01-01',
     );
 
     expect(result.title).toBe('Do the thing');
     expect(result.statement).toBe('It matters');
+    expect(result.refuseToLose).toBe('my health');
+    expect(result.reward).toBe('weekend trip');
     expect(result.startDate).toBe('2026-01-01');
     expect(result.endDate).toBe('2026-02-09');
     expect(result.status).toBe('active');
     expect(result.targetMetrics).toEqual({ targetDays: 40 });
     expect(result.notes).toBe('');
-    expect(result.reward).toBe('');
 
     expect(missionRepository.put).toHaveBeenCalledTimes(1);
     expect(purgeBootstrap).toHaveBeenCalledTimes(1);
     expect(dayLogRepository.getOrCreateForToday).toHaveBeenCalledTimes(1);
+  });
+
+  it('defaults reward to empty string when omitted', async () => {
+    (missionRepository.getActive as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+    (dayLogRepository.getOrCreateForToday as ReturnType<typeof vi.fn>).mockResolvedValue({});
+    (missionRepository.put as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+
+    const result = await activateNewMission(
+      { title: 'A', why: 'B', refuseToLose: 'R', durationDays: 30 },
+    );
+
+    expect(result.reward).toBe('');
+    expect(result.refuseToLose).toBe('R');
   });
 
   it('allows activation when only a bootstrap mission is active', async () => {
@@ -131,7 +193,7 @@ describe('activateNewMission', () => {
     (dayLogRepository.getOrCreateForToday as ReturnType<typeof vi.fn>).mockResolvedValue({});
 
     await expect(
-      activateNewMission({ title: 'A', why: 'B', durationDays: 30 }),
+      activateNewMission({ title: 'A', why: 'B', refuseToLose: 'R', durationDays: 30 }),
     ).resolves.toBeDefined();
 
     expect(missionRepository.put).toHaveBeenCalledTimes(1);
@@ -144,7 +206,7 @@ describe('activateNewMission', () => {
     );
 
     await expect(
-      activateNewMission({ title: 'A', why: 'B', durationDays: 30 }),
+      activateNewMission({ title: 'A', why: 'B', refuseToLose: 'R', durationDays: 30 }),
     ).rejects.toBeInstanceOf(MissionContractError);
 
     expect(missionRepository.put).not.toHaveBeenCalled();
@@ -153,23 +215,41 @@ describe('activateNewMission', () => {
 
   it('refuses invalid drafts before touching the DB', async () => {
     await expect(
-      activateNewMission({ title: '', why: '', durationDays: 0 }),
+      activateNewMission({ title: '', why: '', refuseToLose: '', durationDays: 0 }),
+    ).rejects.toBeInstanceOf(MissionContractError);
+    expect(missionRepository.getActive).not.toHaveBeenCalled();
+  });
+
+  it('refuses drafts missing only refuseToLose', async () => {
+    await expect(
+      activateNewMission({ title: 'A', why: 'B', refuseToLose: '', durationDays: 30 }),
     ).rejects.toBeInstanceOf(MissionContractError);
     expect(missionRepository.getActive).not.toHaveBeenCalled();
   });
 });
 
 describe('updateActiveMissionEditable', () => {
-  it('updates notes and reward on the active mission', async () => {
+  it('updates notes, reward, and refuseToLose on the active mission', async () => {
     (missionRepository.getById as ReturnType<typeof vi.fn>).mockResolvedValue(
-      stubMission({ id: 'm1', status: 'active', notes: 'old', reward: 'old' }),
+      stubMission({
+        id: 'm1',
+        status: 'active',
+        notes: 'old n',
+        reward: 'old r',
+        refuseToLose: 'old anchor',
+      }),
     );
     (missionRepository.put as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
 
-    const updated = await updateActiveMissionEditable('m1', { notes: 'new n', reward: 'new r' });
+    const updated = await updateActiveMissionEditable('m1', {
+      notes: 'new n',
+      reward: 'new r',
+      refuseToLose: 'new anchor',
+    });
 
     expect(updated.notes).toBe('new n');
     expect(updated.reward).toBe('new r');
+    expect(updated.refuseToLose).toBe('new anchor');
     expect(missionRepository.put).toHaveBeenCalledTimes(1);
   });
 

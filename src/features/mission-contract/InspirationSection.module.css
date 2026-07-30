@@ -1,0 +1,103 @@
+/* Empty state is intentionally quiet — a single line of copy, no icons or
+ * badges. The animation on expansion is opacity + height only (grid-rows
+ * trick), so it feels like a page turning rather than a dropdown opening. */
+
+.wrap {
+  /* Pulled slightly closer to the input above so the affordance reads as
+   * belonging to the field, not floating between sections. */
+  margin-top: -4px;
+}
+
+.trigger {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 4px 2px;
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  letter-spacing: -0.005em;
+  transition: color 200ms var(--easing-standard);
+  border-radius: 4px;
+}
+
+.trigger:hover {
+  color: var(--color-accent-ink);
+}
+
+.trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Grid-rows trick lets us animate an unknown content height with pure CSS.
+ * Closed: 0fr, opacity 0. Open: 1fr, opacity 1. The inner div carries the
+ * required `overflow: hidden` + `min-height: 0`. */
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 260ms var(--easing-decelerate),
+    opacity 200ms var(--easing-standard);
+}
+
+.panelOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.panelInner {
+  overflow: hidden;
+  min-height: 0;
+  padding-top: 4px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Simple rows — deliberately not cards. Generous vertical padding + serif
+ * face + secondary colour so they read as suggestions, never as content. */
+.example {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 8px 10px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+  width: 100%;
+  transition:
+    background-color 180ms var(--easing-standard),
+    color 180ms var(--easing-standard);
+}
+
+.example:hover {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-text-primary);
+}
+
+.example:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .trigger,
+  .example {
+    transition: none;
+  }
+}
