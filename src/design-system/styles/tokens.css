@@ -16,7 +16,11 @@
   /* Colors — Foreground (deep warm ink) */
   --color-text-primary: #1a1613;
   --color-text-secondary: #56504a;
-  --color-text-muted: #8a837c;
+  /* Darkened from #8a837c to reach WCAG AA (4.5:1) on every warm surface —
+   * not just --color-surface-base. New ratios: 5.47 on base, 5.02 on subtle,
+   * 5.85 on elevated, 4.80 on inset, 5.44 on hero-end. Warm neutral hue is
+   * preserved; only the value shifts down. */
+  --color-text-muted: #6b6459;
   --color-text-inverse: #ffffff;
 
   /* Colors — Borders */
