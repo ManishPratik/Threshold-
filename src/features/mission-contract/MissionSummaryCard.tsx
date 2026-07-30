@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Card, Heading, Text, TextArea } from '@shared/ui';
 import type { Mission } from '@data/types/Mission';
 import type { DayLog } from '@data/types/DayLog';
-import { formatShortDate } from '@shared/lib/date';
+import { formatShortDate, formatWitnessTimestamp } from '@shared/lib/date';
 import { currentLogicalDate } from '@shared/lib/dayBoundary';
 import { isBootstrapMission } from '@data/db/seed';
 import { getMissionHealth, healthLabel } from './getMissionHealth';
@@ -54,6 +54,11 @@ export function MissionSummaryCard({
           <Heading level={2} visualLevel={4} id="mission-title" className={styles.title}>
             {mission.title}
           </Heading>
+          {!bootstrap && mission.activatedAt ? (
+            <span className={styles.witnessTimestamp} aria-hidden="true">
+              {formatWitnessTimestamp(mission.activatedAt)}
+            </span>
+          ) : null}
           <Text size="sm" variant="secondary" className={styles.dayLabel}>
             {progress.totalDays !== null
               ? `Day ${progress.currentDay} of ${progress.totalDays}`

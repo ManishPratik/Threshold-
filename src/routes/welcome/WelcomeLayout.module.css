@@ -1,0 +1,12 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: var(--color-surface-base);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  outline: none;
+}

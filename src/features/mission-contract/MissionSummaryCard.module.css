@@ -56,6 +56,15 @@
   transition: color var(--duration-fast) var(--easing-standard);
 }
 
+.witnessTimestamp {
+  display: block;
+  margin: 4px 0 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+
 .dayLabel {
   margin: 0;
   color: var(--color-text-muted);

@@ -22,6 +22,25 @@ export interface RoutineBuilderProps {
   onSaved: (routine: Routine) => void;
   /** Called when the user cancels; omit to force the user to save (no way out). */
   onCancel?: (() => void) | undefined;
+  /**
+   * When true, the internal editorial header (kicker + serif title + subline)
+   * is not rendered — used by the /welcome/routine route which provides its
+   * own screen-level header. Defaults to false so existing callers keep theirs.
+   */
+  hideHeader?: boolean;
+  /**
+   * When provided, the primary CTA calls this with the current draft *instead*
+   * of persisting via saveRoutineForActiveMission. Used by the onboarding flow
+   * to defer saving until the mission is committed at Screen 5. When omitted,
+   * the component saves to the DB as before.
+   */
+  onDraftReady?: ((draft: RoutineDraft) => void) | undefined;
+  /**
+   * Custom label for the primary CTA. Defaults to "Save routine" (edit mode)
+   * or "Activate routine" (new). Used by the /welcome/routine route so the
+   * button reads with onboarding voice ("Next" — the promise is signed later).
+   */
+  primaryLabel?: string | undefined;
 }
 
 /**
@@ -32,7 +51,14 @@ export interface RoutineBuilderProps {
  * on keyboard, works on touch, and the routine block count is small enough
  * that direct reordering is not painful.
  */
-export function RoutineBuilder({ existing, onSaved, onCancel }: RoutineBuilderProps) {
+export function RoutineBuilder({
+  existing,
+  onSaved,
+  onCancel,
+  hideHeader = false,
+  onDraftReady,
+  primaryLabel,
+}: RoutineBuilderProps) {
   const initial: RoutineDraft = useMemo(
     () =>
       existing
@@ -86,6 +112,12 @@ export function RoutineBuilder({ existing, onSaved, onCancel }: RoutineBuilderPr
     setTouched(true);
     setServerError(undefined);
     if (!canSave) return;
+    // Deferred-save path — used by onboarding. The draft is handed to the
+    // caller and no DB write happens here. Commit happens later on Screen 5.
+    if (onDraftReady) {
+      onDraftReady(draft);
+      return;
+    }
     setSaving(true);
     void (async () => {
       try {
@@ -108,16 +140,18 @@ export function RoutineBuilder({ existing, onSaved, onCancel }: RoutineBuilderPr
   };
 
   return (
-    <Card padding="lg" className={styles.card} as="section" aria-labelledby="builder-heading">
-      <div className={styles.header}>
-        <p className={styles.kicker}>{existing ? 'Editing' : 'Your day'}</p>
-        <h1 id="builder-heading" className={styles.heading}>
-          {existing ? 'Edit your routine' : 'Build your routine'}<span className={styles.punct}>.</span>
-        </h1>
-        <p className={styles.subheading}>
-          Arrange your day. You can rearrange or edit any block later.
-        </p>
-      </div>
+    <Card padding="lg" className={styles.card} as="section" {...(hideHeader ? {} : { 'aria-labelledby': 'builder-heading' })}>
+      {!hideHeader && (
+        <div className={styles.header}>
+          <p className={styles.kicker}>{existing ? 'Editing' : 'Your day'}</p>
+          <h1 id="builder-heading" className={styles.heading}>
+            {existing ? 'Edit your routine' : 'Build your routine'}<span className={styles.punct}>.</span>
+          </h1>
+          <p className={styles.subheading}>
+            Arrange your day. You can rearrange or edit any block later.
+          </p>
+        </div>
+      )}
 
       <div className={styles.body}>
         <TextField
@@ -183,7 +217,7 @@ export function RoutineBuilder({ existing, onSaved, onCancel }: RoutineBuilderPr
             onClick={handleSave}
             disabled={touched && !canSave}
           >
-            {saving ? 'Saving…' : existing ? 'Save routine' : 'Activate routine'}
+            {saving ? 'Saving…' : (primaryLabel ?? (existing ? 'Save routine' : 'Activate routine'))}
           </Button>
         </div>
       </div>

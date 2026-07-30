@@ -10,6 +10,12 @@ export interface ReviewMissionScreenProps {
   errorMessage?: string | undefined;
   onBack: () => void;
   onCommit: () => void;
+  /**
+   * When true, the internal editorial header (kicker + serif title) is not
+   * rendered — used by the /welcome/commit route which provides its own
+   * screen-level header. Defaults to false so existing callers keep theirs.
+   */
+  hideHeader?: boolean;
 }
 
 export function ReviewMissionScreen({
@@ -18,18 +24,21 @@ export function ReviewMissionScreen({
   errorMessage,
   onBack,
   onCommit,
+  hideHeader = false,
 }: ReviewMissionScreenProps) {
   const projection = projectDraft(draft);
   const [confirming, setConfirming] = useState(false);
 
   return (
-    <Card padding="lg" className={styles.card} as="section" aria-labelledby="review-heading">
-      <div className={styles.header}>
-        <p className={styles.kicker}>Review your contract</p>
-        <h1 id="review-heading" className={styles.heading}>
-          {draft.title.trim()}
-        </h1>
-      </div>
+    <Card padding="lg" className={styles.card} as="section" {...(hideHeader ? {} : { 'aria-labelledby': 'review-heading' })}>
+      {!hideHeader && (
+        <div className={styles.header}>
+          <p className={styles.kicker}>Review your contract</p>
+          <h1 id="review-heading" className={styles.heading}>
+            {draft.title.trim()}
+          </h1>
+        </div>
+      )}
 
       <dl className={styles.list}>
         <div className={styles.row}>
@@ -76,7 +85,7 @@ export function ReviewMissionScreen({
           }}
           disabled={submitting || confirming}
         >
-          {submitting ? 'Committing…' : 'I commit'}
+          {submitting ? 'Making the promise…' : 'I promise.'}
         </Button>
       </div>
     </Card>

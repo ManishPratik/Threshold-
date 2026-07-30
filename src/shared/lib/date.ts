@@ -48,3 +48,25 @@ export function formatShortDate(date: ISODate, locale = 'en-GB'): string {
     month: 'short',
   }).format(local);
 }
+
+/**
+ * Witness-ritual timestamp for the keepsake. Formats an ISO datetime into the
+ * unlabelled `Wed 29 Jul 2026 · 14:32` grammar the ritual anchors on.
+ * Renders in the user's local timezone using their locale defaults.
+ */
+export function formatWitnessTimestamp(iso: ISODateTime, locale = 'en-GB'): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  const datePart = new Intl.DateTimeFormat(locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(d);
+  const timePart = new Intl.DateTimeFormat(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(d);
+  return `${datePart} · ${timePart}`;
+}

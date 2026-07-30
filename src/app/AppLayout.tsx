@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { UpdatePrompt } from '@/pwa/UpdatePrompt';
 import { useServiceWorkerUpdate } from '@/pwa/useServiceWorkerUpdate';
+import { OnboardingGate } from '@features/onboarding';
 import {
   TodayGlyph,
   KnowledgeGlyph,
@@ -78,7 +79,9 @@ export function AppLayout() {
         tabIndex={-1}
         className={styles.main}
       >
-        <Outlet />
+        <OnboardingGate>
+          <Outlet />
+        </OnboardingGate>
       </main>
 
       <UpdatePrompt

@@ -1,0 +1,276 @@
+/* The witness ritual — Frames 2-6 of the approved storyboard.
+ *
+ * All timing lives here as animation-delay values so the pacing is one
+ * continuous CSS-driven sequence. The DOM does not change during the
+ * ritual — every element is rendered from mount and made visible via
+ * opacity keyframes.
+ *
+ * Timing (values below are the delays that appear in the keyframe rules):
+ *
+ *   0     ms   — mount. Promise title starts ghost-colored; ink layer + timestamp
+ *                + pause layer all at opacity 0.
+ *   600   ms   — Frame 3 stillness begins (nothing moves; the beat is the silence).
+ *   1600  ms   — Frame 4 ink absorbs — terracotta saturates the sentence
+ *                left-to-right over 2000 ms.
+ *   3600  ms   — Frame 5 timestamp fades in beneath the now-inked sentence.
+ *   3800  ms   — Isolation held (user reads their words a second time).
+ *   6300  ms   — Frame 6 crossfade — promise + timestamp fade out over 800 ms as
+ *                the first pause beat fades in over the same window.
+ *   7500  ms   — Second pause beat fades in.
+ *   9000  ms   — Third pause beat fades in.
+ *   10800 ms   — Begin today CTA fades in.
+ *
+ * reduced-motion: same delay sequence, translate + ink-sweep replaced by
+ * plain opacity transitions so the emotional pacing survives.
+ */
+
+.canvas {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 32px 128px;
+  position: relative;
+  background-color: var(--color-surface-base);
+}
+
+/* Frame 2-5 layer — the user's own words.
+ *
+ * Two animations on the same element:
+ *   witnessPromiseIn   (0 → 1) — 500 ms fade-in on mount, so the ritual
+ *                                doesn't hard-swap when the review card
+ *                                unmounts. This is Frame 2 — chrome receding.
+ *   witnessPromiseFade (1 → 0) — 800 ms fade-out at Frame 6, when the pause
+ *                                beats begin taking the canvas.
+ */
+.promiseLayer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 22ch;
+  text-align: left;
+  will-change: opacity;
+  animation:
+    witnessPromiseIn 500ms var(--easing-decelerate) 0ms both,
+    witnessPromiseFade 800ms var(--easing-standard) 6300ms both;
+}
+
+.promise {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 40px;
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+/* Ghost copy — the sentence in a cool grey, awaiting ink. */
+.ghost {
+  color: var(--color-text-muted);
+}
+
+/* Ink overlay — sits on top of the ghost, revealed left-to-right. */
+.ink {
+  position: absolute;
+  inset: 0;
+  color: var(--color-text-primary);
+  clip-path: inset(0 100% 0 0);
+  will-change: clip-path;
+  animation: witnessInk 2000ms var(--easing-standard) 1600ms both;
+}
+
+.timestamp {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  animation: witnessTimestamp 600ms var(--easing-standard) 3600ms both;
+}
+
+/* Frame 6 layer — the app's exhale. Positioned absolutely so it can
+ * crossfade with the promise layer without shifting the canvas. */
+.pauseLayer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 32px 128px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.pauseLayer > * {
+  opacity: 0;
+}
+
+/* Once the CTA becomes visible, the whole pause layer becomes interactive. */
+.pauseLayer:has(.beginCta:not([data-hidden])) {
+  pointer-events: auto;
+}
+
+.beat1 {
+  /* Size deliberately kept at or below the promise (40 px) so the user's own
+   * words remain the emotional climax. The app's exhale is smaller by design. */
+  font-family: var(--font-serif);
+  font-size: 36px;
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-primary);
+  margin-bottom: 40px;
+  max-width: 26ch;
+  animation: witnessBeat 800ms var(--easing-decelerate) 6300ms both;
+}
+
+.beat2 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+  max-width: 28ch;
+  animation: witnessBeat 700ms var(--easing-standard) 7500ms both;
+}
+
+.beat3 {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin-bottom: 72px;
+  max-width: 32ch;
+  animation: witnessBeat 700ms var(--easing-standard) 9000ms both;
+}
+
+.beat3 p {
+  margin: 0 0 6px;
+}
+
+.beat3 p:last-child {
+  margin-bottom: 0;
+}
+
+.beginCta {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  padding: 12px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    color 200ms var(--easing-standard),
+    border-color 200ms var(--easing-standard),
+    background-color 200ms var(--easing-standard);
+  animation: witnessCta 500ms var(--easing-standard) 10800ms both;
+}
+
+.beginCta:hover {
+  color: var(--color-accent-ink);
+  border-color: var(--color-accent);
+  background-color: rgba(184, 85, 43, 0.05);
+}
+
+.beginCta:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 200ms var(--easing-standard);
+}
+
+.beginCta:hover .arrow {
+  transform: translateX(3px);
+}
+
+@keyframes witnessInk {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0    0 0); }
+}
+
+@keyframes witnessTimestamp {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes witnessPromiseIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes witnessPromiseFade {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes witnessBeat {
+  from { opacity: 0; transform: translate3d(0, 4px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes witnessCta {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ink {
+    /* Skip the clip-path sweep; fade the ink layer in as one block. */
+    animation: witnessInkReduced 400ms ease-out 1600ms both;
+    clip-path: none;
+    opacity: 0;
+  }
+  .beat1, .beat2, .beat3 {
+    animation-duration: 300ms;
+  }
+  @keyframes witnessInkReduced {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes witnessBeat {
+    from { opacity: 0; transform: none; }
+    to   { opacity: 1; transform: none; }
+  }
+}
+
+@media (max-width: 640px) {
+  .canvas {
+    padding: 64px 24px 96px;
+  }
+  .promise {
+    font-size: 28px;
+  }
+  .beat1 {
+    font-size: 26px;
+    margin-bottom: 32px;
+  }
+  .beat2 {
+    font-size: 18px;
+    margin-bottom: 24px;
+  }
+  .beat3 {
+    font-size: 16px;
+    margin-bottom: 56px;
+  }
+  .pauseLayer {
+    padding: 64px 24px 96px;
+  }
+}

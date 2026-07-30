@@ -13,12 +13,19 @@ export interface CreateMissionFormProps {
   initialDraft?: Partial<MissionDraft> | undefined;
   onCancel?: (() => void) | undefined;
   onSubmit: (draft: MissionDraft) => void;
+  /**
+   * When true, the internal editorial header (kicker + serif title + subline)
+   * is not rendered — used by callers (e.g. the /welcome/promise route) that
+   * provide their own screen-level header and want to avoid duplicate chrome.
+   * Defaults to false so existing callers keep their headers.
+   */
+  hideHeader?: boolean;
 }
 
 const DEFAULT_DURATION = 40;
 const CUSTOM_SENTINEL = -1;
 
-export function CreateMissionForm({ initialDraft, onCancel, onSubmit }: CreateMissionFormProps) {
+export function CreateMissionForm({ initialDraft, onCancel, onSubmit, hideHeader = false }: CreateMissionFormProps) {
   const [title, setTitle] = useState(initialDraft?.title ?? '');
   const [why, setWhy] = useState(initialDraft?.why ?? '');
   const [durationChoice, setDurationChoice] = useState<number>(() => {
@@ -57,16 +64,18 @@ export function CreateMissionForm({ initialDraft, onCancel, onSubmit }: CreateMi
   };
 
   return (
-    <Card padding="lg" className={styles.card} as="section" aria-labelledby="create-heading">
-      <div className={styles.header}>
-        <p className={styles.kicker}>The contract</p>
-        <h1 id="create-heading" className={styles.heading}>
-          Your mission<span className={styles.punct}>.</span>
-        </h1>
-        <p className={styles.subheading}>
-          A promise, not a to-do. You will see this every day.
-        </p>
-      </div>
+    <Card padding="lg" className={styles.card} as="section" {...(hideHeader ? {} : { 'aria-labelledby': 'create-heading' })}>
+      {!hideHeader && (
+        <div className={styles.header}>
+          <p className={styles.kicker}>The contract</p>
+          <h1 id="create-heading" className={styles.heading}>
+            Your mission<span className={styles.punct}>.</span>
+          </h1>
+          <p className={styles.subheading}>
+            A promise, not a to-do. You will see this every day.
+          </p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className={styles.form} noValidate>
         <TextField
