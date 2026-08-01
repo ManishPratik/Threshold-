@@ -6,6 +6,7 @@ import {
   CurrentFocusCard,
   ProgressSummary,
   RoutineBuilder,
+  SecondaryBlockCard,
   useRoutineToday,
 } from '@features/routine-engine';
 import { EndOfDayReflectionCard } from '@features/reviews';
@@ -132,6 +133,23 @@ export function TodayPage() {
           void view.complete();
         }}
       />
+
+      {view.progress.openBlocks.length > 1 && (
+        <section className={styles.alsoSection} aria-labelledby="also-heading">
+          <div className={styles.alsoEyebrow} id="also-heading">
+            <span>Also in your day</span>
+          </div>
+          <div className={styles.alsoList}>
+            {view.progress.openBlocks.slice(1).map((block) => (
+              <SecondaryBlockCard
+                key={block.id}
+                block={block}
+                onComplete={view.completeBlock}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       <ProgressSummary progress={view.progress} />
 

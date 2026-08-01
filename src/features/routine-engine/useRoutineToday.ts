@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import {
   dayLogRepository,
   missionRepository,
@@ -27,7 +27,15 @@ export interface RoutineTodayView {
   start: () => void;
   pause: () => void;
   resume: () => void;
+  /** Completes the current (recommended) block via the focus-machine flow. */
   complete: () => Promise<void>;
+  /**
+   * Completes any open block by id. "Guide, never trap": lets the user check
+   * off later blocks without finishing earlier ones. Idempotent per block —
+   * concurrent calls for the same id are collapsed via an in-flight guard.
+   * Only resets the focus machine when the completed block is the current one.
+   */
+  completeBlock: (blockId: string) => Promise<void>;
   /** Reloads mission + routine + today's log from repositories. Resets focus to idle. */
   refresh: () => void;
   /** Locally replace the mission (e.g. after inline notes/reward edit) without a full refetch. */
@@ -53,6 +61,10 @@ export function useRoutineToday(): RoutineTodayView {
   const [selfTrustScore, setSelfTrustScore] = useState<number | null>(null);
   const [focus, dispatch] = useReducer(focusReducer, 'idle');
   const [reloadKey, setReloadKey] = useState(0);
+  // Per-block in-flight guard so rapid double-taps on "Mark complete" do not
+  // race two writes for the same block. Ref (not state) — we never render
+  // from it; changing it must not re-render.
+  const inFlightBlockIds = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     let cancelled = false;
@@ -102,27 +114,49 @@ export function useRoutineToday(): RoutineTodayView {
   const pause = useCallback(() => dispatch('PAUSE'), []);
   const resume = useCallback(() => dispatch('RESUME'), []);
 
+  const completeBlock = useCallback(
+    async (blockId: string): Promise<void> => {
+      if (!dayLog) return;
+      // Idempotency: already recorded → nothing to do.
+      if (dayLog.completedBlockIds.includes(blockId)) return;
+      // In-flight guard: collapse concurrent calls for the same block.
+      if (inFlightBlockIds.current.has(blockId)) return;
+      inFlightBlockIds.current.add(blockId);
+      try {
+        const updated = await dayLogRepository.markBlockCompleted(dayLog.id, blockId);
+        await promiseEventRepository.append({
+          id: generateId(),
+          createdAt: nowIso(),
+          updatedAt: nowIso(),
+          schemaVersion: 1,
+          dayLogId: dayLog.id,
+          kind: 'kept',
+          source: 'manual',
+          blockId,
+          missionId: mission?.id ?? null,
+          at: nowIso(),
+          note: '',
+        });
+        const snap = await selfTrustService.recomputeTodaySnapshot();
+        setDayLog(updated);
+        if (snap) setSelfTrustScore(snap.score);
+        // Focus machine belongs to the recommended block only. Reset it when
+        // that specific block is completed; otherwise leave focus untouched
+        // (the user may still be mid-session on the current block).
+        if (currentBlock && currentBlock.id === blockId) {
+          dispatch('RESET');
+        }
+      } finally {
+        inFlightBlockIds.current.delete(blockId);
+      }
+    },
+    [dayLog, currentBlock, mission?.id],
+  );
+
   const complete = useCallback(async () => {
-    if (!dayLog || !currentBlock) return;
-    const updated = await dayLogRepository.markBlockCompleted(dayLog.id, currentBlock.id);
-    await promiseEventRepository.append({
-      id: generateId(),
-      createdAt: nowIso(),
-      updatedAt: nowIso(),
-      schemaVersion: 1,
-      dayLogId: dayLog.id,
-      kind: 'kept',
-      source: 'manual',
-      blockId: currentBlock.id,
-      missionId: mission?.id ?? null,
-      at: nowIso(),
-      note: '',
-    });
-    const snap = await selfTrustService.recomputeTodaySnapshot();
-    setDayLog(updated);
-    if (snap) setSelfTrustScore(snap.score);
-    dispatch('RESET');
-  }, [dayLog, currentBlock, mission?.id]);
+    if (!currentBlock) return;
+    await completeBlock(currentBlock.id);
+  }, [completeBlock, currentBlock]);
 
   const refresh = useCallback(() => {
     dispatch('RESET');
@@ -147,6 +181,7 @@ export function useRoutineToday(): RoutineTodayView {
     pause,
     resume,
     complete,
+    completeBlock,
     refresh,
     applyMissionUpdate,
   };

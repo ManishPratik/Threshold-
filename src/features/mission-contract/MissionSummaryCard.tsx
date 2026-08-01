@@ -55,15 +55,22 @@ export function MissionSummaryCard({
           <Heading level={2} visualLevel={4} id="mission-title" className={styles.title}>
             {mission.title}
           </Heading>
-          {!bootstrap && mission.activatedAt ? (
+          {!bootstrap && (mission.promisedAt ?? mission.activatedAt) ? (
             <span className={styles.witnessTimestamp} aria-hidden="true">
-              {formatWitnessTimestamp(mission.activatedAt)}
+              {/* Prefer the button-press moment (promisedAt); fall back to the
+                 * DB-write time (activatedAt) for missions created before the
+                 * promisedAt field shipped. */}
+              {formatWitnessTimestamp(
+                (mission.promisedAt ?? mission.activatedAt) as string,
+              )}
             </span>
           ) : null}
           <Text size="sm" variant="secondary" className={styles.dayLabel}>
-            {progress.totalDays !== null
-              ? `Day ${progress.currentDay} of ${progress.totalDays}`
-              : `Day ${progress.currentDay}`}
+            {progress.hasStarted
+              ? progress.totalDays !== null
+                ? `Day ${progress.currentDay} of ${progress.totalDays}`
+                : `Day ${progress.currentDay}`
+              : `Begins ${formatShortDate(mission.startDate)}`}
           </Text>
         </div>
         <div className={styles.right}>

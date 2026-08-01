@@ -9,6 +9,8 @@ export type { RoutineTodayView } from './useRoutineToday';
 
 export { CurrentFocusCard } from './CurrentFocusCard';
 export { ProgressSummary } from './ProgressSummary';
+export { SecondaryBlockCard } from './SecondaryBlockCard';
+export type { SecondaryBlockCardProps } from './SecondaryBlockCard';
 
 export { RoutineBuilder } from './RoutineBuilder';
 export { BlockEditor } from './BlockEditor';

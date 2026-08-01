@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, ProgressBar } from '@shared/ui';
+import { formatShortDate } from '@shared/lib/date';
 import { analyticsService, type AnalyticsView } from './analyticsService';
 import styles from './AnalyticsDashboard.module.css';
 
@@ -112,7 +113,7 @@ function SelfTrustHero({ view }: { view: AnalyticsView }) {
 /* ─────────────── Mission progress (Question 2) ─────────────── */
 
 function MissionCard({ view }: { view: AnalyticsView }) {
-  const { present, title, currentDay, totalDays, ratio } = view.mission;
+  const { present, title, currentDay, totalDays, ratio, hasStarted, startDate } = view.mission;
 
   if (!present) {
     return (
@@ -129,12 +130,16 @@ function MissionCard({ view }: { view: AnalyticsView }) {
 
   const daysToGo =
     totalDays !== null ? Math.max(0, totalDays - currentDay) : null;
-  const coachLine =
-    totalDays === null
-      ? `Day ${currentDay}. Keep going.`
-      : daysToGo === 0
-        ? `Day ${currentDay} of ${totalDays}. You made it. Reflect and choose what&rsquo;s next.`
-        : `Day ${currentDay} of ${totalDays} · ${daysToGo} ${daysToGo === 1 ? 'day' : 'days'} to go.`;
+  let coachLine: string;
+  if (!hasStarted && startDate) {
+    coachLine = `Begins ${formatShortDate(startDate)}. Rest tonight — Day 1 waits for you.`;
+  } else if (totalDays === null) {
+    coachLine = `Day ${currentDay}. Keep going.`;
+  } else if (daysToGo === 0) {
+    coachLine = `Day ${currentDay} of ${totalDays}. You made it. Reflect and choose what’s next.`;
+  } else {
+    coachLine = `Day ${currentDay} of ${totalDays} · ${daysToGo} ${daysToGo === 1 ? 'day' : 'days'} to go.`;
+  }
 
   return (
     <Card padding="md" className={styles.missionCard} as="article" aria-labelledby="mission-heading">
@@ -143,7 +148,7 @@ function MissionCard({ view }: { view: AnalyticsView }) {
         {title}
       </h2>
       <p className={styles.missionMeta}>{coachLine}</p>
-      {ratio !== null && (
+      {ratio !== null && hasStarted && (
         <ProgressBar
           value={ratio}
           label={`Mission progress: ${currentDay} of ${totalDays} days`}

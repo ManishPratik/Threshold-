@@ -1,7 +1,11 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { activateNewMission, type MissionDraft } from '@features/mission-contract';
 import { saveRoutineForActiveMission, type RoutineDraft } from '@features/routine-engine';
-import { OnboardingSetupContext, type OnboardingSetupState } from './onboardingSetupContext';
+import {
+  OnboardingSetupContext,
+  type CommitAllOpts,
+  type OnboardingSetupState,
+} from './onboardingSetupContext';
 
 /**
  * Provider component for the onboarding setup context. Wraps the /welcome
@@ -26,16 +30,25 @@ export function OnboardingSetupProvider({ children }: { children: ReactNode }) {
     setRoutineDraftState(null);
   }, []);
 
-  const commitAll = useCallback(async () => {
-    if (!missionDraft) {
-      throw new Error('Cannot commit — mission draft missing.');
-    }
-    if (!routineDraft) {
-      throw new Error('Cannot commit — routine draft missing.');
-    }
-    await activateNewMission(missionDraft);
-    await saveRoutineForActiveMission(routineDraft);
-  }, [missionDraft, routineDraft]);
+  const commitAll = useCallback(
+    async (opts?: CommitAllOpts) => {
+      if (!missionDraft) {
+        throw new Error('Cannot commit — mission draft missing.');
+      }
+      if (!routineDraft) {
+        throw new Error('Cannot commit — routine draft missing.');
+      }
+      // Forward the button-press instant so `mission.promisedAt` records the
+      // true commitment moment, distinct from the DB-write time (activatedAt).
+      await activateNewMission(
+        missionDraft,
+        undefined,
+        opts?.promisedAt !== undefined ? { promisedAt: opts.promisedAt } : undefined,
+      );
+      await saveRoutineForActiveMission(routineDraft);
+    },
+    [missionDraft, routineDraft],
+  );
 
   const value = useMemo<OnboardingSetupState>(
     () => ({

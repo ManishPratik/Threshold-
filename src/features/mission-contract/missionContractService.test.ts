@@ -34,6 +34,8 @@ import {
   validateDraft,
   projectDraft,
   updateActiveMissionEditable,
+  getEffectiveStartDate,
+  LATE_START_CUTOFF_HOUR,
   MissionContractError,
   DURATION_PRESETS,
 } from './missionContractService';
@@ -139,6 +141,76 @@ describe('projectDraft', () => {
     expect(p.endDate).toBe('2026-02-09');
     expect(p.totalDays).toBe(40);
   });
+
+  it('uses the effective start date when no explicit startDate is passed', () => {
+    // 2026-07-31 23:50 local — inside the late-start window (>= 21).
+    // Effective Day 1 must shift to 2026-08-01.
+    const p = projectDraft(
+      { title: '', why: '', refuseToLose: '', durationDays: 3 },
+      undefined,
+      { now: new Date(2026, 6, 31, 23, 50, 0) },
+    );
+    expect(p.startDate).toBe('2026-08-01');
+    expect(p.endDate).toBe('2026-08-03');
+    expect(p.totalDays).toBe(3);
+  });
+
+  it('honours a custom cutoffHour override', () => {
+    // With cutoffHour=18 a commit at 19:00 shifts to tomorrow.
+    const p = projectDraft(
+      { title: '', why: '', refuseToLose: '', durationDays: 1 },
+      undefined,
+      { now: new Date(2026, 6, 31, 19, 0, 0), cutoffHour: 18 },
+    );
+    expect(p.startDate).toBe('2026-08-01');
+  });
+});
+
+describe('getEffectiveStartDate', () => {
+  it('exposes the documented default cutoff hour', () => {
+    expect(LATE_START_CUTOFF_HOUR).toBe(21);
+  });
+
+  it('before cutoff (20:59) → today', () => {
+    // 2026-07-31 20:59 local. Logical date = 2026-07-31.
+    expect(
+      getEffectiveStartDate({ now: new Date(2026, 6, 31, 20, 59, 0) }),
+    ).toBe('2026-07-31');
+  });
+
+  it('at cutoff (21:00) → tomorrow', () => {
+    expect(
+      getEffectiveStartDate({ now: new Date(2026, 6, 31, 21, 0, 0) }),
+    ).toBe('2026-08-01');
+  });
+
+  it('late night (23:59) → tomorrow', () => {
+    expect(
+      getEffectiveStartDate({ now: new Date(2026, 6, 31, 23, 59, 0) }),
+    ).toBe('2026-08-01');
+  });
+
+  it('post-midnight, pre-dayStart (00:30) → today\'s calendar', () => {
+    // 2026-08-01 00:30. dayStart=04:00 collapses this to logical 2026-07-31.
+    // Late-window rule shifts start to logical+1 = 2026-08-01, which matches
+    // the user's calendar "today" — the fair Day 1.
+    expect(
+      getEffectiveStartDate({ now: new Date(2026, 7, 1, 0, 30, 0) }),
+    ).toBe('2026-08-01');
+  });
+
+  it('after dayStart (04:30) → today', () => {
+    expect(
+      getEffectiveStartDate({ now: new Date(2026, 7, 1, 4, 30, 0) }),
+    ).toBe('2026-08-01');
+  });
+
+  it('crosses month/year boundary correctly', () => {
+    // 2026-12-31 23:00 → 2027-01-01.
+    expect(
+      getEffectiveStartDate({ now: new Date(2026, 11, 31, 23, 0, 0) }),
+    ).toBe('2027-01-01');
+  });
 });
 
 describe('activateNewMission', () => {
@@ -184,6 +256,37 @@ describe('activateNewMission', () => {
 
     expect(result.reward).toBe('');
     expect(result.refuseToLose).toBe('R');
+  });
+
+  it('persists promisedAt verbatim when supplied via opts', async () => {
+    (missionRepository.getActive as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+    (dayLogRepository.getOrCreateForToday as ReturnType<typeof vi.fn>).mockResolvedValue({});
+    (missionRepository.put as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+
+    const pressIso = '2026-07-31T18:20:15.007Z';
+    const result = await activateNewMission(
+      { title: 'A', why: 'B', refuseToLose: 'R', durationDays: 30 },
+      '2026-08-01',
+      { promisedAt: pressIso },
+    );
+
+    expect(result.promisedAt).toBe(pressIso);
+    // activatedAt is independent — its own timestamp path (nowIso), NOT the
+    // press instant. We can't pin it exactly but it must exist and differ.
+    expect(typeof result.activatedAt).toBe('string');
+    expect(result.activatedAt).not.toBe(pressIso);
+  });
+
+  it('leaves promisedAt undefined when not supplied (backward compat)', async () => {
+    (missionRepository.getActive as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+    (dayLogRepository.getOrCreateForToday as ReturnType<typeof vi.fn>).mockResolvedValue({});
+    (missionRepository.put as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+
+    const result = await activateNewMission(
+      { title: 'A', why: 'B', refuseToLose: 'R', durationDays: 30 },
+    );
+
+    expect(result.promisedAt).toBeUndefined();
   });
 
   it('allows activation when only a bootstrap mission is active', async () => {
@@ -260,6 +363,18 @@ describe('updateActiveMissionEditable', () => {
 
     await expect(
       updateActiveMissionEditable('m1', { notes: 'ok', title: 'nope' }),
+    ).rejects.toBeInstanceOf(MissionContractError);
+
+    expect(missionRepository.put).not.toHaveBeenCalled();
+  });
+
+  it('rejects attempts to edit promisedAt (locked)', async () => {
+    (missionRepository.getById as ReturnType<typeof vi.fn>).mockResolvedValue(
+      stubMission({ id: 'm1', status: 'active' }),
+    );
+
+    await expect(
+      updateActiveMissionEditable('m1', { promisedAt: '2027-01-01T00:00:00.000Z' }),
     ).rejects.toBeInstanceOf(MissionContractError);
 
     expect(missionRepository.put).not.toHaveBeenCalled();

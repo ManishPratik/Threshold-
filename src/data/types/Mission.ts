@@ -23,5 +23,17 @@ export interface Mission extends BaseEntity {
   notes: string;
   reward: string;
   refuseToLose?: string | undefined;
+  /**
+   * Technical activation timestamp — when the mission row was written to
+   * IndexedDB. Not the emotional moment; use `promisedAt` for the keepsake.
+   */
   activatedAt: string | null;
+  /**
+   * ISO timestamp of the user's exact "I promise." press moment during the
+   * onboarding witness ritual. Anchors the emotional keepsake independent
+   * of DB-write latency. Optional so missions created before this field
+   * shipped continue to load without migration; consumers must fall back
+   * to `activatedAt` when this is absent.
+   */
+  promisedAt?: string | undefined;
 }

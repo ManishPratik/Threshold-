@@ -62,3 +62,36 @@ describe('getTodayProgress', () => {
     expect(p.remainingBlocks).toBe(0);
   });
 });
+
+describe('getTodayProgress > openBlocks', () => {
+  it('lists all blocks in order when nothing is done', () => {
+    const p = getTodayProgress(routine, dayLog([]));
+    expect(p.openBlocks.map((b) => b.id)).toEqual(['a', 'b', 'c']);
+  });
+
+  it('preserves original routine order (not completion order)', () => {
+    // 'b' completed first, then 'a' — openBlocks must still start with 'c'
+    // if we complete 'a' and 'b'. When only 'b' is complete, list = ['a','c'].
+    const p = getTodayProgress(routine, dayLog(['b']));
+    expect(p.openBlocks.map((b) => b.id)).toEqual(['a', 'c']);
+    expect(p.currentBlock?.id).toBe('a');
+    expect(p.currentBlockIndex).toBe(0);
+  });
+
+  it('excludes skipped blocks', () => {
+    const p = getTodayProgress(routine, dayLog(['a'], ['b']));
+    expect(p.openBlocks.map((b) => b.id)).toEqual(['c']);
+  });
+
+  it('is empty when every block is done or skipped', () => {
+    const p = getTodayProgress(routine, dayLog(['a', 'c'], ['b']));
+    expect(p.openBlocks).toEqual([]);
+    expect(p.currentBlock).toBeNull();
+  });
+
+  it('places currentBlock at openBlocks[0]', () => {
+    const p = getTodayProgress(routine, dayLog(['a']));
+    expect(p.openBlocks[0]?.id).toBe(p.currentBlock?.id);
+    expect(p.openBlocks.map((b) => b.id)).toEqual(['b', 'c']);
+  });
+});

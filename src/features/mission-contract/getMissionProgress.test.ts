@@ -47,4 +47,21 @@ describe('getMissionProgress', () => {
     expect(p.totalDays).toBeNull();
     expect(p.ratio).toBeNull();
   });
+
+  it('hasStarted is true on and after startDate', () => {
+    const onDay1 = getMissionProgress(mission('2026-01-01', '2026-01-10'), '2026-01-01');
+    const laterDay = getMissionProgress(mission('2026-01-01', '2026-01-10'), '2026-01-05');
+    expect(onDay1.hasStarted).toBe(true);
+    expect(laterDay.hasStarted).toBe(true);
+  });
+
+  it('hasStarted is false when today is before startDate', () => {
+    // Late-start scenario: mission committed on 2026-07-31 with cutoff shift
+    // to a startDate of 2026-08-01. On 2026-07-31 the mission has not yet begun.
+    const p = getMissionProgress(mission('2026-08-01', '2026-09-09'), '2026-07-31');
+    expect(p.hasStarted).toBe(false);
+    // currentDay is still 1 (clamped) so downstream numeric consumers keep
+    // working, but hasStarted lets the UI hide the counter until fair Day 1.
+    expect(p.currentDay).toBe(1);
+  });
 });

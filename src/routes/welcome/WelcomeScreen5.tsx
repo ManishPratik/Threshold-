@@ -38,13 +38,15 @@ export function WelcomeScreen5() {
     if (inRitual) return;
     setError(undefined);
     // Anchor the ritual on the exact moment of intent — the button press —
-    // not on the DB write time (which comes a few ms later).
+    // not on the DB write time (which comes a few ms later). The same ISO is
+    // forwarded to commitAll so `mission.promisedAt` durably preserves the
+    // true commitment moment, independent of any subsequent write latency.
     const iso = new Date().toISOString();
     setCommittedIso(iso);
     setInRitual(true);
     void (async () => {
       try {
-        await setup.commitAll();
+        await setup.commitAll({ promisedAt: iso });
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Could not save. Try again.');
         setInRitual(false);

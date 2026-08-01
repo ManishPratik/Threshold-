@@ -8,12 +8,22 @@ import type { RoutineDraft } from '@features/routine-engine';
  * Split from OnboardingSetupProvider so the provider file exports a single
  * component (satisfies react-refresh/only-export-components).
  */
+export interface CommitAllOpts {
+  /**
+   * ISO timestamp of the user's exact "I promise." press moment. Captured by
+   * Screen 5 before commitAll runs and forwarded verbatim to the mission
+   * service so `mission.promisedAt` anchors the keepsake on the true moment
+   * of intent — independent of DB-write latency.
+   */
+  promisedAt?: string;
+}
+
 export interface OnboardingSetupState {
   missionDraft: MissionDraft | null;
   routineDraft: RoutineDraft | null;
   setMissionDraft: (draft: MissionDraft) => void;
   setRoutineDraft: (draft: RoutineDraft) => void;
-  commitAll: () => Promise<void>;
+  commitAll: (opts?: CommitAllOpts) => Promise<void>;
   reset: () => void;
 }
 

@@ -98,6 +98,46 @@
   );
 }
 
+/* ═══════════ "Also in your day" secondary list ═══════════ */
+.alsoSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  /* Pull slightly closer to the hero so the two feel like one composition,
+   * yet stay visually subordinate — the hero remains the dominant surface. */
+  margin-top: calc(-1 * var(--space-2));
+}
+
+.alsoEyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  font-weight: var(--fw-bold);
+}
+
+.alsoEyebrow::before,
+.alsoEyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-border-subtle),
+    transparent
+  );
+}
+
+.alsoList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
 .editRow {
   display: flex;
   justify-content: center;

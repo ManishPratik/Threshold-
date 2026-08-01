@@ -6,7 +6,10 @@ import {
 import { isBootstrapMission, purgeBootstrap } from '@data/db/seed';
 import type { Mission } from '@data/types/Mission';
 import { addDays, nowIso, type ISODate } from '@shared/lib/date';
-import { currentLogicalDate } from '@shared/lib/dayBoundary';
+import {
+  DEFAULT_DAY_START_HOUR,
+  getLogicalDate,
+} from '@shared/lib/dayBoundary';
 import { generateId } from '@shared/lib/id';
 
 /**
@@ -26,6 +29,56 @@ export const MISSION_REFUSE_MAX = 200;
 export const MISSION_REWARD_MAX = 200;
 export const MISSION_DURATION_MIN_DAYS = 1;
 export const MISSION_DURATION_MAX_DAYS = 365;
+
+/**
+ * Wall-clock hour (0-23) at or after which a new mission is fair-started on
+ * the next calendar day instead of the current one. Fairness rule: if a user
+ * commits at 23:50 they should not begin already-behind on Day 1.
+ * The rule is a domain rule (not a UI rule) — every consumer of mission
+ * startDate inherits the correction automatically.
+ */
+export const LATE_START_CUTOFF_HOUR = 21;
+
+export interface StartDateOpts {
+  /** Wall-clock instant. Injectable for tests + future settings-UI plumbing. */
+  now?: Date;
+  /** Late-start cutoff hour. Defaults to LATE_START_CUTOFF_HOUR. */
+  cutoffHour?: number;
+  /** Logical-day boundary hour. Defaults to DEFAULT_DAY_START_HOUR (04:00). */
+  dayStartHour?: number;
+}
+
+/**
+ * Opts for `activateNewMission`. Extends `StartDateOpts` so the fair-start
+ * computation is configurable, and adds `promisedAt` — the exact user
+ * button-press instant during the witness ritual. `promisedAt` is stored
+ * verbatim so the emotional keepsake anchors on the true commitment moment
+ * rather than the DB write time (activatedAt).
+ */
+export interface ActivationOpts extends StartDateOpts {
+  promisedAt?: string;
+}
+
+/**
+ * Computes the fair Day-1 date for a mission committed at `now`. A late-night
+ * window spans [cutoffHour, 24) ∪ [0, dayStartHour). Inside that window the
+ * mission begins on the calendar day after the current logical date; outside
+ * it, on the current logical date.
+ *
+ * Comparing against wall-clock hour (not the logical date) is intentional:
+ * the 04:00 logical boundary already collapses 00:00-03:59 into "yesterday",
+ * so a commit at 00:30 shifts to yesterday+1 = today's calendar — exactly
+ * the fair Day 1.
+ */
+export function getEffectiveStartDate(opts: StartDateOpts = {}): ISODate {
+  const now = opts.now ?? new Date();
+  const cutoffHour = opts.cutoffHour ?? LATE_START_CUTOFF_HOUR;
+  const dayStartHour = opts.dayStartHour ?? DEFAULT_DAY_START_HOUR;
+  const hour = now.getHours();
+  const inLateWindow = hour >= cutoffHour || hour < dayStartHour;
+  const logicalToday = getLogicalDate(now, dayStartHour);
+  return inLateWindow ? addDays(logicalToday, 1) : logicalToday;
+}
 
 export interface MissionDraft {
   title: string;
@@ -56,6 +109,7 @@ const LOCKED_FIELDS = [
   'endDate',
   'status',
   'activatedAt',
+  'promisedAt',
   'targetMetrics',
   'id',
   'schemaVersion',
@@ -135,8 +189,19 @@ export interface MissionProjection {
   totalDays: number;
 }
 
-export function projectDraft(draft: MissionDraft, startDate?: ISODate): MissionProjection {
-  const start = startDate ?? currentLogicalDate();
+/**
+ * Projects a draft to concrete dates. Callers may pass an explicit `startDate`
+ * to bypass cutoff logic (tests, future manual scheduling). Otherwise the
+ * effective Day-1 date is derived from `getEffectiveStartDate` — the fair-
+ * start domain rule. `startDateOpts` is forwarded to that helper so tests +
+ * a future settings-UI can override the cutoff/now/dayStart values.
+ */
+export function projectDraft(
+  draft: MissionDraft,
+  startDate?: ISODate,
+  startDateOpts?: StartDateOpts,
+): MissionProjection {
+  const start = startDate ?? getEffectiveStartDate(startDateOpts);
   const end = addDays(start, draft.durationDays - 1);
   return { startDate: start, endDate: end, totalDays: draft.durationDays };
 }
@@ -160,6 +225,7 @@ export class MissionContractError extends Error {
 export async function activateNewMission(
   draft: MissionDraft,
   startDate?: ISODate,
+  opts?: ActivationOpts,
 ): Promise<Mission> {
   const errors = validateDraft(draft);
   if (errors.length > 0) {
@@ -173,7 +239,7 @@ export async function activateNewMission(
     );
   }
 
-  const projection = projectDraft(draft, startDate);
+  const projection = projectDraft(draft, startDate, opts);
   const now = nowIso();
   const mission: Mission = {
     id: generateId(),
@@ -190,6 +256,10 @@ export async function activateNewMission(
     reward: (draft.reward ?? '').trim(),
     refuseToLose: draft.refuseToLose.trim(),
     activatedAt: now,
+    // Only write promisedAt when the caller supplied it. Leaving it undefined
+    // on legacy/non-onboarding activations keeps IndexedDB rows identical
+    // for missions created before this field existed.
+    ...(opts?.promisedAt !== undefined ? { promisedAt: opts.promisedAt } : {}),
   };
 
   await missionRepository.put(mission);

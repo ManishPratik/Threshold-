@@ -59,6 +59,13 @@ export interface MissionSummary {
   currentDay: number;
   totalDays: number | null;
   ratio: number | null;
+  /** Mirrors MissionProgress.hasStarted — false when today is before the
+   *  mission's effective startDate (late-start fair-shift). Consumers must
+   *  suppress the day counter and show a "Begins {startDate}" affordance. */
+  hasStarted: boolean;
+  /** ISO date of the mission's effective startDate, exposed so consumers can
+   *  render the "Begins …" affordance without also fetching the mission. */
+  startDate: ISODate | null;
 }
 
 export interface KnowledgeStats {
@@ -126,7 +133,15 @@ export function computeMissionSummary(
   today: ISODate,
 ): MissionSummary {
   if (!mission) {
-    return { present: false, title: '', currentDay: 0, totalDays: null, ratio: null };
+    return {
+      present: false,
+      title: '',
+      currentDay: 0,
+      totalDays: null,
+      ratio: null,
+      hasStarted: false,
+      startDate: null,
+    };
   }
   const p = getMissionProgress(mission, today);
   return {
@@ -135,6 +150,8 @@ export function computeMissionSummary(
     currentDay: p.currentDay,
     totalDays: p.totalDays,
     ratio: p.ratio,
+    hasStarted: p.hasStarted,
+    startDate: mission.startDate,
   };
 }
 
