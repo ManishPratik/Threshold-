@@ -1,0 +1,43 @@
+/* Full-viewport alertdialog surface for destructive confirmations
+ * (BreakPromiseDialog, DeleteRoutineDialog, DeleteBlockConfirm,
+ * EraseDataDialog). Same visual chrome as ModalShell — the
+ * `role="alertdialog"` is the semantic distinction. */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: radial-gradient(
+    ellipse at center,
+    var(--paper) 0%,
+    var(--paper-edge) 100%
+  );
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: max(var(--space-xl), env(safe-area-inset-top, 0));
+  padding-bottom: max(var(--space-xl), env(safe-area-inset-bottom, 0));
+  padding-left: var(--content-column-padding);
+  padding-right: var(--content-column-padding);
+  animation: overlayFadeIn var(--motion-ceremonial-in) var(--motion-easing-out);
+}
+
+.column {
+  width: 100%;
+  max-width: var(--content-column-max);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay { animation-duration: 0.01ms; }
+}

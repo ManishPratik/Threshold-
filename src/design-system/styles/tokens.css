@@ -132,4 +132,69 @@
   --layout-max-shell-width: 1080px;
   --layout-nav-height: 60px;
   --layout-nav-height-desktop: 64px;
+
+  /* === SEMANTIC LAYER (v3, additive — for the outcome-first UI remediation) ===
+   * Adopted by every module stylesheet created after 2026-08-02. Legacy
+   * --color-*, --space-N, --text-*, --lh-*, --fw-*, --radius-*, --shadow-*,
+   * --duration-*, --easing-* tokens above remain in place for existing
+   * shared/ui + pwa consumers. Do not delete the legacy layer without
+   * migrating every consumer first.
+   */
+
+  /* Colours */
+  --paper: #F7F3EA;
+  --paper-edge: #EFE9DA; /* radial-vignette outer stop on ceremonial overlays */
+  --ink-primary: #181613;
+  --ink-muted: #6B6459; /* AA-safe against --paper */
+  --ink-line: #E3DED2;
+  --accent: #B4692A;
+  --accent-hover: #A25E24;
+  --accent-ink-on: #FFFFFF;
+  --accent-subtle: #FBEADD;
+  --warning: #8C2A1F;
+  --warning-hover: #7A251C;
+
+  /* Spacing — 8pt base */
+  --space-xs: 4px;
+  --space-s: 8px;
+  --space-m: 16px;
+  --space-l: 24px;
+  --space-xl: 40px;
+  --space-xxl: 64px;
+  --space-ceremonial: 96px;
+
+  /* Type roles */
+  --type-display-hero-size: 44px;
+  --type-display-hero-lh: 50px;
+  --type-display-hero-tracking: -0.01em;
+  --type-display-reading-size: 28px;
+  --type-display-reading-lh: 34px;
+  --type-body-reading-size: 18px;
+  --type-body-reading-lh: 27px;
+  --type-body-reading-small-size: 15px;
+  --type-body-reading-small-lh: 22px;
+  --type-meta-eyebrow-size: 12px;
+  --type-meta-eyebrow-lh: 16px;
+  --type-meta-eyebrow-tracking: 0.08em;
+  --type-meta-body-size: 14px;
+  --type-meta-body-lh: 19px;
+  --type-label-size: 15px;
+  --type-label-weight: 600;
+
+  /* Motion — derived as fractions of FROZEN_BOOT_LOADING_THRESHOLD_MS
+     (400) at src/app/frozen/boot.ts line 19. */
+  --motion-ceremonial-in: 320ms;
+  --motion-ceremonial-out: 240ms;
+  --motion-response: 120ms;
+  --motion-transition: 200ms;
+  --motion-easing-in: ease-in;
+  --motion-easing-out: ease-out;
+  --motion-easing-in-out: ease-in-out;
+
+  /* Content-column layout */
+  --content-column-max: 560px;
+  --content-column-padding: 24px;
+
+  /* Focus ring */
+  --focus-ring-accent-color: #B4692A;
 }

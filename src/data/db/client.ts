@@ -1,14 +1,14 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import { DB_NAME, DB_VERSION } from './schema';
 import { MIGRATIONS } from './migrations';
-import { seedIfEmpty } from './seed';
 
 let dbPromise: Promise<IDBPDatabase> | null = null;
 
 /**
- * Lazy singleton IndexedDB handle. First call opens the DB, runs any pending
- * migrations from oldVersion+1 upward, then runs the bootstrap seed (ADR 0006).
- * The seed is idempotent and only writes if no active Mission is present.
+ * Lazy singleton IndexedDB handle. First call opens the DB and runs any
+ * pending migrations from oldVersion+1 upward. The legacy bootstrap-seed
+ * step has been removed with the legacy schema; the frozen application's
+ * first-launch behaviour lives in `src/app/frozen/firstLaunch.ts`.
  */
 export function getDb(): Promise<IDBPDatabase> {
   if (!dbPromise) {
@@ -35,7 +35,6 @@ export function getDb(): Promise<IDBPDatabase> {
           dbPromise = null;
         },
       });
-      await seedIfEmpty(db);
       return db;
     })();
   }

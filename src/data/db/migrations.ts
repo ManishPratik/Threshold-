@@ -1,5 +1,5 @@
 import type { IDBPDatabase, IDBPTransaction } from 'idb';
-import { STORES } from './schema';
+import { FROZEN_STORES, STORES } from './schema';
 
 /**
  * Migrations are pure functions of (db, oldVersion, tx). They run in order,
@@ -42,6 +42,57 @@ const migration1: Migration = (db) => {
   settings.createIndex('by-key', 'key', { unique: true });
 };
 
+/**
+ * v2 — frozen-architecture stores. Creates every frozen store. The two whose
+ * final names (`routines`, `notes`) collide with v1 stores of the same name
+ * are created here under temporary names (`frozenRoutines`, `frozenNotes`)
+ * so both architectures coexist during the parallel phase. The eventual v3
+ * cleanup migration deletes the v1 stores and copies data from these
+ * temporary stores into stores under the final names. No v1 store is
+ * touched here; every legacy record survives the upgrade.
+ */
+const migration2: Migration = (db) => {
+  // Singleton pointer record. Only one row per install, id === 'app'.
+  db.createObjectStore(FROZEN_STORES.appState, { keyPath: 'id' });
+
+  const promises = db.createObjectStore(FROZEN_STORES.promises, { keyPath: 'id' });
+  promises.createIndex('by-attemptNumber', 'attemptNumber', { unique: true });
+  promises.createIndex('by-startDate', 'startDate');
+  promises.createIndex('by-activatedAt', 'activatedAt');
+  promises.createIndex('by-brokenAt', 'brokenAt');
+
+  // Composite key [promiseId, date]. One verdict per (promise, day).
+  const declarations = db.createObjectStore(FROZEN_STORES.declarations, {
+    keyPath: ['promiseId', 'date'],
+  });
+  declarations.createIndex('by-promiseId', 'promiseId');
+  declarations.createIndex('by-date', 'date');
+
+  // Composite key [promiseId, date, blockId]. Idempotent per block per day.
+  const blockCompletions = db.createObjectStore(FROZEN_STORES.blockCompletions, {
+    keyPath: ['promiseId', 'date', 'blockId'],
+  });
+  blockCompletions.createIndex('by-promiseId-date', ['promiseId', 'date']);
+
+  // Frozen Routine store under a temporary name — one routine per Promise,
+  // uniqueness enforced at the index level. Renamed to `routines` by the
+  // v3 cleanup migration once the v1 `routines` store is deleted.
+  const frozenRoutines = db.createObjectStore(FROZEN_STORES.frozenRoutines, {
+    keyPath: 'id',
+  });
+  frozenRoutines.createIndex('by-promiseId', 'promiseId', { unique: true });
+
+  // Frozen Note store under a temporary name — notes belong to a Promise.
+  // Renamed to `notes` by the v3 cleanup migration once the v1 `notes`
+  // store is deleted.
+  const frozenNotes = db.createObjectStore(FROZEN_STORES.frozenNotes, {
+    keyPath: 'id',
+  });
+  frozenNotes.createIndex('by-promiseId', 'promiseId');
+  frozenNotes.createIndex('by-createdAt', 'createdAt');
+};
+
 export const MIGRATIONS: Record<number, Migration> = {
   1: migration1,
+  2: migration2,
 };

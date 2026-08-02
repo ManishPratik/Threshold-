@@ -1,0 +1,82 @@
+/* Settings page — two shelves: About + Data. Editorial column. */
+
+.column {
+  max-width: var(--content-column-max);
+  margin: 0 auto;
+  padding: var(--space-xxl) var(--content-column-padding) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-eyebrow-size);
+  line-height: var(--type-meta-eyebrow-lh);
+  letter-spacing: var(--type-meta-eyebrow-tracking);
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  margin: 0 0 var(--space-xl) 0;
+  font-weight: var(--fw-medium);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  margin-bottom: var(--space-xl);
+}
+
+.sectionEyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-eyebrow-size);
+  line-height: var(--type-meta-eyebrow-lh);
+  letter-spacing: var(--type-meta-eyebrow-tracking);
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  margin: 0 0 var(--space-s) 0;
+  font-weight: var(--fw-medium);
+}
+
+.appName {
+  font-family: var(--font-serif);
+  font-size: var(--type-display-reading-size);
+  line-height: var(--type-display-reading-lh);
+  color: var(--ink-primary);
+  margin: 0;
+  font-weight: var(--fw-regular);
+}
+
+.appVersion {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.dataParagraph {
+  font-family: var(--font-serif);
+  font-size: var(--type-body-reading-size);
+  line-height: var(--type-body-reading-lh);
+  color: var(--ink-primary);
+  margin: 0 0 var(--space-m) 0;
+  font-weight: var(--fw-regular);
+}
+
+.warningTextLink {
+  background: none;
+  border: none;
+  color: var(--warning);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  font-weight: var(--type-label-weight);
+  cursor: pointer;
+  padding: var(--space-s) 0;
+  align-self: flex-start;
+  border-radius: var(--radius-sm);
+}
+.warningTextLink:hover { text-decoration: underline; }
+.warningTextLink:focus-visible {
+  outline: 2px solid var(--warning);
+  outline-offset: 3px;
+}

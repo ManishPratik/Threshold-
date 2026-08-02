@@ -1,0 +1,65 @@
+/* Fixed bottom navigation. 4 items. Active state = accent ink + accent
+ * underline. Height = 64px + safe-area inset. Never overlaps content
+ * because FrozenAppLayout adds matching bottom padding.
+ */
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: var(--paper);
+  border-top: 1px solid var(--ink-line);
+  height: calc(64px + env(safe-area-inset-bottom, 0));
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+}
+
+.item {
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  color: var(--ink-muted);
+  padding: 0 var(--space-m);
+  position: relative;
+  transition: color var(--motion-response) var(--motion-easing-out);
+}
+
+.item:hover { color: var(--ink-primary); }
+
+.item:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: -4px;
+  border-radius: var(--radius-sm);
+}
+
+.itemActive {
+  color: var(--accent);
+}
+
+.itemActive::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item { transition: none; }
+}

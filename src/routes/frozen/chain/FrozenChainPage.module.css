@@ -1,0 +1,150 @@
+/* Chain page — ledger of days for a Promise. 3-column row: glyph +
+ * Day-N label + human date. Today row gets an accent underline. */
+
+.column {
+  max-width: var(--content-column-max);
+  margin: 0 auto;
+  padding: var(--space-xxl) var(--content-column-padding) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--type-display-reading-size);
+  line-height: var(--type-display-reading-lh);
+  color: var(--ink-primary);
+  margin: 0 0 var(--space-s) 0;
+  font-weight: var(--fw-regular);
+}
+
+.header {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  margin: 0 0 var(--space-xl) 0;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  padding: 0;
+}
+
+.row {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-s) 0;
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: var(--space-m);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  border-bottom: 1px solid var(--ink-line);
+}
+.item:last-of-type .row { border-bottom: none; }
+.row:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.row:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+.row:not(:disabled):hover .glyph {
+  border-color: var(--ink-muted);
+}
+
+.glyph {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-line);
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--motion-response) var(--motion-easing-out),
+    border-color var(--motion-response) var(--motion-easing-out);
+}
+.glyphKept {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.glyphBroken {
+  background: var(--paper);
+  border-color: var(--warning);
+  color: var(--warning);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1;
+  font-weight: var(--fw-medium);
+}
+
+.dayLabel {
+  font-family: var(--font-sans);
+  font-size: var(--type-label-size);
+  color: var(--ink-primary);
+  font-weight: var(--fw-regular);
+  font-variant-numeric: tabular-nums;
+  position: relative;
+  display: inline-block;
+}
+
+.dayLabelToday {
+  font-weight: var(--fw-semibold);
+}
+.dayLabelToday::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 24px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+
+.date {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.loading {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  text-align: center;
+  margin: var(--space-xl) 0;
+}
+
+.notFound {
+  font-family: var(--font-serif);
+  font-size: var(--type-body-reading-size);
+  color: var(--ink-primary);
+  margin: 0;
+}
+
+.error {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--warning);
+  margin: var(--space-m) 0 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyph { transition: none; }
+}

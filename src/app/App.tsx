@@ -1,11 +1,5 @@
-import { RouterProvider } from 'react-router-dom';
-import { ErrorBoundary } from './ErrorBoundary';
-import { router } from './router';
+import { FrozenAppShell } from './frozen/FrozenAppShell';
 
 export function App() {
-  return (
-    <ErrorBoundary>
-      <RouterProvider router={router} />
-    </ErrorBoundary>
-  );
+  return <FrozenAppShell />;
 }

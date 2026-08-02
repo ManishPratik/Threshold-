@@ -1,20 +1,27 @@
-# Session handoff — Personal OS V2 onboarding
+# Session handoff — Personal OS
 
-Written 2026-07-30 so the next session can pick up cold.
+Written 2026-07-30. Updated same day at v1.0.0 release.
 
 ## State at handoff
 
 - Live URL: https://makeyoudiscplined.netlify.app
-- GitHub main: `ManishPratik/Threshold-` at commit `a2302cd`
-  (`V2 onboarding — witness ritual + Today keepsake`, on top of
-  `6565926` `V1.1 UI redesign — warm editorial design system across every screen`).
-- Netlify: auto-builds from `main`. Deploy of `a2302cd` verified live;
-  served assets `/assets/index-ClJYs1OQ.js` + `/assets/index-bENPLQKw.css`
-  match the local `dist/index.html` bundle references.
-- Both onboarding paths verified against production:
-  - New user → `/today` redirects to `/welcome` (Mirror screen).
-  - Existing user (with `setting-onboarding-completed` present in
-    IndexedDB `settings` store) → `/today` renders normally.
+- GitHub main: `ManishPratik/Threshold-` at commit `bb85c631` — **tagged
+  as `v1.0.0`** (annotated tag object `c59a8220`). Release chain:
+  - `bb85c63` Accessibility: darken color-text-muted for WCAG AA
+  - `3a4bd0b` V2 contract redesign — five-section promise + inspiration accordion
+  - `a2302cd` V2 onboarding — witness ritual + Today keepsake
+  - `6565926` V1.1 UI redesign — warm editorial design system across every screen
+- Netlify: auto-builds from `main`. Deploy of `bb85c631` verified live
+  during the release gate.
+- **`main` is frozen at v1.0.0.** All future work targets the `develop`
+  branch (already created + pushed to origin at the same commit).
+- V1.1 canonical backlog: `docs/roadmap/v1.1-backlog.md`. RQ-1 (draft
+  persistence across `/welcome/*` refresh) is the P0 blocker for v1.1.0.
+- Lighthouse (snapshot mode, mobile) at v1.0.0: Accessibility 100, Best
+  Practices 100, SEO 100, Agentic Browsing 50 (only failing audit is
+  `llms-txt`, deferred to V1.1 as A-2). Performance category was not
+  measured (Lighthouse navigation mode threw NO_FCP in the MCP-controlled
+  browser — see TD-4).
 
 ## Repo layout — read before editing
 
@@ -166,9 +173,13 @@ navigate_page url=.../today
 ## First things to do in the next session
 
 1. `git -C /tmp/threshold-swap log --oneline -5` — confirm `main` is
-   still at `a2302cd` (or newer).
-2. `curl -sSI https://makeyoudiscplined.netlify.app/` — confirm site up.
-3. Read this doc.
-4. Ask the user what they want; do not assume continuation of any
+   still at `bb85c631` (v1.0.0 tag; if anything newer is there it is a
+   post-v1.0.0 change — check whether it went through the v1.1 governance
+   in `docs/roadmap/v1.1-backlog.md`).
+2. `git -C /tmp/threshold-swap branch -a` — confirm `develop` exists and
+   is the branch future work targets.
+3. `curl -sSI https://makeyoudiscplined.netlify.app/` — confirm site up.
+4. Read this doc + `docs/roadmap/v1.1-backlog.md`.
+5. Ask the user what they want; do not assume continuation of any
    specific thread. V1.0 blockers are shipped; V1.1 UI redesign is
    shipped; V2 onboarding is shipped.

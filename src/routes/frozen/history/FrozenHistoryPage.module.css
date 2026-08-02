@@ -1,0 +1,127 @@
+/* History page — reverse-chronological chronicle of every Promise. Each
+ * card is a whitespace-separated editorial block with outcome-tinted
+ * outcome line. Hairline rule between attempts. No card surface. */
+
+.column {
+  max-width: var(--content-column-max);
+  margin: 0 auto;
+  padding: var(--space-xxl) var(--content-column-padding) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-eyebrow-size);
+  line-height: var(--type-meta-eyebrow-lh);
+  letter-spacing: var(--type-meta-eyebrow-tracking);
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  margin: 0 0 var(--space-xl) 0;
+  font-weight: var(--fw-medium);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  padding: 0;
+  border-bottom: 1px solid var(--ink-line);
+}
+.item:last-of-type { border-bottom: none; }
+
+.card {
+  width: 100%;
+  padding: var(--space-l) 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+}
+.card:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+.card:hover .title { color: var(--accent); }
+
+.attempt {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-eyebrow-size);
+  line-height: var(--type-meta-eyebrow-lh);
+  letter-spacing: var(--type-meta-eyebrow-tracking);
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  margin: 0;
+  font-weight: var(--fw-medium);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--type-display-reading-size);
+  line-height: var(--type-display-reading-lh);
+  color: var(--ink-primary);
+  margin: 0;
+  font-weight: var(--fw-regular);
+  transition: color var(--motion-response) var(--motion-easing-out);
+  overflow-wrap: break-word;
+  hyphens: auto;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dates {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.outcome {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  margin: 0;
+  font-weight: var(--fw-medium);
+}
+.outcomeKept { color: var(--accent); }
+.outcomeBroken { color: var(--warning); }
+.outcomeActive { color: var(--ink-primary); }
+
+.loading {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  text-align: center;
+  margin: var(--space-xl) 0;
+}
+
+.emptyLine {
+  font-family: var(--font-serif);
+  font-size: var(--type-body-reading-size);
+  color: var(--ink-primary);
+  text-align: center;
+  margin: var(--space-xxl) 0;
+}
+
+.error {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--warning);
+  margin: var(--space-m) 0 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title { transition: none; }
+}

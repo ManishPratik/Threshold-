@@ -1,0 +1,33 @@
+/* App-wide layout shell. Paper surface, min-height full viewport, main
+ * content flex-grows, NavBar pinned to the bottom via its own fixed
+ * positioning. `main` reserves bottom padding equal to nav height + inset
+ * so route content never hides behind the nav bar.
+ */
+
+.shell {
+  min-height: 100vh;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0) + var(--space-l));
+  animation: routeFadeIn var(--motion-transition) var(--motion-easing-out);
+}
+
+.mainFocused {
+  flex: 1;
+  padding-bottom: var(--space-xl);
+  animation: routeFadeIn var(--motion-transition) var(--motion-easing-out);
+}
+
+@keyframes routeFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main, .mainFocused { animation-duration: 0.01ms; }
+}

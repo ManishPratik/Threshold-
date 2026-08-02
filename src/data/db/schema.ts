@@ -2,8 +2,12 @@
 // in migrations.ts and bump DB_VERSION. Never modify a shipped migration.
 
 export const DB_NAME = 'personal-os';
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 
+// Legacy v1 store names. Retained solely so `migration1` — the shipped v1
+// baseline in `migrations.ts` — continues to compile against the same string
+// literals it originally created. No live consumer reads or writes these
+// stores; the frozen application uses `FROZEN_STORES` below.
 export const STORES = {
   missions: 'missions',
   routines: 'routines',
@@ -15,6 +19,16 @@ export const STORES = {
   settings: 'settings',
 } as const;
 
-export type StoreName = (typeof STORES)[keyof typeof STORES];
+// Frozen v2 stores. `frozenRoutines` / `frozenNotes` use temporary names to
+// avoid a name collision with the v1 stores of the same string. A future
+// v3 migration is expected to consolidate them under `routines` / `notes`.
+export const FROZEN_STORES = {
+  appState: 'appState',
+  promises: 'promises',
+  declarations: 'declarations',
+  blockCompletions: 'blockCompletions',
+  frozenRoutines: 'frozenRoutines',
+  frozenNotes: 'frozenNotes',
+} as const;
 
-export const ALL_STORE_NAMES: StoreName[] = Object.values(STORES);
+export type FrozenStoreName = (typeof FROZEN_STORES)[keyof typeof FROZEN_STORES];
