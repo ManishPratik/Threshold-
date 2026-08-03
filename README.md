@@ -10,7 +10,11 @@ The primary metric is **Self-Trust** — a score derived from an append-only log
 
 ## Status
 
-This repository contains **only the engineering foundation** (routing, design system, IndexedDB layer, PWA config, tooling). Product features — Mission Contract, Routine Engine, Recovery Mode, Knowledge Vault, Analytics, Reviews — are implemented in later milestones.
+Release Candidate 1 (v1.1.0-rc1).
+
+Shipped surfaces: Today, Chain, History, Settings, Daily Flow Analytics. Shipped kernel: Promise, Routine (with anchor grouping), Reflection, Self-Trust. Shipped runtime: Daily Flow Engine (Intervention Queue, Ack Log, Daily Flow Summary, tier-adaptive interventions, per-day retention purge). Shipped Life Program: Smoking Cessation.
+
+See `docs/release/release-notes-v1.1.0-rc1.md` for a feature-by-feature manifest.
 
 ## Requirements
 
@@ -66,6 +70,10 @@ See `docs/adr/` for the reasoning behind each major decision:
 - ADR 0003 — Offline-first, single-user, single-device V1
 - ADR 0004 — No global state store in V1
 - ADR 0005 — PWA via `vite-plugin-pwa` in `injectManifest` mode
+- ADR 0006 — Bootstrap seed lives inside the repository layer (superseded by the Frozen boot flow)
+- ADR 0007 — Mission lifecycle rules live in a domain service (historical; Mission was renamed to Promise)
+- ADR 0008 — Self-Trust measures promise integrity, not productivity
+- ADR 0009 — Daily Flow Engine, Program Contract, and Today Layout Ownership
 
 ## Design system
 
@@ -86,15 +94,17 @@ Every persisted entity extends `BaseEntity` (`id`, `createdAt`, `updatedAt`, `sc
 
 Access is always via a repository — feature code never touches `idb` directly.
 
-```ts
-import { missionRepository } from '@data/repositories';
-
-const active = await missionRepository.getActive();
-```
-
-The `PromiseEvent` store is append-only — call `append()`, never `put()` on an existing id.
-
 Schema changes require adding a numbered migration in `src/data/db/migrations.ts` and bumping `DB_VERSION` in `schema.ts`. Shipped migrations are never edited.
+
+### Live stores (as of this release)
+
+- `appState` — singleton pointer to the active Promise + enabled program ids.
+- `promises` — Promise records with unique `by-attemptNumber` / `by-startDate` / `by-activatedAt` / `by-brokenAt` indexes.
+- `declarations` — one row per (promiseId, date) — Reflection verdicts.
+- `blockCompletions` — one row per (promiseId, date, blockId) — routine block completions.
+- `frozenRoutines` — one row per Promise (unique `by-promiseId`).
+- `frozenNotes` — notes per Promise.
+- `settings` — reused v1 store; hosts Smoking-scoped rows (`smoking-quit-time`, `smoking-craving-log`, `smoking-peak-crossed-acked`, `smoking-hurdles-acked`, editable-slot rows) and Daily Flow ack-log rows (`dailyFlow-ack-YYYY-MM-DD`).
 
 ## PWA & deployment
 
@@ -109,15 +119,11 @@ Service worker source: `src/pwa/sw.ts` (`injectManifest` mode — we own the SW 
 
 ## Deferred / not implemented
 
-The following are intentionally out of the foundation milestone:
-
-- All product features: Mission Contract, Routine Engine, Recovery Mode, Knowledge Vault, Analytics UI, Reviews UI, Self-Trust UI, Backup & Restore, Settings UI.
-- Real PNG icon set (currently placeholder SVGs). Generate a full icon matrix via `pwa-asset-generator` before iOS install rollout.
-- In-app "update available" prompt UI (currently console-only).
-- Dark mode (locked out of V1).
-- Import / Export JSON flow (repository primitives exist; UI does not).
-- Self-Trust formula body (function is present with a placeholder score of 0).
-- Boundary-enforcement ESLint rule preventing cross-feature imports.
+- Onboarding chooser for non-Promise first-run experiences (Routine-only, Program-only). Present onboarding routes every new user through Promise creation.
+- Ambient program widget rendering when no active Promise is present.
+- Real PNG icon matrix (SVG icons ship today; `pwa-asset-generator` sweep deferred for iOS install polish).
+- Dark mode.
+- Import / Export JSON flow.
 
 ## Contributing
 

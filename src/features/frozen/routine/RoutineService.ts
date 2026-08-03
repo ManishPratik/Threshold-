@@ -1,5 +1,6 @@
 import { getDb } from '@data/db/client';
 import { FROZEN_STORES } from '@data/db/schema';
+import type { BlockCompletion } from '@data/types/frozen/BlockCompletion';
 import type { Routine, RoutineBlock } from '@data/types/frozen/Routine';
 import { RoutineRepository } from '@data/repositories/frozen/RoutineRepository';
 import { BlockCompletionRepository } from '@data/repositories/frozen/BlockCompletionRepository';
@@ -85,12 +86,47 @@ export class RoutineService {
     promiseId: string,
     blocks: RoutineBlock[],
   ): Promise<Routine> {
-    const existing = await this.routines.getByPromiseId(promiseId);
+    // Cross-store readwrite transaction so the Routine write and the
+    // orphan-completion cascade succeed or fail together. Rows for
+    // blockIds that survive the replacement are untouched — this
+    // preserves completion history across reorder / rename / anchor
+    // moves per the Phase-post-audit blocker fix.
+    const db = await getDb();
+    const tx = db.transaction(
+      [FROZEN_STORES.frozenRoutines, FROZEN_STORES.blockCompletions],
+      'readwrite',
+    );
+
+    const routineIdx = tx
+      .objectStore(FROZEN_STORES.frozenRoutines)
+      .index('by-promiseId');
+    const existing = (await routineIdx.get(promiseId)) as Routine | undefined;
     if (!existing) {
       throw new Error(`No Routine exists for promise ${promiseId}`);
     }
+
+    const newIds = new Set(blocks.map((b) => b.id));
+    const removedIds = new Set<string>();
+    for (const b of existing.blocks) {
+      if (!newIds.has(b.id)) removedIds.add(b.id);
+    }
+
+    if (removedIds.size > 0) {
+      const compStore = tx.objectStore(FROZEN_STORES.blockCompletions);
+      const range = IDBKeyRange.bound([promiseId], [promiseId, '￿']);
+      let cursor = await compStore.openCursor(range);
+      while (cursor) {
+        const rec = cursor.value as BlockCompletion;
+        if (removedIds.has(rec.blockId)) {
+          await cursor.delete();
+        }
+        cursor = await cursor.continue();
+      }
+    }
+
     const next: Routine = { ...existing, blocks, updatedAt: nowIso() };
-    await this.routines.put(next);
+    await tx.objectStore(FROZEN_STORES.frozenRoutines).put(next);
+    await tx.done;
     return next;
   }
 

@@ -9,9 +9,21 @@ export {
   getProgram,
   listPrograms,
   clearRegistry,
+  getProgramSurfaces,
 } from './registry';
 
-export type { LifeProgram, TodayWidgetProps } from './types';
+export type {
+  LifeProgram,
+  TodayWidgetProps,
+  Phase,
+  Priority,
+  AckKind,
+  InterventionContext,
+  Intervention,
+  SurfaceSlot,
+  SurfaceProps,
+  ProgramSurface,
+} from './types';
 
 export { TodayProgramWidgets } from './TodayProgramWidgets';
 export type { TodayProgramWidgetsProps } from './TodayProgramWidgets';

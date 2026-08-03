@@ -12,3 +12,11 @@ export type { ProgressSummaryProps } from './ProgressSummary';
 
 export { CurrentFocusCard } from './CurrentFocusCard';
 export type { CurrentFocusCardProps } from './CurrentFocusCard';
+
+export {
+  ANCHOR_ORDER,
+  ANCHOR_LABELS,
+  getBlockAnchor,
+  groupByAnchor,
+  orderedAnchorsWithBlocks,
+} from './anchors';

@@ -1,0 +1,74 @@
+/* Intervention queue — engine-owned surface stack between Self-Trust
+ * and the ambient program widgets on Today. Silent when there is
+ * nothing to render; no wrapper is emitted for the empty case. */
+
+.queue {
+  margin: 0 0 var(--space-xl) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+.card {
+  padding: var(--space-m) 0;
+  border-bottom: 1px solid var(--ink-line);
+}
+.card:last-of-type {
+  border-bottom: none;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--type-body-reading-size);
+  color: var(--ink-primary);
+  margin: 0;
+  font-weight: var(--fw-regular);
+}
+
+.body {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  margin: var(--space-xs) 0 0 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-m);
+  margin-top: var(--space-m);
+}
+
+.primary {
+  background: var(--accent);
+  color: var(--accent-ink-on);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  min-height: 36px;
+  padding: 0 var(--space-l);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  font-weight: var(--type-label-weight);
+  cursor: pointer;
+}
+.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.primary:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 2px;
+}
+
+.dismiss {
+  background: none;
+  border: none;
+  color: var(--ink-muted);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  cursor: pointer;
+  padding: var(--space-s) var(--space-s);
+  border-radius: var(--radius-sm);
+}
+.dismiss:hover { color: var(--ink-primary); text-decoration: underline; }
+.dismiss:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 2px;
+}

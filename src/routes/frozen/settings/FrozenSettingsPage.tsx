@@ -9,6 +9,8 @@ export interface FrozenSettingsPageProps {
   appVersion?: string;
   /** Fires after Erase Data commits. Parent routes to Today. */
   onErased: (() => void) | undefined;
+  /** Fires when the user opens the Daily Flow Analytics screen. */
+  onOpenDailyFlowAnalytics?: () => void;
 }
 
 /**
@@ -21,6 +23,7 @@ export function FrozenSettingsPage({
   appName = 'Personal OS',
   appVersion = 'V1',
   onErased,
+  onOpenDailyFlowAnalytics,
 }: FrozenSettingsPageProps) {
   const [eraseOpen, setEraseOpen] = useState(false);
   const [programs] = useState<readonly LifeProgram[]>(() => listPrograms());
@@ -88,6 +91,22 @@ export function FrozenSettingsPage({
               </div>
             );
           })}
+        </section>
+      ) : null}
+
+      {onOpenDailyFlowAnalytics ? (
+        <section className={styles.section} aria-label="Daily Flow Analytics">
+          <p className={styles.sectionEyebrow}>Daily Flow</p>
+          <p className={styles.dataParagraph}>
+            See how consistently you have engaged with today&apos;s guidance.
+          </p>
+          <button
+            type="button"
+            className={styles.warningTextLink}
+            onClick={onOpenDailyFlowAnalytics}
+          >
+            Open Daily Flow Analytics.
+          </button>
         </section>
       ) : null}
 

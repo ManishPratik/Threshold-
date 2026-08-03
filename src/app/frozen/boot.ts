@@ -10,6 +10,10 @@ import {
   PromiseService,
   RoutineService,
 } from '@features/frozen';
+import {
+  purgeOlderThan30Days,
+  toDateKey,
+} from '@features/daily-flow-engine';
 
 /**
  * Threshold above which the app root renders a plain "Loading…" line
@@ -44,6 +48,12 @@ export interface FrozenBootData {
  */
 export async function bootstrapFrozen(): Promise<FrozenBootData> {
   const today = currentLogicalDate();
+
+  // Sweep ack rows older than the retention window per ADR 0009 §6.
+  // Failures are swallowed — the analytics view remains readable and
+  // the sweep will retry on the next boot. This is fire-and-forget
+  // so the first-frame render is never blocked on it.
+  void purgeOlderThan30Days(toDateKey(Date.now())).catch(() => {});
 
   const promiseService = new PromiseService();
   const active = (await promiseService.getActivePromise()) ?? null;

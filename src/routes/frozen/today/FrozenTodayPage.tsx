@@ -12,11 +12,18 @@ import {
 } from '@features/frozen';
 import { computeSelfTrust, type SelfTrustResult } from '@features/self-trust';
 import {
+  ANCHOR_LABELS,
   CurrentFocusCard,
   getTodayProgress,
+  groupByAnchor,
+  orderedAnchorsWithBlocks,
   ProgressSummary,
 } from '@features/routine-engine';
 import { TodayProgramWidgets } from '@features/programs';
+import {
+  DailyFlowSummary,
+  InterventionQueue,
+} from '@features/daily-flow-engine';
 import {
   addDays,
   computeDayNumber,
@@ -198,6 +205,8 @@ export function FrozenTodayPage({
           {promise && selfTrust ? (
             <SelfTrustLine result={selfTrust} />
           ) : null}
+          {promise ? <DailyFlowSummary promiseId={promise.id} /> : null}
+          {promise ? <InterventionQueue promiseId={promise.id} /> : null}
           {promise ? <TodayProgramWidgets promiseId={promise.id} /> : null}
           {principle ? <RememberSection principle={principle} /> : null}
           {routine ? (
@@ -352,39 +361,46 @@ function RoutineStrip({
   onBlockTap: ((blockId: string) => void) | undefined;
 }) {
   const completedSet = new Set(completedBlockIds);
+  const grouped = groupByAnchor(blocks);
+  const anchorsWithBlocks = orderedAnchorsWithBlocks(blocks);
   return (
     <section className={styles.routine} aria-label="Routine">
-      <ul className={styles.routineList}>
-        {blocks.map((block) => {
-          const done = completedSet.has(block.id);
-          return (
-            <li key={block.id} className={styles.routineListItem}>
-              <button
-                type="button"
-                className={styles.blockButton}
-                onClick={() => {
-                  if (onBlockTap) onBlockTap(block.id);
-                }}
-                aria-pressed={done}
-                aria-label={`${done ? 'Uncomplete' : 'Complete'} ${block.name}`}
-              >
-                <span
-                  aria-hidden="true"
-                  className={done ? `${styles.glyph} ${styles.glyphDone}` : styles.glyph}
-                />
-                <span
-                  className={done ? `${styles.blockLabel} ${styles.blockDone}` : styles.blockLabel}
-                >
-                  {block.name}
-                </span>
-                <span className={styles.blockMeta}>
-                  {block.durationMinutes} min · {block.type}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      {anchorsWithBlocks.map((anchor) => (
+        <div key={anchor} className={styles.anchorGroup}>
+          <p className={styles.anchorGroupLabel}>{ANCHOR_LABELS[anchor]}</p>
+          <ul className={styles.routineList}>
+            {grouped[anchor].map((block) => {
+              const done = completedSet.has(block.id);
+              return (
+                <li key={block.id} className={styles.routineListItem}>
+                  <button
+                    type="button"
+                    className={styles.blockButton}
+                    onClick={() => {
+                      if (onBlockTap) onBlockTap(block.id);
+                    }}
+                    aria-pressed={done}
+                    aria-label={`${done ? 'Uncomplete' : 'Complete'} ${block.name}`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={done ? `${styles.glyph} ${styles.glyphDone}` : styles.glyph}
+                    />
+                    <span
+                      className={done ? `${styles.blockLabel} ${styles.blockDone}` : styles.blockLabel}
+                    >
+                      {block.name}
+                    </span>
+                    <span className={styles.blockMeta}>
+                      {block.durationMinutes} min · {block.type}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
       <div className={styles.editRoutineRow}>
         <button
           type="button"

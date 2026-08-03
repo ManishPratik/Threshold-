@@ -15,6 +15,7 @@ Each ADR captures a single decision, its context, and its consequences.
 | 0006 | [Bootstrap seed lives inside the repository layer](./0006-bootstrap-repository-seed.md) | Accepted |
 | 0007 | [Mission lifecycle rules live in a domain service, not on the repository](./0007-mission-domain-service.md) | Accepted |
 | 0008 | [Self-Trust measures promise integrity, not productivity](./0008-self-trust-integrity-not-productivity.md) | Accepted |
+| 0009 | [Daily Flow Engine, Program Contract, and Today Layout Ownership](./0009-daily-flow-engine.md) | Accepted |
 
 ## Conventions
 

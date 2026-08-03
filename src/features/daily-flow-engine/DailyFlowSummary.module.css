@@ -1,0 +1,9 @@
+/* Daily Flow Summary — one quiet sentence between Self-Trust and the
+ * intervention queue on Today. No card, no border, no icon. */
+
+.line {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  margin: 0 0 var(--space-l) 0;
+}

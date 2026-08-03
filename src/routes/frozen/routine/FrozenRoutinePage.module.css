@@ -38,6 +38,56 @@
   text-align: center;
 }
 
+.anchorGroups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-l);
+}
+
+.anchorSection {
+  margin: 0;
+}
+
+.anchorHeading {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-eyebrow-size);
+  line-height: var(--type-meta-eyebrow-lh);
+  letter-spacing: var(--type-meta-eyebrow-tracking);
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  margin: 0 0 var(--space-s) 0;
+  font-weight: var(--fw-medium);
+}
+
+.anchorPicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.anchorPickerButton {
+  background: none;
+  border: 1px solid var(--ink-line);
+  color: var(--ink-primary);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  padding: var(--space-s) var(--space-m);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  min-height: 36px;
+}
+.anchorPickerButton:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 2px;
+}
+
+.anchorPickerButtonActive {
+  background: var(--accent);
+  color: var(--accent-ink-on);
+  border-color: var(--accent);
+}
+
 .list {
   list-style: none;
   padding: 0;

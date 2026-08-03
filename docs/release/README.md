@@ -1,9 +1,10 @@
-# V1 Release Artefacts
+# Release Artefacts
 
-*Frozen at v1.0.0. Any change here is a release-management change, not a product or architectural one.*
+*Baseline snapshot for v1.1.0-rc1. Any change here is a release-management change, not a product or architectural one.*
 
 | Artefact | File |
 | -------- | ---- |
+| Release notes (v1.1.0-rc1) | ./release-notes-v1.1.0-rc1.md |
 | Architecture summary | ./architecture-summary.md |
 | ADR index | ./adr-index.md |
 | Deployment checklist | ./deployment-checklist.md |
@@ -13,14 +14,14 @@
 
 ## Baseline
 
-- Version: **v1.0.0** (see package.json).
-- Verification pipeline at freeze: typecheck clean, lint clean, 189 tests across 17 files, production build with 14 precache entries at ~402 KiB.
-- Zero TODO / FIXME / XXX markers in src or docs.
+- Version: **v1.1.0-rc1** (the semver `1.1.0` lives in `package.json`; the RC1 marker is documented here and in the release notes).
+- Verification pipeline at freeze: typecheck clean, lint 0 errors (4 pre-existing test-file non-null-assertion warnings), 335 tests across 23 files, production build with 14 precache entries at ~525 KiB.
+- Zero TODO / FIXME / XXX markers in `src/`.
 
 ## Change control
 
 The main branch is release-candidate quality. From this point:
 
-- **Permitted:** critical production bugs, security issues, data-loss bugs, build or deployment failures.
+- **Permitted:** production bugs, security issues, data-loss bugs, build or deployment failures.
 - **Not permitted without a separate planning cycle:** feature requests, architectural cleanups, refactors, "small improvements".
-- Any material work opens as V1.1 or V2 planning — not by extending this baseline directly.
+- Any material work opens as v1.2 or v2 planning — not by extending this baseline directly.

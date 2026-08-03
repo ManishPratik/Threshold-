@@ -8,7 +8,7 @@
 - [ ] `npm install` finishes without EBADENGINE or ERESOLVE errors.
 - [ ] `npm run typecheck` — no output.
 - [ ] `npm run lint` — no output.
-- [ ] `npm test` — 189 tests / 17 files pass (baseline count; growth is fine, regression is not).
+- [ ] `npm test` — 335 tests / 23 files pass (baseline count; growth is fine, regression is not).
 - [ ] `npm run build` — succeeds, produces `dist/`, PWA precache reported.
 - [ ] Manifest version in package.json reflects the intended release.
 - [ ] `dist/index.html` links the manifest + favicon.
@@ -27,19 +27,39 @@
 - [ ] Push branch → Netlify deploy preview builds green.
 - [ ] Open the deploy preview URL.
 - [ ] Boot: page loads within 3 seconds on a mid-tier connection.
-- [ ] No console errors visible in DevTools during boot.
-- [ ] Bootstrap example data appears (first-visit; DevTools → Application → IndexedDB → `personal-os` present with mission/routine/dayLog rows).
+- [ ] No console errors visible in DevTools during boot (a single `[pwa] App is ready to work offline.` info line is expected).
+- [ ] IndexedDB `personal-os` present at `DB_VERSION = 2` with the 8 v1 stores + 6 frozen v2 stores. No pre-seeded data.
 
-## Smoke test — all four routes
+## Smoke test — every shipped route
 
-- [ ] **Today** — Mission Summary, Current Focus, Progress, End-of-day reflection all render.
-- [ ] Click Start → button set flips to Pause + Complete. Click Complete → progress increments and a new PromiseEvent lands in DevTools (Application → IndexedDB → promiseEvents).
-- [ ] Mission Summary → tap "Create your own contract" → CreateMissionFlow appears → complete the two-step flow → bootstrap purged, real mission active.
-- [ ] Auto-guide → Routine Builder appears since the new mission has no routine → build a 2-block routine → save → back on Today with the new routine driving CurrentFocus.
-- [ ] **Knowledge** — create a note, edit it, soft-delete, undo within 6s, soft-delete again, permanently delete via Settings → Trash.
-- [ ] **Analytics** — Self-Trust score visible; consistency counts reflect the events written during the smoke test; Knowledge stats show note counts.
-- [ ] Analytics → open Weekly Review, save answers, verify status pill flips to Submitted.
-- [ ] **Settings** — Backup → Export downloads a JSON file with `personal-os-backup-<date>` filename; Restore → pick the exported file, preview shows counts, cancel; Reset → dismiss the danger-zone confirmation (do not actually reset in staging without a fresh IndexedDB).
+- [ ] **Today** — Greeting, Promise anchor (Day N of M), Self-Trust line, Daily Flow Summary line (when a Life Program is enabled), Intervention Queue (per phase), program ambient widget (when enabled), Current Focus card, anchor-grouped Routine, Reflect. invitation (evening) all render without console errors.
+- [ ] Tap a routine block → glyph flips to done; Self-Trust re-derives.
+- [ ] Tap "Edit routine." → block editor with anchor picker; add block with anchor = Morning; save; back on Today with the new block grouped under Morning.
+- [ ] **Chain** — every day of the arc rendered with correct kept / broken / awaiting glyph; past-day tap opens read-only Reflection; today's tap opens the Question variant (when in the ritual window).
+- [ ] **History** — every Promise listed with attempt number, dates, outcome text.
+- [ ] Tap a Promise → Promise Detail loads.
+- [ ] **Settings** — About shows app name + version; Life Programs toggle enables/disables Smoking; "Open Daily Flow Analytics." navigates to the analytics screen; "Erase all data." held-disabled 600 ms then confirms.
+- [ ] **Daily Flow Analytics** — supportive summary + 30-day timeline newest-first; empty state renders "Your Daily Flow history will appear here." when no ack rows exist.
+
+## Smoke test — Smoking program
+
+- [ ] Enable Smoking in Settings → return to Today → ambient widget renders with quit-time CTA.
+- [ ] Tap the CTA → stamp quit time → chamber, peak-withdrawal banner, hurdles chain populate.
+- [ ] Craving SOS opens the 3-minute physiological sigh overlay.
+- [ ] Log a slip → confirm slip modal closes; streak unchanged.
+- [ ] Reflection modal in the ritual window declares kept / broken; Chain reflects the verdict.
+
+## Smoke test — Daily Flow behaviour
+
+- [ ] Morning: exactly one morning intervention fires (tier-matched to `ackRate`).
+- [ ] Midday / Evening: exactly one intervention per phase.
+- [ ] Night: one intervention when today's declaration is absent; hidden after declaration.
+- [ ] Tap Done → card disappears; Daily Flow Summary updates immediately.
+- [ ] Tap Dismiss → card disappears; ack row records `dismissed[]` alongside `acked[]`.
+- [ ] Reload → acked / dismissed cards stay hidden.
+- [ ] Next calendar day (or shifted-back ack rows) → morning intervention returns.
+- [ ] Disable Smoking → Intervention Queue empty; Daily Flow Summary hidden; ambient widget hidden.
+- [ ] Re-enable Smoking → intervention returns; ambient widget returns.
 
 ## PWA install + update
 

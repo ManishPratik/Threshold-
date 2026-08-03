@@ -3,6 +3,7 @@ import { FrozenAppLayout } from './FrozenAppLayout';
 import {
   ChainRouteAdapter,
   CreatePromiseRouteAdapter,
+  DailyFlowAnalyticsRouteAdapter,
   HistoryRouteAdapter,
   NotFoundRouteAdapter,
   PromiseChainRouteAdapter,
@@ -34,6 +35,10 @@ export const frozenRouter = createHashRouter([
       { path: '/chain', element: <ChainRouteAdapter /> },
       { path: '/history', element: <HistoryRouteAdapter /> },
       { path: '/settings', element: <SettingsRouteAdapter /> },
+      {
+        path: '/settings/daily-flow',
+        element: <DailyFlowAnalyticsRouteAdapter />,
+      },
       { path: '/promise/:id', element: <PromiseDetailRouteAdapter /> },
       { path: '/promise/:id/chain', element: <PromiseChainRouteAdapter /> },
       { path: '/routine', element: <RoutineRouteAdapter /> },

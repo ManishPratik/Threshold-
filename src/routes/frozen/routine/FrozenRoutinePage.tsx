@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
-import type { Routine, RoutineBlock } from '@data/types/frozen/Routine';
+import type { Anchor, Routine, RoutineBlock } from '@data/types/frozen/Routine';
 import { RoutineService, useSubmitOnce } from '@features/frozen';
+import {
+  ANCHOR_LABELS,
+  ANCHOR_ORDER,
+  getBlockAnchor,
+  groupByAnchor,
+} from '@features/routine-engine';
 import { DeleteRoutineDialog } from './DeleteRoutineDialog';
 import styles from './FrozenRoutinePage.module.css';
 
@@ -87,13 +93,40 @@ export function FrozenRoutinePage({
     setDeletingBlockId(null);
   };
 
-  const handleMove = async (index: number, delta: -1 | 1) => {
-    const target = index + delta;
-    if (target < 0 || target >= blocks.length) return;
+  const handleMove = async (blockId: string, delta: -1 | 1) => {
+    // Move up/down operates within the block's own anchor bucket. The
+    // flat routine.blocks list is the source of truth, but we only
+    // swap positions between neighbours that share the same anchor —
+    // otherwise a "move up" would drift into a different anchor
+    // section without warning.
+    const index = blocks.findIndex((b) => b.id === blockId);
+    if (index === -1) return;
+    const source = blocks[index];
+    if (!source) return;
+    const anchor = getBlockAnchor(source);
+    let neighbourIndex = -1;
+    if (delta === -1) {
+      for (let i = index - 1; i >= 0; i -= 1) {
+        const candidate = blocks[i];
+        if (candidate && getBlockAnchor(candidate) === anchor) {
+          neighbourIndex = i;
+          break;
+        }
+      }
+    } else {
+      for (let i = index + 1; i < blocks.length; i += 1) {
+        const candidate = blocks[i];
+        if (candidate && getBlockAnchor(candidate) === anchor) {
+          neighbourIndex = i;
+          break;
+        }
+      }
+    }
+    if (neighbourIndex === -1) return;
     const next = [...blocks];
     const removed = next.splice(index, 1)[0];
     if (!removed) return;
-    next.splice(target, 0, removed);
+    next.splice(neighbourIndex, 0, removed);
     await persistBlocks(next);
   };
 
@@ -120,32 +153,58 @@ export function FrozenRoutinePage({
       ) : null}
 
       {showList ? (
-        <ul className={styles.list}>
-          {blocks.map((block, idx) => (
-            <li key={block.id} className={styles.listItem}>
-              <BlockRow
-                block={block}
-                index={idx}
-                totalBlocks={blocks.length}
-                editable={mode === 'edit'}
-                onEdit={() => setEditorTarget({ kind: 'edit', block })}
-                onDelete={() => setDeletingBlockId(block.id)}
-                onMoveUp={() => {
-                  void handleMove(idx, -1);
-                }}
-                onMoveDown={() => {
-                  void handleMove(idx, 1);
-                }}
-              />
-              {deletingBlockId === block.id ? (
-                <DeleteBlockConfirm
-                  onConfirm={() => handleDeleteBlock(block.id)}
-                  onCancel={() => setDeletingBlockId(null)}
-                />
-              ) : null}
-            </li>
-          ))}
-        </ul>
+        (() => {
+          const grouped = groupByAnchor(blocks);
+          const visibleAnchors = ANCHOR_ORDER.filter(
+            (a) => grouped[a].length > 0,
+          );
+          if (visibleAnchors.length === 0) return null;
+          return (
+            <div className={styles.anchorGroups}>
+              {visibleAnchors.map((anchor) => (
+                <section key={anchor} className={styles.anchorSection}>
+                  <p className={styles.anchorHeading}>
+                    {ANCHOR_LABELS[anchor]}
+                  </p>
+                  <ul className={styles.list}>
+                    {grouped[anchor].map((block) => {
+                      const bucket = grouped[anchor];
+                      const positionInBucket = bucket.findIndex(
+                        (b) => b.id === block.id,
+                      );
+                      return (
+                        <li key={block.id} className={styles.listItem}>
+                          <BlockRow
+                            block={block}
+                            index={positionInBucket}
+                            totalBlocks={bucket.length}
+                            editable={mode === 'edit'}
+                            onEdit={() =>
+                              setEditorTarget({ kind: 'edit', block })
+                            }
+                            onDelete={() => setDeletingBlockId(block.id)}
+                            onMoveUp={() => {
+                              void handleMove(block.id, -1);
+                            }}
+                            onMoveDown={() => {
+                              void handleMove(block.id, 1);
+                            }}
+                          />
+                          {deletingBlockId === block.id ? (
+                            <DeleteBlockConfirm
+                              onConfirm={() => handleDeleteBlock(block.id)}
+                              onCancel={() => setDeletingBlockId(null)}
+                            />
+                          ) : null}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          );
+        })()
       ) : null}
 
       {editorTarget !== null ? (
@@ -320,6 +379,9 @@ function BlockEditor({
     initialBlock?.durationMinutes ?? 30,
   );
   const [type, setType] = useState(initialBlock?.type ?? 'Ritual');
+  const [anchor, setAnchor] = useState<Anchor>(
+    initialBlock ? getBlockAnchor(initialBlock) : 'morning',
+  );
   const [error, setError] = useState<string>('');
   const guard = useSubmitOnce();
 
@@ -334,6 +396,7 @@ function BlockEditor({
       name: trimmedName,
       durationMinutes,
       type,
+      anchor,
     };
     try {
       await guard.submit(() => onSave(block));
@@ -380,6 +443,36 @@ function BlockEditor({
           onChange={(e) => setType(e.target.value)}
           className={styles.editorInput}
         />
+      </div>
+      <div className={styles.editorField}>
+        <span className={styles.editorLabel} id="block-anchor-label">
+          Anchor
+        </span>
+        <div
+          className={styles.anchorPicker}
+          role="radiogroup"
+          aria-labelledby="block-anchor-label"
+        >
+          {ANCHOR_ORDER.map((a) => {
+            const active = a === anchor;
+            return (
+              <button
+                type="button"
+                key={a}
+                role="radio"
+                aria-checked={active}
+                className={
+                  active
+                    ? `${styles.anchorPickerButton} ${styles.anchorPickerButtonActive}`
+                    : styles.anchorPickerButton
+                }
+                onClick={() => setAnchor(a)}
+              >
+                {ANCHOR_LABELS[a]}
+              </button>
+            );
+          })}
+        </div>
       </div>
       {error ? (
         <p className={styles.error} role="alert">

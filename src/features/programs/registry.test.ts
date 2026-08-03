@@ -1,8 +1,9 @@
 import { afterEach, describe, it, expect } from 'vitest';
-import type { LifeProgram } from './types';
+import type { LifeProgram, ProgramSurface } from './types';
 import {
   clearRegistry,
   getProgram,
+  getProgramSurfaces,
   listPrograms,
   registerProgram,
 } from './registry';
@@ -15,6 +16,11 @@ function makeProgram(overrides: Partial<LifeProgram> = {}): LifeProgram {
     ...overrides,
   };
 }
+
+// Minimal placeholder component — never rendered, only referenced by
+// identity so the surface-alias test can assert component reuse.
+const DummyWidget = () => null;
+const DummyHero = () => null;
 
 describe('program registry', () => {
   afterEach(() => {
@@ -65,5 +71,41 @@ describe('program registry', () => {
     clearRegistry();
     expect(listPrograms()).toEqual([]);
     expect(getProgram('a')).toBeUndefined();
+  });
+});
+
+describe('getProgramSurfaces (ADR 0009 §3 legacy alias)', () => {
+  it('returns an empty list when the program has neither surfaces nor todayWidget', () => {
+    const p = makeProgram();
+    expect(getProgramSurfaces(p)).toEqual([]);
+  });
+
+  it('exposes a legacy todayWidget as one ambient surface with weight 0', () => {
+    const p = makeProgram({ todayWidget: DummyWidget });
+    const surfaces = getProgramSurfaces(p);
+    expect(surfaces).toHaveLength(1);
+    expect(surfaces[0].slot).toBe('ambient');
+    expect(surfaces[0].component).toBe(DummyWidget);
+    expect(surfaces[0].weight).toBe(0);
+  });
+
+  it('returns the explicit surfaces list verbatim when provided', () => {
+    const surfaces: readonly ProgramSurface[] = [
+      { slot: 'hero', component: DummyHero, weight: 10 },
+      { slot: 'ambient', component: DummyWidget, weight: 5 },
+    ];
+    const p = makeProgram({ surfaces });
+    expect(getProgramSurfaces(p)).toBe(surfaces);
+  });
+
+  it('skips the todayWidget alias when explicit surfaces are also declared (no duplicate rendering)', () => {
+    const surfaces: readonly ProgramSurface[] = [
+      { slot: 'ambient', component: DummyHero, weight: 1 },
+    ];
+    const p = makeProgram({ todayWidget: DummyWidget, surfaces });
+    const out = getProgramSurfaces(p);
+    expect(out).toBe(surfaces);
+    expect(out).toHaveLength(1);
+    expect(out[0].component).toBe(DummyHero);
   });
 });

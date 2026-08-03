@@ -1,22 +1,31 @@
 import { useEffect, useState } from 'react';
 import { AppStateRepository } from '@data/repositories/frozen/AppStateRepository';
+import { listSurfaces, SurfaceErrorBoundary } from '@features/daily-flow-engine';
 import { getProgram } from './registry';
+import type { LifeProgram } from './types';
 
 export interface TodayProgramWidgetsProps {
   promiseId: string;
 }
 
 /**
- * Renders the Today widget of every enabled Life Program, in the
- * order stored on AppState. When no programs are enabled (the default
- * state per personal-os/src/data/repositories/frozen/AppStateRepository.ts
- * `getEnabledProgramIds` — returns `[]` when the field is absent), this
- * component renders nothing and Today behaves exactly as before the
- * program runtime landed.
+ * Renders the ambient-slot surface of every enabled Life Program, in
+ * the order stored on AppState. Routing goes through the Daily Flow
+ * Engine per ADR 0009 §3, §5 (ambient = unbounded vertical stack).
  *
- * The enabled-ids list is loaded once on mount. Toggling a program in
- * Settings requires a re-mount of Today (navigation or reload) to
- * apply. Live sync is deferred to keep this slice minimal.
+ * Legacy `todayWidget` programs surface through the alias defined in
+ * personal-os/src/features/programs/registry.ts lines 46-59 —
+ * `getProgramSurfaces` exposes one ambient entry per legacy program
+ * so Smoking (registered at
+ * personal-os/src/programs/smoking/manifest.ts lines 4-11) requires
+ * zero code changes.
+ *
+ * Every surface is wrapped in `SurfaceErrorBoundary`. A program whose
+ * ambient component throws collapses to `null`; every other program
+ * continues rendering; Today never crashes.
+ *
+ * Hero and overlay slots are not yet activated by this integration
+ * slice. The intervention queue is not yet wired.
  */
 export function TodayProgramWidgets({ promiseId }: TodayProgramWidgetsProps) {
   const [enabledIds, setEnabledIds] = useState<readonly string[] | null>(null);
@@ -36,13 +45,25 @@ export function TodayProgramWidgets({ promiseId }: TodayProgramWidgetsProps) {
 
   if (enabledIds === null || enabledIds.length === 0) return null;
 
+  const programs: LifeProgram[] = [];
+  for (const id of enabledIds) {
+    const program = getProgram(id);
+    if (program) programs.push(program);
+  }
+  if (programs.length === 0) return null;
+
   return (
     <>
-      {enabledIds.map((id) => {
-        const program = getProgram(id);
-        if (!program || !program.todayWidget) return null;
-        const Widget = program.todayWidget;
-        return <Widget key={id} promiseId={promiseId} />;
+      {programs.map((program) => {
+        const ambient = listSurfaces([program], 'ambient');
+        return ambient.map((surface, idx) => {
+          const Surface = surface.component;
+          return (
+            <SurfaceErrorBoundary key={`${program.id}-${idx}`}>
+              <Surface promiseId={promiseId} />
+            </SurfaceErrorBoundary>
+          );
+        });
       })}
     </>
   );

@@ -283,8 +283,10 @@ export async function ackHurdle(hurdleId: string): Promise<readonly string[]> {
 
 export async function fullRelapseReset(): Promise<void> {
   const db = await getDb();
-  await db.delete(STORES.settings, QUIT_TIME_ID);
-  await db.delete(STORES.settings, CRAVING_LOG_ID);
-  await db.delete(STORES.settings, PEAK_ACKED_ID);
-  await db.delete(STORES.settings, HURDLES_ACKED_ID);
+  const tx = db.transaction(STORES.settings, 'readwrite');
+  await tx.store.delete(QUIT_TIME_ID);
+  await tx.store.delete(CRAVING_LOG_ID);
+  await tx.store.delete(PEAK_ACKED_ID);
+  await tx.store.delete(HURDLES_ACKED_ID);
+  await tx.done;
 }

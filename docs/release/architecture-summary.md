@@ -1,6 +1,6 @@
-# V1 Architecture Summary
+# Architecture Summary — v1.1.0-rc1
 
-*Baseline snapshot. Frozen at v1.0.0.*
+*Baseline snapshot for release candidate 1.*
 
 ## Stack
 
@@ -79,9 +79,14 @@ Route  →  Feature service (domain rules)  →  Repository (single-store CRUD) 
 - Baseline security headers set (X-Frame-Options DENY, nosniff, strict Referrer, locked Permissions-Policy).
 - Update prompt is a sticky bar; explicit user action to reload; no silent reloads.
 
-## Counts at v1.0.0
+## Counts at v1.1.0-rc1
 
-- 8 feature folders / 6 domain services / 8 repositories / 8 numbered ADRs.
-- 189 tests across 17 test files (unit + integration).
-- Production bundle: 14 precache entries, ~402 KiB.
-- Zero TODO / FIXME / XXX markers in src or docs.
+- Feature folders: `frozen`, `routine-engine`, `self-trust`, `programs`, `daily-flow-engine`.
+- Concrete Life Programs: `smoking`.
+- Domain services: `PromiseService`, `DeclarationService`, `RoutineService`, `BlockCompletionService`, `NoteService`.
+- Repositories: `PromiseRepository`, `DeclarationRepository`, `RoutineRepository`, `BlockCompletionRepository`, `NoteRepository`, `AppStateRepository`.
+- Numbered ADRs: 9 (0001–0009).
+- Tests: 335 across 23 test files (unit + integration).
+- Production bundle: 14 precache entries at ~525 KiB. Main JS ~153 KiB.
+- Zero TODO / FIXME / XXX markers in `src/`.
+- IDB schema: `DB_VERSION = 2` (v1 legacy baseline + v2 frozen stores; no v3 migration in this release).

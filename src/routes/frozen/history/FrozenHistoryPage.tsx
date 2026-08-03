@@ -114,7 +114,7 @@ function PromiseCard({
   today: ISODate;
   onTap: ((promiseId: string) => void) | undefined;
 }) {
-  const outcome = describeOutcome(promise, today);
+  const outcome = safeDescribeOutcome(promise, today);
   const outcomeClass =
     outcome.kind === 'kept'
       ? `${styles.outcome} ${styles.outcomeKept}`
@@ -135,11 +135,44 @@ function PromiseCard({
       <p className={styles.attempt}>Attempt {promise.attemptNumber}</p>
       <p className={styles.title}>{promise.title}</p>
       <p className={styles.dates}>
-        {humanDate(promise.startDate)} – {humanDate(promise.endDate)}
+        {safeHumanDate(promise.startDate)} – {safeHumanDate(promise.endDate)}
       </p>
       <p className={outcomeClass}>{outcome.text}</p>
     </button>
   );
+}
+
+/**
+ * Never-throw wrapper around `humanDate`. Guards against legacy or
+ * hand-injected Promise rows where `startDate` / `endDate` is missing,
+ * null, or otherwise not a valid ISO string per `personal-os/src/shared/lib/date.ts:138-150`.
+ * Returns an em-dash for any input the formatter cannot render.
+ */
+function safeHumanDate(iso: ISODate | null | undefined): string {
+  if (typeof iso !== 'string' || iso.length === 0) return '—';
+  try {
+    return humanDate(iso);
+  } catch {
+    return '—';
+  }
+}
+
+/**
+ * Never-throw wrapper around `describeOutcome`. Guards downstream date
+ * math at `personal-os/src/shared/lib/date.ts:66-101` from throwing on
+ * legacy rows missing `startDate` or `endDate`. On failure returns an
+ * inert active-status descriptor so History renders the row without
+ * crashing the entire list.
+ */
+function safeDescribeOutcome(
+  promise: PromiseRecord,
+  today: ISODate,
+): OutcomeDescriptor {
+  try {
+    return describeOutcome(promise, today);
+  } catch {
+    return { kind: 'active', text: '—' };
+  }
 }
 
 function byActivatedAtDesc(a: PromiseRecord, b: PromiseRecord): number {

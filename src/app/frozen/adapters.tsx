@@ -10,6 +10,7 @@ import { FrozenRoutinePage } from '@routes/frozen/routine';
 import { FrozenHistoryPage } from '@routes/frozen/history';
 import { FrozenSettingsPage } from '@routes/frozen/settings';
 import { FrozenCreatePromisePage } from '@routes/frozen/create-promise';
+import { FrozenDailyFlowAnalyticsPage } from '@routes/frozen/daily-flow-analytics';
 import {
   EVENING_REFLECTION_HOUR,
   LOGICAL_DAY_BOUNDARY_HOUR,
@@ -18,6 +19,13 @@ import { openModal } from './modalState';
 import type {
   ReflectionModalPayload,
 } from './FrozenModalRoot';
+
+/**
+ * Maximum number of pending Reflection modals surfaced to a returning
+ * user. Longer absences are truncated to the most-recent N days,
+ * preserving oldest-first ordering within the kept slice.
+ */
+const MAX_REFLECTION_BACKFILL = 7;
 
 type ActivePromiseState =
   | { status: 'loading' }
@@ -61,9 +69,17 @@ export function TodayRouteAdapter() {
         today,
       );
       if (cancelled || missing.length === 0) return;
-      const first = missing[0];
+      // Hard cap at MAX_REFLECTION_BACKFILL to protect returning users
+      // from an overwhelming modal queue. Keep the most-recent N by
+      // slicing the tail; ordering (oldest-first within the kept set)
+      // is preserved.
+      const capped =
+        missing.length > MAX_REFLECTION_BACKFILL
+          ? missing.slice(missing.length - MAX_REFLECTION_BACKFILL)
+          : missing;
+      const first = capped[0];
       if (first === undefined) return;
-      const rest = missing.slice(1);
+      const rest = capped.slice(1);
       const payload: ReflectionModalPayload = {
         variant: 'question',
         promise: active,
@@ -219,6 +235,7 @@ export function HistoryRouteAdapter() {
 }
 
 export function SettingsRouteAdapter() {
+  const navigate = useNavigate();
   return (
     <FrozenSettingsPage
       onErased={() => {
@@ -229,8 +246,13 @@ export function SettingsRouteAdapter() {
         // routing decision.
         window.location.reload();
       }}
+      onOpenDailyFlowAnalytics={() => navigate('/settings/daily-flow')}
     />
   );
+}
+
+export function DailyFlowAnalyticsRouteAdapter() {
+  return <FrozenDailyFlowAnalyticsPage />;
 }
 
 export function CreatePromiseRouteAdapter() {
