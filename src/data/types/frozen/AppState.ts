@@ -9,6 +9,13 @@
 export interface AppState {
   id: 'app';
   currentPromiseId: string | null;
+  /**
+   * Ids of registered Life Programs the user has enabled. Optional so
+   * existing AppState rows written before program-runtime landed remain
+   * valid without a schema bump. `undefined` and `[]` are both read as
+   * "no programs enabled" by the runtime.
+   */
+  enabledProgramIds?: readonly string[];
   schemaVersion: number;
 }
 

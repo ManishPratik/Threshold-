@@ -1,0 +1,74 @@
+/* Editable-slot inline pencil + expanded editor. Uses Frozen editorial
+ * tokens throughout — no hardcoded values leak in from the Threshold
+ * source stylesheet. */
+
+.slot {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.slotText {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+
+.pencil {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 var(--space-xs);
+  color: var(--ink-muted);
+  font-size: 14px;
+}
+.pencil:hover {
+  color: var(--ink-primary);
+}
+.pencil:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  padding: var(--space-m);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-recessed, var(--surface-primary));
+}
+
+.editorTitle {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-eyebrow-size);
+  letter-spacing: var(--type-meta-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--ink-primary);
+  font-weight: var(--fw-medium);
+  margin: 0;
+}
+
+.editorHint {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.editorTextarea {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--type-body-reading-size);
+  line-height: 1.5;
+}
+
+.editorActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}

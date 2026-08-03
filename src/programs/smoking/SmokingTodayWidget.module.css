@@ -1,0 +1,56 @@
+/* Smoking Today widget stylesheet. Uses Frozen editorial tokens for
+ * every visual value — no hardcoded hex codes leak in from the
+ * Threshold source stylesheet at ac4b193~1:index.html lines
+ * 1319-1360 (which used raw rgba colors and a fixed 60x60 red
+ * gradient FAB). The frozen design system replaces those with token
+ * variables from personal-os/src/design-system/tokens per
+ * personal-os/README.md lines 74-77. */
+
+.fabRow {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 var(--space-xl) 0;
+}
+
+.fab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-s);
+  padding: var(--space-m) var(--space-l);
+  background: var(--accent, #6b8e5a);
+  color: var(--surface-primary);
+  border: none;
+  border-radius: var(--radius-pill, 999px);
+  font-family: var(--font-sans);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  cursor: pointer;
+  box-shadow: var(--shadow-fab, 0 2px 6px rgba(0, 0, 0, 0.12));
+}
+.fab:hover {
+  filter: brightness(1.05);
+}
+.fab:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 2px;
+}
+
+.fabLabel {
+  font-family: var(--font-sans);
+}
+
+.fabCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.22);
+  color: var(--surface-primary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: var(--fw-semibold, 600);
+  font-variant-numeric: tabular-nums;
+}

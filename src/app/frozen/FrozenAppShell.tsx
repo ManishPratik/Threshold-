@@ -3,6 +3,10 @@ import { RouterProvider } from 'react-router-dom';
 import { ErrorBoundary } from '../ErrorBoundary';
 import { UpdatePrompt } from '@/pwa/UpdatePrompt';
 import { useServiceWorkerUpdate } from '@/pwa/useServiceWorkerUpdate';
+// Register every Life Program manifest at boot. The import is a
+// side-effect module so it must appear before any code that reads
+// the program registry.
+import '@/programs/register';
 import {
   FROZEN_BOOT_LOADING_THRESHOLD_MS,
   bootstrapFrozen,

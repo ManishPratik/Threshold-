@@ -1,0 +1,22 @@
+/* ProgressSummary card — restored shape from tag v1.0.0 (routine-engine
+ * folder), adapted to consume the current TodayProgress. */
+
+.card {
+  margin: 0 0 var(--space-xl) 0;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-m);
+  margin: 0 0 var(--space-s) 0;
+}
+
+.label {
+  color: var(--ink-primary);
+}
+
+.bar {
+  margin: 0;
+}

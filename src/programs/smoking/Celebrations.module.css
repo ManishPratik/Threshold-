@@ -1,0 +1,98 @@
+/* Celebration + slip overlays. Uses Frozen editorial tokens. */
+
+.peakSheet, .hurdleSheet, .slipSheet {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+  text-align: center;
+}
+
+.peakEyebrow, .hurdleEyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-eyebrow-size);
+  letter-spacing: var(--type-meta-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-weight: var(--fw-medium);
+  margin: 0;
+}
+
+.peakMountain, .hurdleIcon {
+  font-size: 48px;
+  line-height: 1;
+  margin: var(--space-s) auto;
+}
+
+.peakTitle, .hurdleTitle, .slipTitle {
+  font-family: var(--font-serif);
+  font-size: var(--type-display-hero-size);
+  line-height: var(--type-display-hero-lh);
+  color: var(--ink-primary);
+  margin: 0;
+  font-weight: var(--fw-regular);
+}
+
+.peakHeadline, .hurdleHeadline {
+  font-family: var(--font-serif);
+  font-size: var(--type-body-reading-size);
+  line-height: var(--type-body-reading-lh);
+  color: var(--ink-primary);
+  margin: 0;
+}
+
+.peakBody, .hurdleBody, .slipBody {
+  font-family: var(--font-sans);
+  font-size: var(--type-body-reading-size);
+  line-height: var(--type-body-reading-lh);
+  color: var(--ink-primary);
+  text-align: left;
+  margin: 0;
+}
+
+.peakVow {
+  padding: var(--space-m);
+  background: var(--surface-recessed, var(--surface-primary));
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.peakVowLabel {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-eyebrow-size);
+  letter-spacing: var(--type-meta-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-weight: var(--fw-medium);
+  margin: 0 0 var(--space-s) 0;
+}
+
+.peakVowText {
+  font-family: var(--font-serif);
+  font-size: var(--type-body-reading-size);
+  color: var(--ink-primary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.hurdleRatchet {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-primary);
+  margin: 0;
+  padding-top: var(--space-s);
+  border-top: 1px solid var(--border-subtle);
+  text-align: left;
+  line-height: 1.6;
+}
+
+.slipActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+}

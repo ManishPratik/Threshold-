@@ -96,6 +96,16 @@ export class BlockCompletionService {
   }
 
   /**
+   * Read every completion for one Promise across ALL logical days. Delegates
+   * to BlockCompletionRepository.listForPromise which uses the
+   * `by-promiseId-date` compound index with a bounded prefix range. Consumers:
+   * derived Self-Trust score and Analytics counts across the full Promise arc.
+   */
+  async listForPromise(promiseId: string): Promise<BlockCompletion[]> {
+    return this.completions.listForPromise(promiseId);
+  }
+
+  /**
    * Delete every completion for one Promise on one logical date. Runs
    * inside a single readwrite transaction via
    * `BlockCompletionRepository.clearForDate`. No-op when the day has no

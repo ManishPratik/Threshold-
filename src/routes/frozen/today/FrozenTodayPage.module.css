@@ -108,6 +108,27 @@
   margin: 0 0 var(--space-xl) 0;
 }
 
+.selfTrust {
+  margin: 0 0 var(--space-xl) 0;
+}
+
+.selfTrustScore {
+  font-family: var(--font-serif);
+  font-size: var(--type-display-hero-size);
+  line-height: var(--type-display-hero-lh);
+  letter-spacing: var(--type-display-hero-tracking);
+  color: var(--ink-primary);
+  margin: 0;
+  font-weight: var(--fw-regular);
+}
+
+.selfTrustMeta {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  margin: var(--space-xs) 0 0 0;
+}
+
 .rememberText {
   font-family: var(--font-serif);
   font-size: var(--type-body-reading-size);

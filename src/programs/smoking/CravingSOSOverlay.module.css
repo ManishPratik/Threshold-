@@ -1,0 +1,130 @@
+/* Craving SOS overlay — adapted from the Threshold overlay markup
+ * at ac4b193~1:index.html lines 1617-1710. Uses the Frozen editorial
+ * design tokens throughout so nothing hardcoded leaks in. */
+
+.sheet {
+  position: relative;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+.closeButton {
+  position: absolute;
+  top: var(--space-s);
+  right: var(--space-m);
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: var(--space-s) var(--space-m);
+  border-radius: var(--radius-sm);
+}
+.closeButton:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 2px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--type-display-hero-size);
+  line-height: var(--type-display-hero-lh);
+  letter-spacing: var(--type-display-hero-tracking);
+  color: var(--ink-primary);
+  margin: 0 0 var(--space-s) 0;
+  font-weight: var(--fw-regular);
+}
+
+.sub {
+  margin: 0 0 var(--space-m) 0;
+}
+
+.vision {
+  padding: var(--space-m);
+  background: var(--surface-recessed, var(--surface-primary));
+  border-radius: var(--radius-md);
+  margin: 0 0 var(--space-m) 0;
+}
+
+.visionLead {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-primary);
+  font-weight: var(--fw-medium);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.visionBody {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.wave {
+  width: 100%;
+  height: 96px;
+  border-radius: var(--radius-md);
+  background: var(--surface-recessed, var(--surface-primary));
+  margin: var(--space-s) 0 var(--space-m) 0;
+  transition: background 0.4s ease;
+}
+.wave_inhale {
+  background: color-mix(in oklab, var(--accent, #6b8e5a) 25%, transparent);
+}
+.wave_hold {
+  background: color-mix(in oklab, var(--accent, #6b8e5a) 15%, transparent);
+}
+.wave_exhale {
+  background: color-mix(in oklab, var(--accent, #6b8e5a) 8%, transparent);
+}
+
+.triggerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-s);
+  margin: 0 0 var(--space-m) 0;
+}
+
+.triggerButton {
+  padding: var(--space-m);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-primary);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-primary);
+  cursor: pointer;
+  text-align: left;
+}
+.triggerButton:hover {
+  border-color: var(--ink-muted);
+}
+.triggerButton:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 2px;
+}
+.triggerButtonSelected {
+  border-color: var(--accent, var(--ink-primary));
+  background: color-mix(in oklab, var(--accent, #6b8e5a) 10%, transparent);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+}
+
+.doneCount {
+  font-family: var(--font-serif);
+  font-weight: var(--fw-medium);
+  color: var(--ink-primary);
+}

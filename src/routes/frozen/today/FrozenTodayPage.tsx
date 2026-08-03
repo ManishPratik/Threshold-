@@ -10,6 +10,13 @@ import {
   PromiseService,
   RoutineService,
 } from '@features/frozen';
+import { computeSelfTrust, type SelfTrustResult } from '@features/self-trust';
+import {
+  CurrentFocusCard,
+  getTodayProgress,
+  ProgressSummary,
+} from '@features/routine-engine';
+import { TodayProgramWidgets } from '@features/programs';
 import {
   addDays,
   computeDayNumber,
@@ -58,6 +65,7 @@ export function FrozenTodayPage({
   const [yesterdayVerdict, setYesterdayVerdict] = useState<
     'kept' | 'broken' | null
   >(null);
+  const [selfTrust, setSelfTrust] = useState<SelfTrustResult | null>(null);
 
   useEffect(() => {
     const promiseService = new PromiseService();
@@ -75,27 +83,45 @@ export function FrozenTodayPage({
           setRoutine(null);
           setTodayDeclaration(null);
           setCompletedBlockIds([]);
+          setSelfTrust(null);
           return;
         }
         const now = currentLogicalDate();
         setToday(now);
         const yesterday = addDays(now, -1);
         const yesterdayInsideArc = yesterday >= active.startDate;
-        const [routineRecord, declaration, completions, yesterdayDecl] =
-          await Promise.all([
-            routineService.getRoutine(active.id),
-            declarationService.getTodayDeclaration(active.id, now),
-            blockCompletionService.getCompletedBlocksForToday(active.id, now),
-            yesterdayInsideArc
-              ? declarationService.getDeclaration(active.id, yesterday)
-              : Promise.resolve(null),
-          ]);
+        const [
+          routineRecord,
+          declaration,
+          completions,
+          yesterdayDecl,
+          allDeclarations,
+          allCompletions,
+        ] = await Promise.all([
+          routineService.getRoutine(active.id),
+          declarationService.getTodayDeclaration(active.id, now),
+          blockCompletionService.getCompletedBlocksForToday(active.id, now),
+          yesterdayInsideArc
+            ? declarationService.getDeclaration(active.id, yesterday)
+            : Promise.resolve(null),
+          declarationService.listDeclarationsForPromise(active.id),
+          blockCompletionService.listForPromise(active.id),
+        ]);
         if (cancelled) return;
         setPromise(active);
         setRoutine(routineRecord ?? null);
         setTodayDeclaration(declaration ?? null);
         setCompletedBlockIds(completions.map((c) => c.blockId));
         setYesterdayVerdict(yesterdayDecl?.verdict ?? null);
+        setSelfTrust(
+          computeSelfTrust({
+            promise: active,
+            routine: routineRecord ?? null,
+            declarations: allDeclarations,
+            blockCompletions: allCompletions,
+            today: now,
+          }),
+        );
       } catch (err) {
         if (cancelled) return;
         setError(err instanceof Error ? err.message : 'Failed to load Today.');
@@ -112,6 +138,7 @@ export function FrozenTodayPage({
   const handleBlockTap = async (blockId: string) => {
     if (!promise) return;
     const service = new BlockCompletionService();
+    const declarationService = new DeclarationService();
     const isDone = completedBlockIds.includes(blockId);
     try {
       if (isDone) {
@@ -123,6 +150,21 @@ export function FrozenTodayPage({
           prev.includes(blockId) ? prev : [...prev, blockId],
         );
       }
+      // Recompute Self-Trust after any block change so the full-day bonus
+      // update is reflected immediately without waiting for a remount.
+      const [allDeclarations, allCompletions] = await Promise.all([
+        declarationService.listDeclarationsForPromise(promise.id),
+        service.listForPromise(promise.id),
+      ]);
+      setSelfTrust(
+        computeSelfTrust({
+          promise,
+          routine,
+          declarations: allDeclarations,
+          blockCompletions: allCompletions,
+          today,
+        }),
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save block.');
     }
@@ -153,16 +195,32 @@ export function FrozenTodayPage({
           ) : (
             <EmptyState onCreate={onCreatePromise ?? noop} />
           )}
+          {promise && selfTrust ? (
+            <SelfTrustLine result={selfTrust} />
+          ) : null}
+          {promise ? <TodayProgramWidgets promiseId={promise.id} /> : null}
           {principle ? <RememberSection principle={principle} /> : null}
           {routine ? (
-            <RoutineStrip
-              blocks={routine.blocks}
-              completedBlockIds={completedBlockIds}
-              onEditRoutine={onEditRoutine ?? noop}
-              onBlockTap={(id) => {
-                void handleBlockTap(id);
-              }}
-            />
+            (() => {
+              const routineProgress = getTodayProgress(
+                routine,
+                completedBlockIds,
+              );
+              return (
+                <>
+                  <CurrentFocusCard progress={routineProgress} />
+                  <ProgressSummary progress={routineProgress} />
+                  <RoutineStrip
+                    blocks={routine.blocks}
+                    completedBlockIds={completedBlockIds}
+                    onEditRoutine={onEditRoutine ?? noop}
+                    onBlockTap={(id) => {
+                      void handleBlockTap(id);
+                    }}
+                  />
+                </>
+              );
+            })()
           ) : null}
           <CeremonialFade visible={reflectionState === 'awaiting'}>
             <ReflectionInvitation
@@ -256,6 +314,20 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
         Make one.
       </button>
     </div>
+  );
+}
+
+function SelfTrustLine({ result }: { result: SelfTrustResult }) {
+  const suffix =
+    result.daysScored === 0
+      ? 'no days scored yet'
+      : `${result.daysScored} day${result.daysScored === 1 ? '' : 's'} scored`;
+  return (
+    <section className={styles.selfTrust} aria-label="Self-Trust">
+      <p className={styles.eyebrow}>Self-Trust</p>
+      <p className={styles.selfTrustScore}>{result.score}</p>
+      <p className={styles.selfTrustMeta}>{suffix}</p>
+    </section>
   );
 }
 

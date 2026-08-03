@@ -83,4 +83,36 @@ export class AppStateRepository {
     const key = await db.getKey(this.storeName, APP_STATE_ID);
     return key !== undefined;
   }
+
+  /**
+   * Read the enabled Life-Program ids. Absent or empty are both surfaced
+   * as `[]`. Never mutates the store.
+   */
+  async getEnabledProgramIds(): Promise<readonly string[]> {
+    const current = await this.get();
+    return current?.enabledProgramIds ?? [];
+  }
+
+  /**
+   * Overwrite the enabled Life-Program ids. Initialises the singleton
+   * first if it is absent so callers do not have to sequence init + write.
+   * Duplicates are removed and order is preserved (first-occurrence wins).
+   */
+  async setEnabledProgramIds(ids: readonly string[]): Promise<void> {
+    const seen = new Set<string>();
+    const deduped: string[] = [];
+    for (const id of ids) {
+      if (seen.has(id)) continue;
+      seen.add(id);
+      deduped.push(id);
+    }
+    const current = (await this.get()) ?? {
+      id: APP_STATE_ID,
+      currentPromiseId: null,
+      schemaVersion: 1,
+    };
+    const next: AppState = { ...current, enabledProgramIds: deduped };
+    const db = await getDb();
+    await db.put(this.storeName, next);
+  }
 }
