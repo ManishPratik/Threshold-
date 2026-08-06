@@ -43,6 +43,12 @@ lerna-debug.log*
 coverage/
 .nyc_output/
 
+# Playwright (Slice H — Automated Runtime Verification)
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
 # Netlify
 .netlify/
 
