@@ -20,7 +20,14 @@ import { SurfaceErrorBoundary } from './SurfaceErrorBoundary';
 import styles from './InterventionQueue.module.css';
 
 export interface InterventionQueueProps {
-  promiseId: string;
+  /**
+   * Optional per module-independence architecture (Slice A). When
+   * absent, the engine still passes `undefined` to each program's
+   * `shouldFire(context)`. Programs that require a Promise-scoped
+   * entity self-null internally; Promise-independent modules fire
+   * normally.
+   */
+  promiseId?: string;
 }
 
 /**
@@ -46,7 +53,7 @@ export interface InterventionQueueProps {
  * returns `null`. No wrapper element is emitted, no placeholder, no
  * empty state.
  */
-export function InterventionQueue({ promiseId }: InterventionQueueProps) {
+export function InterventionQueue({ promiseId }: InterventionQueueProps = {}) {
   const [enabledIds, setEnabledIds] = useState<readonly string[] | null>(null);
   const [seenToday, setSeenToday] = useState<ReadonlySet<string>>(new Set());
   const [ackRate, setAckRate] = useState<number>(1);
@@ -120,7 +127,7 @@ export function InterventionQueue({ promiseId }: InterventionQueueProps) {
 
   const nowIso = new Date().toISOString();
   const context: InterventionContext = {
-    promiseId,
+    ...(promiseId !== undefined ? { promiseId } : {}),
     nowIso,
     phase: resolvePhase(nowIso),
     ackRate,

@@ -291,7 +291,12 @@ export function FrozenTodayPage({
               onReflect={onReflect ?? noop}
             />
           </CeremonialFade>
-          {promise ? <InterventionQueue promiseId={promise.id} /> : null}
+          {/* Slice B — Home render decoupling. InterventionQueue accepts
+              optional promiseId per Slice A; self-nulls when nothing
+              fires (InterventionQueue.tsx:130-132), so the outer
+              promise-gate is no longer necessary. Conditional spread
+              satisfies tsconfig `exactOptionalPropertyTypes`. */}
+          <InterventionQueue {...(promise ? { promiseId: promise.id } : {})} />
           {/* Layer 3 — Supporting. Routine section (Current focus +
               progress + strip) or its empty-state promo, then ambient
               module widgets. */}
@@ -319,10 +324,18 @@ export function FrozenTodayPage({
           ) : promise ? (
             <RoutineEmptyStatePromo onEditRoutine={onEditRoutine ?? noop} />
           ) : null}
-          {promise ? <TodayProgramWidgets promiseId={promise.id} /> : null}
+          {/* Slice B — TodayProgramWidgets accepts optional promiseId
+              per Slice A; self-nulls when no enabled programs
+              (TodayProgramWidgets.tsx:46), so the outer promise-gate
+              is no longer necessary. */}
+          <TodayProgramWidgets {...(promise ? { promiseId: promise.id } : {})} />
           {/* Layer 4 — Quiet. Aggregate engagement summary + principle
               reinforcement. */}
-          {promise ? <DailyFlowSummary promiseId={promise.id} /> : null}
+          {/* Slice B — DailyFlowSummary accepts optional promiseId per
+              Slice A; self-nulls when summary === null
+              (DailyFlowSummary.tsx:117), so the outer promise-gate is
+              no longer necessary. */}
+          <DailyFlowSummary {...(promise ? { promiseId: promise.id } : {})} />
           {principle ? <RememberSection principle={principle} /> : null}
         </>
       )}
