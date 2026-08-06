@@ -11,7 +11,14 @@ import { DeleteRoutineDialog } from './DeleteRoutineDialog';
 import styles from './FrozenRoutinePage.module.css';
 
 export interface FrozenRoutinePageProps {
-  promiseId: string;
+  /**
+   * The active Promise's id, when the user has one. Optional per
+   * module-independence architecture (Slice C): when absent, the page
+   * loads / persists the orphan routine on AppState via
+   * `RoutineService.getOrphanRoutineBlocks` /
+   * `RoutineService.saveOrphanRoutineBlocks`.
+   */
+  promiseId?: string;
   /** Fires after the routine is deleted so the parent can navigate away. */
   onRoutineDeleted: (() => void) | undefined;
 }
@@ -23,13 +30,23 @@ type Mode = 'view' | 'edit';
  * "Add your first block." — the first Save creates the Routine record.
  * Subsequent Saves replace the block list via RoutineService.replaceBlocks.
  * Reordering uses move-up / move-down buttons for keyboard accessibility.
+ *
+ * Slice C: when no `promiseId` is passed the page operates in orphan
+ * mode. Load / save go through the orphan-routine methods on
+ * RoutineService (backed by AppState.orphanRoutine). "Delete entire
+ * routine" is hidden in orphan mode; per-block delete continues to work.
  */
 export function FrozenRoutinePage({
   promiseId,
   onRoutineDeleted,
 }: FrozenRoutinePageProps) {
   const [loading, setLoading] = useState(true);
+  // In promise-scoped mode this holds the loaded Routine record.
+  // In orphan mode it stays null and `orphanBlocks` carries the blocks.
   const [routine, setRoutine] = useState<Routine | null>(null);
+  // In orphan mode this holds the loaded blocks. null when no orphan
+  // routine has been authored yet.
+  const [orphanBlocks, setOrphanBlocks] = useState<RoutineBlock[] | null>(null);
   const [mode, setMode] = useState<Mode>('view');
   const [editorTarget, setEditorTarget] = useState<
     { kind: 'new' } | { kind: 'edit'; block: RoutineBlock } | null
@@ -43,9 +60,15 @@ export function FrozenRoutinePage({
     let cancelled = false;
     (async () => {
       try {
-        const r = await service.getRoutine(promiseId);
-        if (cancelled) return;
-        setRoutine(r ?? null);
+        if (promiseId !== undefined) {
+          const r = await service.getRoutine(promiseId);
+          if (cancelled) return;
+          setRoutine(r ?? null);
+        } else {
+          const blocks = await service.getOrphanRoutineBlocks();
+          if (cancelled) return;
+          setOrphanBlocks(blocks);
+        }
       } catch (err) {
         if (cancelled) return;
         setError(err instanceof Error ? err.message : 'Failed to load routine.');
@@ -62,19 +85,29 @@ export function FrozenRoutinePage({
     return <p className={styles.loading}>Loading.</p>;
   }
 
-  const blocks = routine?.blocks ?? [];
+  const blocks: RoutineBlock[] =
+    promiseId !== undefined
+      ? routine?.blocks ?? []
+      : orphanBlocks ?? [];
+  const hasPersistedRoutine =
+    promiseId !== undefined ? routine !== null : orphanBlocks !== null;
 
   const persistBlocks = async (nextBlocks: RoutineBlock[]) => {
     const service = new RoutineService();
-    if (!routine) {
-      const created = await service.createRoutine({
-        promiseId,
-        blocks: nextBlocks,
-      });
-      setRoutine(created);
+    if (promiseId !== undefined) {
+      if (!routine) {
+        const created = await service.createRoutine({
+          promiseId,
+          blocks: nextBlocks,
+        });
+        setRoutine(created);
+      } else {
+        const updated = await service.replaceBlocks(promiseId, nextBlocks);
+        setRoutine(updated);
+      }
     } else {
-      const updated = await service.replaceBlocks(promiseId, nextBlocks);
-      setRoutine(updated);
+      await service.saveOrphanRoutineBlocks(nextBlocks);
+      setOrphanBlocks(nextBlocks);
     }
   };
 
@@ -130,13 +163,13 @@ export function FrozenRoutinePage({
     await persistBlocks(next);
   };
 
-  const showEmpty = routine === null && mode === 'view';
+  const showEmpty = !hasPersistedRoutine && mode === 'view';
   const showList =
-    (routine !== null || mode === 'edit') && editorTarget === null;
+    (hasPersistedRoutine || mode === 'edit') && editorTarget === null;
   const showAddInline =
-    (routine !== null || mode === 'edit') && editorTarget === null;
+    (hasPersistedRoutine || mode === 'edit') && editorTarget === null;
   const showEditRoutineButton =
-    routine !== null && mode === 'view' && editorTarget === null;
+    hasPersistedRoutine && mode === 'view' && editorTarget === null;
   const showEditFooter = mode === 'edit' && editorTarget === null;
 
   return (
@@ -250,7 +283,7 @@ export function FrozenRoutinePage({
           >
             Done.
           </button>
-          {routine !== null ? (
+          {routine !== null && promiseId !== undefined ? (
             <button
               type="button"
               className={styles.warningTextLink}
@@ -262,17 +295,22 @@ export function FrozenRoutinePage({
         </div>
       ) : null}
 
-      <DeleteRoutineDialog
-        open={deleteRoutineOpen}
-        promiseId={promiseId}
-        onDeleted={() => {
-          setDeleteRoutineOpen(false);
-          setRoutine(null);
-          setMode('view');
-          if (onRoutineDeleted) onRoutineDeleted();
-        }}
-        onCancel={() => setDeleteRoutineOpen(false)}
-      />
+      {/* Slice C — DeleteRoutineDialog is promise-scoped only; orphan
+          routine deletion is not yet exposed via a bulk action (users
+          can still delete individual blocks). */}
+      {promiseId !== undefined ? (
+        <DeleteRoutineDialog
+          open={deleteRoutineOpen}
+          promiseId={promiseId}
+          onDeleted={() => {
+            setDeleteRoutineOpen(false);
+            setRoutine(null);
+            setMode('view');
+            if (onRoutineDeleted) onRoutineDeleted();
+          }}
+          onCancel={() => setDeleteRoutineOpen(false)}
+        />
+      ) : null}
 
       {error ? (
         <p className={styles.error} role="alert">
