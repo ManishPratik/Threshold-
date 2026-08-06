@@ -112,21 +112,29 @@ export function FrozenTodayPage(_props: FrozenTodayPageProps = {}) {
     const repo = new AppStateRepository();
     try {
       await repo.setStartingPoint(sp);
+      // Slice G — Onboarding decoupling. Each Starting Point opens its
+      // own module. No handler funnels into another module's creation
+      // surface; no module is the gateway to another. Users who pick
+      // "quit-addiction" get Smoking enabled and land on Home where
+      // Smoking's ambient widget renders via the registry; Promise is
+      // one option among many, no longer forced.
       if (sp === 'quit-addiction') {
-        // Pre-enable Smoking so the post-Promise Home immediately shows
-        // its ambient widget + interventions. Then flow into the
-        // Promise-creation ritual as the natural continuation of
-        // onboarding — the user is not "leaving" onboarding; they are
-        // completing it.
+        // Enable Smoking; then Home renders (Smoking's ambient widget
+        // appears via listHomeSurfaces per Slice E). User can create a
+        // Promise separately if they choose — no forced navigation.
         await repo.setEnabledProgramIds(['smoking']);
-        navigate('/create-promise');
+        setStartingPoint(sp);
       } else if (sp === 'daily-routine') {
+        // Open the Routine module directly. Routine works in orphan
+        // mode per Slice C — no Promise required.
         navigate('/modules/routine');
       } else if (sp === 'serious-promise') {
+        // User explicitly chose Promise. Route to Promise creation.
+        // This is the only Starting Point that opens Promise.
         navigate('/create-promise');
       } else {
-        // 'look-around' — stay on Home; the operating state renders the
-        // module-agnostic empty-state prompt linking to /modules.
+        // 'look-around' — stay on Home; the empty layer(s) invite
+        // the user to visit /modules via the platform NavBar.
         setStartingPoint(sp);
       }
     } catch (err) {
