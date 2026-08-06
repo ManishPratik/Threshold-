@@ -1,0 +1,67 @@
+name: Lockfile regeneration probe
+
+# TEMPORARY workflow — created by RELEASE_PLAN W1.2 investigation to answer:
+#   "What package-lock.json does npm 10 (Netlify's bundled npm) produce
+#   from the current package.json, and does it differ from the npm 11
+#   lockfile produced on the release engineer's machine?"
+#
+# This workflow MUST be removed before the release branch merges to main.
+# See docs/release/release-log-v1.1.0.md for the diff analysis.
+
+on:
+  push:
+    branches: ['chore/lockfile-regen-probe']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20 (matches netlify.toml NODE_VERSION="20")
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Toolchain fingerprint
+        run: |
+          echo "node: $(node --version)"
+          echo "npm:  $(npm --version)"
+
+      - name: Backup existing lockfile (as checked out from branch)
+        run: cp package-lock.json package-lock.baseline.json
+
+      - name: Delete lockfile and regenerate via npm install
+        run: |
+          rm -f package-lock.json
+          npm install --loglevel=warn
+
+      - name: Post-install fingerprint
+        run: |
+          echo "node: $(node --version)"
+          echo "npm:  $(npm --version)"
+          echo ""
+          echo "--- npm ls --depth=0 ---"
+          npm ls --depth=0 || true
+          echo ""
+          echo "--- baseline vs regenerated: line counts ---"
+          echo "baseline: $(wc -l < package-lock.baseline.json)"
+          echo "regen:    $(wc -l < package-lock.json)"
+          echo ""
+          echo "--- baseline vs regenerated: unified diff (truncated to 400 lines) ---"
+          diff -u package-lock.baseline.json package-lock.json | head -400 || true
+
+      - name: Upload lockfile artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lockfile-regen-artifacts
+          path: |
+            package-lock.json
+            package-lock.baseline.json
+          if-no-files-found: error
+          retention-days: 7
