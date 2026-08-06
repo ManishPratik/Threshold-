@@ -125,6 +125,27 @@ export function listNavEntries(): readonly NavEntry[] {
 function moduleHomeSurfaces(mod: LifeProgram): readonly HomeSurface[] {
   const explicit = mod.homeSurfaces ?? [];
   if (explicit.length > 0) return explicit;
+  // Slice H hotfix — Slice E left `surfaces` (ProgramSurface[]) with no
+  // Home render path after TodayProgramWidgets was removed. Auto-alias
+  // each ambient/hero entry as a HomeSurface so modules declared with
+  // the ADR 0009 surfaces pattern (e.g., Smoking at
+  // src/programs/smoking/manifest.ts:12-18) still contribute to Home.
+  // Overlay slot is skipped — overlays are modal surfaces, not
+  // Home-layer surfaces.
+  if (mod.surfaces && mod.surfaces.length > 0) {
+    const aliased: HomeSurface[] = [];
+    for (const s of mod.surfaces) {
+      if (s.slot === 'overlay') continue;
+      const layer: HomeSurface['layer'] =
+        s.slot === 'hero' ? 'hero' : 'supporting';
+      const SurfaceComp = s.component;
+      function ProgramSurfaceHomeAdapter() {
+        return createElement(SurfaceComp, {});
+      }
+      aliased.push({ layer, component: ProgramSurfaceHomeAdapter, weight: s.weight });
+    }
+    if (aliased.length > 0) return aliased;
+  }
   if (mod.todayWidget) {
     // Wrap the legacy `todayWidget` (typed against `TodayWidgetProps`)
     // in an adapter that consumes `HomeSurfaceProps` and calls the

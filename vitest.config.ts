@@ -23,6 +23,11 @@ export default defineConfig({
     environment: 'happy-dom',
     setupFiles: './src/test/setup.ts',
     css: true,
+    // Slice H — exclude the Playwright runtime-verification suite;
+    // those specs run under `npm run verify:runtime` (Playwright),
+    // not Vitest. Without this, Vitest attempts to execute the
+    // Playwright DSL and reports the file as failed.
+    exclude: ['**/node_modules/**', '**/dist/**', 'tests/runtime/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],

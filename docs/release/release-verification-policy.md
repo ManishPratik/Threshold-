@@ -28,10 +28,10 @@ This policy replaces earlier informal references to "Human Verification" / "Huma
 
 **Capability priority order.** The verifier SHALL use the highest-capability runtime available:
 
-1. Playwright (headless or headed browser automation with full API access)
-2. Chrome DevTools automation (via CDP or the Chrome DevTools MCP)
-3. Puppeteer
-4. Human reviewer
+1. Playwright (headless or headed browser automation with full API access) — **INSTALLED** as of Slice H. Configuration at `playwright.config.ts`; suite at `tests/runtime/critical-path.spec.ts`. Run locally against `npm run preview` with `npm run verify:runtime`; run against the live production with `PLAYWRIGHT_BASE_URL=https://makeyoudiscplined.netlify.app npm run verify:runtime`.
+2. Chrome DevTools automation (via CDP or the Chrome DevTools MCP) — fallback if Playwright fails to launch in a given environment.
+3. Puppeteer — fallback.
+4. Human reviewer — last-resort fallback per Slice H automation.
 
 Lower-priority methods are used only when higher-priority methods are unavailable. Selecting a lower-priority method when a higher-priority method is available is a policy violation.
 
