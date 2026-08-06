@@ -36,9 +36,14 @@ export interface LifeProgram {
  * Props every Today widget receives from the program runtime. Kept
  * lean so programs can pull their own data through the existing
  * repositories rather than accept a wide facade.
+ *
+ * `promiseId` is optional per module-independence architecture: modules
+ * that do not depend on a Promise (e.g., orphan Routine, Smoking in
+ * module-scoped mode) receive `undefined`. Modules that DO carry a
+ * Promise-scoped surface still receive the Promise's id.
  */
 export interface TodayWidgetProps {
-  promiseId: string;
+  promiseId?: string;
 }
 
 /**
@@ -78,7 +83,13 @@ export type AckKind = 'per-day' | 'per-arc' | 'per-milestone' | 'passive';
  * `1` per the "never punish missing data" rule.
  */
 export interface InterventionContext {
-  promiseId: string;
+  /**
+   * Optional per module-independence architecture: modules that do not
+   * depend on a Promise (e.g., Smoking in module-scoped mode) receive
+   * `undefined`. Modules that DO carry a Promise-scoped intervention
+   * still receive the Promise's id from the engine.
+   */
+  promiseId?: string;
   nowIso: string;
   phase: Phase;
   ackRate?: number;
@@ -112,7 +123,11 @@ export type SurfaceSlot = 'hero' | 'ambient' | 'overlay';
  * surfaces without a component rewrite.
  */
 export interface SurfaceProps {
-  promiseId: string;
+  /**
+   * Optional per module-independence architecture. Same semantics as
+   * `TodayWidgetProps.promiseId`.
+   */
+  promiseId?: string;
 }
 
 /**
