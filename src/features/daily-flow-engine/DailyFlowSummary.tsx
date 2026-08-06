@@ -15,7 +15,11 @@ import { pickLine } from './dailyFlowSummaryCopy';
 import styles from './DailyFlowSummary.module.css';
 
 export interface DailyFlowSummaryProps {
-  promiseId: string;
+  /**
+   * Optional per module-independence architecture (Slice A). See
+   * `InterventionQueueProps.promiseId` for the shared rationale.
+   */
+  promiseId?: string;
 }
 
 /**
@@ -37,7 +41,7 @@ export interface DailyFlowSummaryProps {
  * The component reuses `listInterventions` and `readSeenTodayIds`
  * from the engine — it does NOT duplicate any aggregation logic.
  */
-export function DailyFlowSummary({ promiseId }: DailyFlowSummaryProps) {
+export function DailyFlowSummary({ promiseId }: DailyFlowSummaryProps = {}) {
   const [enabledIds, setEnabledIds] = useState<readonly string[] | null>(null);
   const [seenToday, setSeenToday] = useState<ReadonlySet<string>>(new Set());
   const [ackRate, setAckRate] = useState<number>(1);
@@ -100,7 +104,7 @@ export function DailyFlowSummary({ promiseId }: DailyFlowSummaryProps) {
 
     const nowIso = new Date().toISOString();
     const context: InterventionContext = {
-      promiseId,
+      ...(promiseId !== undefined ? { promiseId } : {}),
       nowIso,
       phase: resolvePhase(nowIso),
       ackRate,

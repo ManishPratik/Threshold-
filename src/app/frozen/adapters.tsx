@@ -220,7 +220,14 @@ export function RoutineRouteAdapter() {
   const navigate = useNavigate();
   const active = useActivePromiseId();
   if (active.status === 'loading') return <p>Loading…</p>;
-  if (active.id === null) return <Navigate to="/create-promise" replace />;
+  // Slice C — module-independence. When no active Promise, render the
+  // orphan-mode Routine page (blocks stored on AppState.orphanRoutine).
+  // Previously this adapter redirected to /create-promise here.
+  if (active.id === null) {
+    return (
+      <FrozenRoutinePage onRoutineDeleted={() => navigate('/today')} />
+    );
+  }
   return (
     <FrozenRoutinePage
       promiseId={active.id}

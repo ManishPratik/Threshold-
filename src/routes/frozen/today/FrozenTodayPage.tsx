@@ -1,45 +1,54 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Declaration } from '@data/types/frozen/Declaration';
+import { SurfaceErrorBoundary } from '@features/daily-flow-engine';
 import type { Principle } from '@data/types/Principle';
 import type { PromiseRecord } from '@data/types/PromiseRecord';
-import type { Routine, RoutineBlock } from '@data/types/frozen/Routine';
+import type { RoutineBlock } from '@data/types/frozen/Routine';
 import { AppStateRepository } from '@data/repositories/frozen/AppStateRepository';
 import {
-  BlockCompletionService,
-  CeremonialFade,
-  DeclarationService,
-  PromiseService,
-  RoutineService,
-} from '@features/frozen';
-import { computeSelfTrust, type SelfTrustResult } from '@features/self-trust';
-import {
   ANCHOR_LABELS,
-  CurrentFocusCard,
-  getTodayProgress,
   groupByAnchor,
   orderedAnchorsWithBlocks,
-  ProgressSummary,
 } from '@features/routine-engine';
-import { TodayProgramWidgets } from '@features/programs';
+import { DailyFlowSummary, InterventionQueue } from '@features/daily-flow-engine';
+import { listHomeSurfaces } from '@kernel/registry';
+import type { SelfTrustResult } from '@features/self-trust';
+import type { ReflectionInvitationState } from './reflectionState';
 import {
-  DailyFlowSummary,
-  InterventionQueue,
-} from '@features/daily-flow-engine';
-import {
-  addDays,
   computeDayNumber,
   totalDaysBetween,
   type ISODate,
 } from '@shared/lib/date';
 import { currentLogicalDate } from '@shared/lib/dayBoundary';
-import {
-  selectReflectionState,
-  type ReflectionInvitationState,
-} from './reflectionState';
 import styles from './FrozenTodayPage.module.css';
 
-const noop = () => {};
+
+/**
+ * Slice E — Home multi-module composition.
+ *
+ * Iterates every registered module's contributed home surfaces via
+ * `listHomeSurfaces()` at `src/kernel/registry/index.ts:75` and
+ * renders each in `identity → hero → supporting → quiet` layer order
+ * (descending weight within a layer). Home contains no module-specific
+ * rendering logic. A future module contributes to Home by declaring
+ * `homeSurfaces` on its manifest and calling `registerModule` — no
+ * edit to this file required.
+ */
+function HomeModuleSurfaces({ today }: { today: ISODate }) {
+  const surfaces = listHomeSurfaces();
+  return (
+    <>
+      {surfaces.map((s, idx) => {
+        const Surface = s.component;
+        return (
+          <SurfaceErrorBoundary key={`${s.layer}-${idx}`}>
+            <Surface today={today} />
+          </SurfaceErrorBoundary>
+        );
+      })}
+    </>
+  );
+}
 
 export interface FrozenTodayPageProps {
   /** Fired when the "Reflect." button is tapped. Default: noop. */
@@ -69,25 +78,10 @@ export interface FrozenTodayPageProps {
  * RoutineService, and DeclarationService. Presentation-only refactor —
  * business logic, lifecycle, and callback shapes are unchanged.
  */
-export function FrozenTodayPage({
-  onReflect,
-  onPromiseAnchorTap,
-  onEditRoutine,
-  onExplore,
-}: FrozenTodayPageProps = {}) {
+export function FrozenTodayPage(_props: FrozenTodayPageProps = {}) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [promise, setPromise] = useState<PromiseRecord | null>(null);
-  const [routine, setRoutine] = useState<Routine | null>(null);
-  const [todayDeclaration, setTodayDeclaration] =
-    useState<Declaration | null>(null);
-  const [completedBlockIds, setCompletedBlockIds] = useState<string[]>([]);
   const [error, setError] = useState<string>('');
-  const [today, setToday] = useState<ISODate>(currentLogicalDate());
-  const [yesterdayVerdict, setYesterdayVerdict] = useState<
-    'kept' | 'broken' | null
-  >(null);
-  const [selfTrust, setSelfTrust] = useState<SelfTrustResult | null>(null);
+  const [today] = useState<ISODate>(currentLogicalDate());
   // `undefined` = not yet loaded from AppState; `null` = onboarding not
   // yet completed (Home renders the onboarding state); string = user
   // has picked a Starting Point (Home renders operating state).
@@ -95,10 +89,11 @@ export function FrozenTodayPage({
     undefined,
   );
 
-  // Load the chosen Starting Point on mount. Independent of the primary
-  // data useEffect below so onboarding-state rendering does not have to
-  // wait for the Promise/Routine reads (which return early when
-  // `activePromise === null` anyway).
+  // Load the chosen Starting Point on mount. Independent of any module's
+  // data loading — modules load their own data via their registered
+  // Home surfaces (see src/features/frozen/promise/promiseModule.ts +
+  // src/features/frozen/promise/usePromiseHomeState.ts for Promise;
+  // Smoking uses its own manifest under src/programs/smoking/).
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -117,21 +112,29 @@ export function FrozenTodayPage({
     const repo = new AppStateRepository();
     try {
       await repo.setStartingPoint(sp);
+      // Slice G — Onboarding decoupling. Each Starting Point opens its
+      // own module. No handler funnels into another module's creation
+      // surface; no module is the gateway to another. Users who pick
+      // "quit-addiction" get Smoking enabled and land on Home where
+      // Smoking's ambient widget renders via the registry; Promise is
+      // one option among many, no longer forced.
       if (sp === 'quit-addiction') {
-        // Pre-enable Smoking so the post-Promise Home immediately shows
-        // its ambient widget + interventions. Then flow into the
-        // Promise-creation ritual as the natural continuation of
-        // onboarding — the user is not "leaving" onboarding; they are
-        // completing it.
+        // Enable Smoking; then Home renders (Smoking's ambient widget
+        // appears via listHomeSurfaces per Slice E). User can create a
+        // Promise separately if they choose — no forced navigation.
         await repo.setEnabledProgramIds(['smoking']);
-        navigate('/create-promise');
+        setStartingPoint(sp);
       } else if (sp === 'daily-routine') {
+        // Open the Routine module directly. Routine works in orphan
+        // mode per Slice C — no Promise required.
         navigate('/modules/routine');
       } else if (sp === 'serious-promise') {
+        // User explicitly chose Promise. Route to Promise creation.
+        // This is the only Starting Point that opens Promise.
         navigate('/create-promise');
       } else {
-        // 'look-around' — stay on Home; the operating state renders the
-        // module-agnostic empty-state prompt linking to /modules.
+        // 'look-around' — stay on Home; the empty layer(s) invite
+        // the user to visit /modules via the platform NavBar.
         setStartingPoint(sp);
       }
     } catch (err) {
@@ -139,121 +142,10 @@ export function FrozenTodayPage({
     }
   };
 
-  useEffect(() => {
-    const promiseService = new PromiseService();
-    const routineService = new RoutineService();
-    const declarationService = new DeclarationService();
-    const blockCompletionService = new BlockCompletionService();
-    let cancelled = false;
-
-    (async () => {
-      try {
-        const active = await promiseService.getActivePromise();
-        if (cancelled) return;
-        if (!active) {
-          setPromise(null);
-          setRoutine(null);
-          setTodayDeclaration(null);
-          setCompletedBlockIds([]);
-          setSelfTrust(null);
-          return;
-        }
-        const now = currentLogicalDate();
-        setToday(now);
-        const yesterday = addDays(now, -1);
-        const yesterdayInsideArc = yesterday >= active.startDate;
-        const [
-          routineRecord,
-          declaration,
-          completions,
-          yesterdayDecl,
-          allDeclarations,
-          allCompletions,
-        ] = await Promise.all([
-          routineService.getRoutine(active.id),
-          declarationService.getTodayDeclaration(active.id, now),
-          blockCompletionService.getCompletedBlocksForToday(active.id, now),
-          yesterdayInsideArc
-            ? declarationService.getDeclaration(active.id, yesterday)
-            : Promise.resolve(null),
-          declarationService.listDeclarationsForPromise(active.id),
-          blockCompletionService.listForPromise(active.id),
-        ]);
-        if (cancelled) return;
-        setPromise(active);
-        setRoutine(routineRecord ?? null);
-        setTodayDeclaration(declaration ?? null);
-        setCompletedBlockIds(completions.map((c) => c.blockId));
-        setYesterdayVerdict(yesterdayDecl?.verdict ?? null);
-        setSelfTrust(
-          computeSelfTrust({
-            promise: active,
-            routine: routineRecord ?? null,
-            declarations: allDeclarations,
-            blockCompletions: allCompletions,
-            today: now,
-          }),
-        );
-      } catch (err) {
-        if (cancelled) return;
-        setError(err instanceof Error ? err.message : 'Failed to load Today.');
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const handleBlockTap = async (blockId: string) => {
-    if (!promise) return;
-    const service = new BlockCompletionService();
-    const declarationService = new DeclarationService();
-    const isDone = completedBlockIds.includes(blockId);
-    try {
-      if (isDone) {
-        await service.uncompleteBlock(promise.id, today, blockId);
-        setCompletedBlockIds((prev) => prev.filter((id) => id !== blockId));
-      } else {
-        await service.completeBlock(promise.id, today, blockId);
-        setCompletedBlockIds((prev) =>
-          prev.includes(blockId) ? prev : [...prev, blockId],
-        );
-      }
-      // Recompute Self-Trust after any block change so the full-day bonus
-      // update is reflected immediately without waiting for a remount.
-      const [allDeclarations, allCompletions] = await Promise.all([
-        declarationService.listDeclarationsForPromise(promise.id),
-        service.listForPromise(promise.id),
-      ]);
-      setSelfTrust(
-        computeSelfTrust({
-          promise,
-          routine,
-          declarations: allDeclarations,
-          blockCompletions: allCompletions,
-          today,
-        }),
-      );
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save block.');
-    }
-  };
-
-  const currentHour = new Date().getHours();
-  const reflectionState = selectReflectionState({
-    currentHour,
-    todayDeclaration,
-  });
-
-  const principle = promise?.principles?.[0];
-
   return (
     <div className={styles.column}>
       <Greeting />
-      {loading || startingPoint === undefined ? (
+      {startingPoint === undefined ? (
         <p className={styles.loadingLine}>Loading Personal OS.</p>
       ) : startingPoint === null ? (
         <OnboardingSection
@@ -263,67 +155,22 @@ export function FrozenTodayPage({
         />
       ) : (
         <>
-          {/* Layer 1 — Identity (always). Greeting is above. Anchor +
-              Self-Trust complete the identity strip per the Daily
-              Momentum composition. */}
-          {promise ? (
-            <PromiseAnchor
-              promise={promise}
-              today={today}
-              yesterdayVerdict={yesterdayVerdict}
-              onTap={onPromiseAnchorTap ?? noop}
-            />
-          ) : (
-            <EmptyState onExplore={onExplore ?? noop} />
-          )}
-          {promise && selfTrust ? (
-            <SelfTrustLine result={selfTrust} />
-          ) : null}
-          {/* Layer 2 — Hero (single conscious decision). Reflection
-              takes the hero when the ritual window is open per line
-              180-184. Otherwise the Intervention Queue occupies the
-              first-below-identity position and self-nulls when nothing
-              fires per InterventionQueue.tsx:128-130 — leaving the
-              routine section visually next in line. */}
-          <CeremonialFade visible={reflectionState === 'awaiting'}>
-            <ReflectionInvitation
-              state={reflectionState}
-              onReflect={onReflect ?? noop}
-            />
-          </CeremonialFade>
-          {promise ? <InterventionQueue promiseId={promise.id} /> : null}
-          {/* Layer 3 — Supporting. Routine section (Current focus +
-              progress + strip) or its empty-state promo, then ambient
-              module widgets. */}
-          {routine ? (
-            (() => {
-              const routineProgress = getTodayProgress(
-                routine,
-                completedBlockIds,
-              );
-              return (
-                <>
-                  <CurrentFocusCard progress={routineProgress} />
-                  <ProgressSummary progress={routineProgress} />
-                  <RoutineStrip
-                    blocks={routine.blocks}
-                    completedBlockIds={completedBlockIds}
-                    onEditRoutine={onEditRoutine ?? noop}
-                    onBlockTap={(id) => {
-                      void handleBlockTap(id);
-                    }}
-                  />
-                </>
-              );
-            })()
-          ) : promise ? (
-            <RoutineEmptyStatePromo onEditRoutine={onEditRoutine ?? noop} />
-          ) : null}
-          {promise ? <TodayProgramWidgets promiseId={promise.id} /> : null}
-          {/* Layer 4 — Quiet. Aggregate engagement summary + principle
-              reinforcement. */}
-          {promise ? <DailyFlowSummary promiseId={promise.id} /> : null}
-          {principle ? <RememberSection principle={principle} /> : null}
+          {/* Slice E — Home multi-module composition. Home enumerates
+              registered modules' contributed home surfaces via
+              listHomeSurfaces() and renders each in layer order. Home
+              contains no module-specific rendering logic. Promise
+              contributes through `registerModule` at
+              src/features/frozen/promise/promiseModule.ts, Smoking's
+              legacy todayWidget auto-aliases through the same
+              mechanism per src/kernel/registry/index.ts:98-107. */}
+          <HomeModuleSurfaces today={today} />
+          {/* Platform-level daily-flow engine surfaces (not module
+              contributions). Both accept an optional promiseId — the
+              engine passes undefined when no active Promise, and each
+              surface self-nulls per InterventionQueue.tsx:130-132 /
+              DailyFlowSummary.tsx:117 when nothing fires. */}
+          <InterventionQueue />
+          <DailyFlowSummary />
         </>
       )}
       {error ? (
@@ -359,7 +206,7 @@ function Greeting() {
   );
 }
 
-function PromiseAnchor({
+export function PromiseAnchor({
   promise,
   today,
   yesterdayVerdict,
@@ -399,17 +246,6 @@ function PromiseAnchor({
         <span className={yesterdayClass}>{yesterdayLabel}</span>
       ) : null}
     </button>
-  );
-}
-
-function EmptyState({ onExplore }: { onExplore: () => void }) {
-  return (
-    <div className={styles.emptyBlock}>
-      <p className={styles.emptyLine}>Personal OS is quiet today.</p>
-      <button type="button" className={styles.textLink} onClick={onExplore}>
-        Choose a module to begin.
-      </button>
-    </div>
   );
 }
 
@@ -476,7 +312,7 @@ function StartingPointCard({
   );
 }
 
-function SelfTrustLine({ result }: { result: SelfTrustResult }) {
+export function SelfTrustLine({ result }: { result: SelfTrustResult }) {
   const suffix =
     result.daysScored === 0
       ? 'no days scored yet'
@@ -490,7 +326,7 @@ function SelfTrustLine({ result }: { result: SelfTrustResult }) {
   );
 }
 
-function RememberSection({ principle }: { principle: Principle }) {
+export function RememberSection({ principle }: { principle: Principle }) {
   return (
     <section className={styles.remember} aria-label="Remember">
       <p className={styles.eyebrow}>Remember</p>
@@ -499,7 +335,7 @@ function RememberSection({ principle }: { principle: Principle }) {
   );
 }
 
-function RoutineStrip({
+export function RoutineStrip({
   blocks,
   completedBlockIds,
   onEditRoutine,
@@ -564,7 +400,7 @@ function RoutineStrip({
   );
 }
 
-function RoutineEmptyStatePromo({
+export function RoutineEmptyStatePromo({
   onEditRoutine,
 }: {
   onEditRoutine: () => void;
@@ -584,7 +420,7 @@ function RoutineEmptyStatePromo({
   );
 }
 
-function ReflectionInvitation({
+export function ReflectionInvitation({
   state,
   onReflect,
 }: {

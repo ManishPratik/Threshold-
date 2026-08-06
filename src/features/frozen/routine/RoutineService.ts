@@ -4,6 +4,7 @@ import type { BlockCompletion } from '@data/types/frozen/BlockCompletion';
 import type { Routine, RoutineBlock } from '@data/types/frozen/Routine';
 import { RoutineRepository } from '@data/repositories/frozen/RoutineRepository';
 import { BlockCompletionRepository } from '@data/repositories/frozen/BlockCompletionRepository';
+import { AppStateRepository } from '@data/repositories/frozen/AppStateRepository';
 import { nowIso } from '@shared/lib/date';
 
 const ROUTINE_SCHEMA_VERSION = 1;
@@ -185,5 +186,38 @@ export class RoutineService {
     }
 
     await tx.done;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Orphan routine (Slice C — module-independence).
+  //
+  // An orphan routine is a Routine that exists without any Promise.
+  // Stored as a JSON blob on `AppState.orphanRoutine`
+  // (src/data/types/frozen/AppState.ts:30-38). Zero or one per install.
+  // Promise-scoped routines and orphan routines coexist in the schema:
+  // promise-scoped live in the `frozenRoutines` IDB store; orphan lives
+  // on the singleton AppState record. Existing methods above are
+  // untouched.
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Read the orphan Routine's blocks. `null` when none authored. */
+  async getOrphanRoutineBlocks(): Promise<RoutineBlock[] | null> {
+    const appState = new AppStateRepository();
+    const blocks = await appState.getOrphanRoutineBlocks();
+    if (blocks === null) return null;
+    // Structural clone — the returned type mirrors RoutineBlock.
+    return blocks.map((b) => ({ ...b })) as RoutineBlock[];
+  }
+
+  /** Persist the orphan Routine's blocks. Creates the record if absent. */
+  async saveOrphanRoutineBlocks(blocks: RoutineBlock[]): Promise<void> {
+    const appState = new AppStateRepository();
+    await appState.setOrphanRoutineBlocks(blocks);
+  }
+
+  /** Delete the orphan Routine payload. No-op if none exists. */
+  async deleteOrphanRoutine(): Promise<void> {
+    const appState = new AppStateRepository();
+    await appState.deleteOrphanRoutine();
   }
 }

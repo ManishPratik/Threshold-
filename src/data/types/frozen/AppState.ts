@@ -27,7 +27,35 @@ export interface AppState {
    * `enabledProgramIds` above).
    */
   startingPoint?: string;
+  /**
+   * Orphan-routine payload — a Routine that exists independently of any
+   * Promise (module-independence architecture, Slice C). Zero or one
+   * orphan routine per install. The blocks array carries the same
+   * `RoutineBlock` shape as promise-scoped routines. Optional so
+   * existing AppState rows remain valid without a schema bump.
+   */
+  orphanRoutine?: {
+    blocks: readonly RoutineBlockShape[];
+    updatedAt: string;
+  };
   schemaVersion: number;
+}
+
+/**
+ * Structural type — mirrors `RoutineBlock` at
+ * `src/data/types/frozen/Routine.ts:20-29`. Duplicated here as a
+ * structural echo to avoid an import cycle between AppState and the
+ * Routine type module. Keep in sync with the source of truth.
+ */
+export interface RoutineBlockShape {
+  id: string;
+  name: string;
+  durationMinutes: number;
+  type: string;
+  anchor?: 'morning' | 'midday' | 'evening' | 'night';
+  required?: boolean;
+  order?: number;
+  programOrigin?: string;
 }
 
 /** The literal id used for the singleton AppState record. */

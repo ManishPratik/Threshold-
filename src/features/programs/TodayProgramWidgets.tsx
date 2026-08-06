@@ -5,7 +5,12 @@ import { getProgram } from './registry';
 import type { LifeProgram } from '@contract/program';
 
 export interface TodayProgramWidgetsProps {
-  promiseId: string;
+  /**
+   * Optional per module-independence architecture (Slice A). Passed
+   * through to each ambient surface as-is; programs that require a
+   * Promise-scoped surface receive `undefined` and self-null.
+   */
+  promiseId?: string;
 }
 
 /**
@@ -27,7 +32,7 @@ export interface TodayProgramWidgetsProps {
  * Hero and overlay slots are not yet activated by this integration
  * slice. The intervention queue is not yet wired.
  */
-export function TodayProgramWidgets({ promiseId }: TodayProgramWidgetsProps) {
+export function TodayProgramWidgets({ promiseId }: TodayProgramWidgetsProps = {}) {
   const [enabledIds, setEnabledIds] = useState<readonly string[] | null>(null);
 
   useEffect(() => {
@@ -58,9 +63,10 @@ export function TodayProgramWidgets({ promiseId }: TodayProgramWidgetsProps) {
         const ambient = listSurfaces([program], 'ambient');
         return ambient.map((surface, idx) => {
           const Surface = surface.component;
+          const surfaceProps = promiseId !== undefined ? { promiseId } : {};
           return (
             <SurfaceErrorBoundary key={`${program.id}-${idx}`}>
-              <Surface promiseId={promiseId} />
+              <Surface {...surfaceProps} />
             </SurfaceErrorBoundary>
           );
         });

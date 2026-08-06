@@ -30,15 +30,35 @@ export interface LifeProgram {
    * See ADR 0009 §3, §5.
    */
   surfaces?: readonly ProgramSurface[];
+  /**
+   * Slice E — Home multi-module composition. Optional array of home
+   * surfaces the module contributes at Home's layered positions
+   * (identity / hero / supporting / quiet). Home enumerates every
+   * registered module's `homeSurfaces` and renders them in weight
+   * order per layer; no module receives privileged treatment.
+   */
+  homeSurfaces?: readonly HomeSurface[];
+  /**
+   * Slice F — Module-owned navigation. Optional array of NavBar entries
+   * the module contributes. The platform renders top-level entries
+   * (today, modules, settings) plus every registered module's
+   * `navEntries`. No module receives privileged NavBar placement.
+   */
+  navEntries?: readonly NavEntry[];
 }
 
 /**
  * Props every Today widget receives from the program runtime. Kept
  * lean so programs can pull their own data through the existing
  * repositories rather than accept a wide facade.
+ *
+ * `promiseId` is optional per module-independence architecture: modules
+ * that do not depend on a Promise (e.g., orphan Routine, Smoking in
+ * module-scoped mode) receive `undefined`. Modules that DO carry a
+ * Promise-scoped surface still receive the Promise's id.
  */
 export interface TodayWidgetProps {
-  promiseId: string;
+  promiseId?: string;
 }
 
 /**
@@ -78,7 +98,13 @@ export type AckKind = 'per-day' | 'per-arc' | 'per-milestone' | 'passive';
  * `1` per the "never punish missing data" rule.
  */
 export interface InterventionContext {
-  promiseId: string;
+  /**
+   * Optional per module-independence architecture: modules that do not
+   * depend on a Promise (e.g., Smoking in module-scoped mode) receive
+   * `undefined`. Modules that DO carry a Promise-scoped intervention
+   * still receive the Promise's id from the engine.
+   */
+  promiseId?: string;
   nowIso: string;
   phase: Phase;
   ackRate?: number;
@@ -112,7 +138,11 @@ export type SurfaceSlot = 'hero' | 'ambient' | 'overlay';
  * surfaces without a component rewrite.
  */
 export interface SurfaceProps {
-  promiseId: string;
+  /**
+   * Optional per module-independence architecture. Same semantics as
+   * `TodayWidgetProps.promiseId`.
+   */
+  promiseId?: string;
 }
 
 /**
@@ -123,5 +153,67 @@ export interface SurfaceProps {
 export interface ProgramSurface {
   slot: SurfaceSlot;
   component: ComponentType<SurfaceProps>;
+  weight: number;
+}
+
+/**
+ * Slice E — Home multi-module composition.
+ *
+ * Layered position where a module's home surface renders on the Today
+ * page. Home enumerates registered modules and renders each module's
+ * `homeSurfaces` at the appropriate layer.
+ *
+ * - identity: the "who am I in this session" strip at the top of Home
+ *   (anchors, self-trust indicators).
+ * - hero: the single conscious decision surface below identity
+ *   (interventions, reflection invitations).
+ * - supporting: the operational strip below hero (routines, ambient
+ *   widgets).
+ * - quiet: the low-attention footer (aggregate summaries, principle
+ *   reinforcement, module reminders).
+ */
+export type HomeSurfaceLayer = 'identity' | 'hero' | 'supporting' | 'quiet';
+
+/**
+ * Module-agnostic props every Home surface receives. Kept intentionally
+ * narrow so modules cannot request Promise-domain fields at the
+ * contract level. Modules that need per-module state load it
+ * internally via their own repositories and services.
+ */
+export interface HomeSurfaceProps {
+  /** Today's logical date, resolved through the app's day-boundary
+   *  rule. Provided so surfaces do not have to import the shared date
+   *  helper independently. */
+  today: string;
+}
+
+/**
+ * A single home-layer surface declared by a module. Weight orders
+ * multiple surfaces within the same layer (higher wins the earlier
+ * position). Home does not privilege any module id.
+ */
+export interface HomeSurface {
+  layer: HomeSurfaceLayer;
+  component: ComponentType<HomeSurfaceProps>;
+  weight: number;
+}
+
+/**
+ * Slice F — Module-owned navigation.
+ *
+ * A single NavBar entry declared by a module. `key` is the NavBar
+ * item identifier (must be stable across renders). `label` is the
+ * user-visible text. `path` is the navigation destination when the
+ * entry is tapped. `matches` is an optional predicate for active-key
+ * detection; when absent, the platform uses `pathname === path ||
+ * pathname.startsWith(path + '/')` as the default active rule.
+ * `weight` orders module contributions within the module-nav slot on
+ * the NavBar (higher first).
+ */
+export interface NavEntry {
+  key: string;
+  label: string;
+  path: string;
+  matches?: (pathname: string) => boolean;
   weight: number;
 }

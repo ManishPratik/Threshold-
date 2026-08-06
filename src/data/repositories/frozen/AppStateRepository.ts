@@ -1,6 +1,6 @@
 import { getDb } from '@data/db/client';
 import { FROZEN_STORES } from '@data/db/schema';
-import type { AppState } from '@data/types/frozen/AppState';
+import type { AppState, RoutineBlockShape } from '@data/types/frozen/AppState';
 import { APP_STATE_ID } from '@data/types/frozen/AppState';
 
 /**
@@ -139,5 +139,47 @@ export class AppStateRepository {
     const next: AppState = { ...current, startingPoint };
     const db = await getDb();
     await db.put(this.storeName, next);
+  }
+
+  /**
+   * Read the orphan Routine blocks. Returns `null` when the user has
+   * not yet authored an orphan routine. Slice C — module-independence.
+   */
+  async getOrphanRoutineBlocks(): Promise<readonly RoutineBlockShape[] | null> {
+    const current = await this.get();
+    return current?.orphanRoutine?.blocks ?? null;
+  }
+
+  /**
+   * Persist the orphan Routine blocks. Initialises the singleton first
+   * if absent. Stamps `updatedAt` at write time. Slice C — module-
+   * independence.
+   */
+  async setOrphanRoutineBlocks(
+    blocks: readonly RoutineBlockShape[],
+  ): Promise<void> {
+    const current = (await this.get()) ?? {
+      id: APP_STATE_ID,
+      currentPromiseId: null,
+      schemaVersion: 1,
+    };
+    const next: AppState = {
+      ...current,
+      orphanRoutine: { blocks, updatedAt: new Date().toISOString() },
+    };
+    const db = await getDb();
+    await db.put(this.storeName, next);
+  }
+
+  /**
+   * Delete the orphan Routine payload. Initialises the singleton first
+   * if absent. Slice C — module-independence.
+   */
+  async deleteOrphanRoutine(): Promise<void> {
+    const current = await this.get();
+    if (current === undefined) return;
+    const { orphanRoutine: _dropped, ...rest } = current;
+    const db = await getDb();
+    await db.put(this.storeName, rest as AppState);
   }
 }

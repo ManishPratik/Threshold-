@@ -24,6 +24,13 @@
 // namespace exposes only V2 names. V2 code paths MUST consume through
 // this namespace.
 
+import { createElement } from 'react';
+import type {
+  HomeSurface,
+  HomeSurfaceLayer,
+  LifeProgram,
+  NavEntry,
+} from '@contract/program';
 import {
   registerProgram as _registerProgram,
   getProgram as _getProgram,
@@ -54,3 +61,86 @@ export const listModules = _listPrograms;
  * the empty list.
  */
 export const getModuleSurfaces = _getProgramSurfaces;
+
+/**
+ * Slice E — Home multi-module composition.
+ *
+ * Enumerate the home surfaces contributed by every registered module,
+ * in weight-descending order per layer. When `layer` is provided the
+ * list is filtered to that layer only; otherwise all layers are
+ * returned in a single flat list (still weight-descending per layer,
+ * layer-order preserved as `identity → hero → supporting → quiet`).
+ *
+ * A module's `todayWidget` legacy entry (per ADR 0009 §3) is exposed
+ * here as an auto-aliased `HomeSurface` at layer `supporting` with
+ * weight `0`, so pre-existing programs (e.g., `src/programs/smoking/manifest.ts:5`
+ * which declares only `todayWidget`) contribute to Home through the
+ * same mechanism as modules that declare `homeSurfaces` explicitly.
+ * Every module receives identical treatment; Home does not privilege
+ * any module id.
+ */
+export function listHomeSurfaces(
+  layer?: HomeSurfaceLayer,
+): readonly HomeSurface[] {
+  const modules = listModules();
+  const layerOrder: readonly HomeSurfaceLayer[] = [
+    'identity',
+    'hero',
+    'supporting',
+    'quiet',
+  ];
+  const surfaces: HomeSurface[] = [];
+  for (const mod of modules) {
+    for (const s of moduleHomeSurfaces(mod)) {
+      if (layer === undefined || s.layer === layer) {
+        surfaces.push(s);
+      }
+    }
+  }
+  return surfaces.sort((a, b) => {
+    if (a.layer !== b.layer) {
+      return layerOrder.indexOf(a.layer) - layerOrder.indexOf(b.layer);
+    }
+    return b.weight - a.weight;
+  });
+}
+
+/**
+ * Slice F — Module-owned navigation.
+ *
+ * Enumerate the NavBar entries contributed by every registered module,
+ * sorted by descending weight. Platform-level entries (Today, Modules,
+ * Settings) are NOT part of this list; the app-layout composes them
+ * separately alongside these module contributions.
+ */
+export function listNavEntries(): readonly NavEntry[] {
+  const modules = listModules();
+  const entries: NavEntry[] = [];
+  for (const mod of modules) {
+    for (const e of mod.navEntries ?? []) entries.push(e);
+  }
+  return entries.sort((a, b) => b.weight - a.weight);
+}
+
+function moduleHomeSurfaces(mod: LifeProgram): readonly HomeSurface[] {
+  const explicit = mod.homeSurfaces ?? [];
+  if (explicit.length > 0) return explicit;
+  if (mod.todayWidget) {
+    // Wrap the legacy `todayWidget` (typed against `TodayWidgetProps`)
+    // in an adapter that consumes `HomeSurfaceProps` and calls the
+    // widget with no props. `TodayWidgetProps` is fully optional per
+    // Slice A so `<LegacyWidget />` compiles cleanly.
+    const LegacyWidget = mod.todayWidget;
+    function LegacyTodayWidgetHomeSurface() {
+      return createElement(LegacyWidget, {});
+    }
+    return [
+      {
+        layer: 'supporting',
+        component: LegacyTodayWidgetHomeSurface,
+        weight: 0,
+      },
+    ];
+  }
+  return [];
+}
