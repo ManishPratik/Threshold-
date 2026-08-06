@@ -31,4 +31,28 @@ registerModule({
       weight: 100,
     },
   ],
+  // Slice F — Module-owned navigation. Promise contributes its
+  // Chain (per-promise arc) and History (of past promises) NavBar
+  // entries. Match predicates capture the Promise-detail sub-routes
+  // (`/promise/*/chain`, `/promise/*`) so those pages highlight the
+  // correct NavBar tab. Weights place Chain above History in the
+  // module-nav slot (both between Modules and Settings).
+  navEntries: [
+    {
+      key: 'chain',
+      label: 'Chain',
+      path: '/chain',
+      matches: (p: string) =>
+        p === '/chain' || /^\/promise\/[^/]+\/chain$/.test(p),
+      weight: 90,
+    },
+    {
+      key: 'history',
+      label: 'History',
+      path: '/history',
+      matches: (p: string) =>
+        p === '/history' || /^\/promise\/[^/]+$/.test(p),
+      weight: 80,
+    },
+  ],
 });

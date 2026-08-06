@@ -29,6 +29,7 @@ import type {
   HomeSurface,
   HomeSurfaceLayer,
   LifeProgram,
+  NavEntry,
 } from '@contract/program';
 import {
   registerProgram as _registerProgram,
@@ -102,6 +103,23 @@ export function listHomeSurfaces(
     }
     return b.weight - a.weight;
   });
+}
+
+/**
+ * Slice F — Module-owned navigation.
+ *
+ * Enumerate the NavBar entries contributed by every registered module,
+ * sorted by descending weight. Platform-level entries (Today, Modules,
+ * Settings) are NOT part of this list; the app-layout composes them
+ * separately alongside these module contributions.
+ */
+export function listNavEntries(): readonly NavEntry[] {
+  const modules = listModules();
+  const entries: NavEntry[] = [];
+  for (const mod of modules) {
+    for (const e of mod.navEntries ?? []) entries.push(e);
+  }
+  return entries.sort((a, b) => b.weight - a.weight);
 }
 
 function moduleHomeSurfaces(mod: LifeProgram): readonly HomeSurface[] {

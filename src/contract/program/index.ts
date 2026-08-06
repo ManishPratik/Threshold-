@@ -19,4 +19,5 @@ export type {
   HomeSurfaceLayer,
   HomeSurfaceProps,
   HomeSurface,
+  NavEntry,
 } from './types';

@@ -38,6 +38,13 @@ export interface LifeProgram {
    * order per layer; no module receives privileged treatment.
    */
   homeSurfaces?: readonly HomeSurface[];
+  /**
+   * Slice F — Module-owned navigation. Optional array of NavBar entries
+   * the module contributes. The platform renders top-level entries
+   * (today, modules, settings) plus every registered module's
+   * `navEntries`. No module receives privileged NavBar placement.
+   */
+  navEntries?: readonly NavEntry[];
 }
 
 /**
@@ -188,5 +195,25 @@ export interface HomeSurfaceProps {
 export interface HomeSurface {
   layer: HomeSurfaceLayer;
   component: ComponentType<HomeSurfaceProps>;
+  weight: number;
+}
+
+/**
+ * Slice F — Module-owned navigation.
+ *
+ * A single NavBar entry declared by a module. `key` is the NavBar
+ * item identifier (must be stable across renders). `label` is the
+ * user-visible text. `path` is the navigation destination when the
+ * entry is tapped. `matches` is an optional predicate for active-key
+ * detection; when absent, the platform uses `pathname === path ||
+ * pathname.startsWith(path + '/')` as the default active rule.
+ * `weight` orders module contributions within the module-nav slot on
+ * the NavBar (higher first).
+ */
+export interface NavEntry {
+  key: string;
+  label: string;
+  path: string;
+  matches?: (pathname: string) => boolean;
   weight: number;
 }
