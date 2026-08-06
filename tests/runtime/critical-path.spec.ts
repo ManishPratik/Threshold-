@@ -287,7 +287,9 @@ test.describe('Founder Critical Path — Personal OS Runtime Verification', () =
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     // Wait for the SW precache install to complete so offline can
-    // serve the shell.
+    // serve the shell. Workbox precache install runs in the SW's
+    // `install` handler; we wait for `activated` + a short warm-up
+    // so precache fetch-and-store completes before we go offline.
     await page.waitForFunction(
       async () => {
         if (!('serviceWorker' in navigator)) return false;
@@ -299,9 +301,16 @@ test.describe('Founder Critical Path — Personal OS Runtime Verification', () =
       },
       { timeout: 15_000 },
     );
+    // Give the Workbox precache install a beat to complete. Verified
+    // required against the production sw.js at
+    // dist/sw.js (14 precache entries).
+    await page.waitForTimeout(2000);
     await context.setOffline(true);
     try {
-      await page.reload();
+      // `waitUntil: 'domcontentloaded'` — reload succeeds when the SW
+      // serves the shell from precache; the default `'load'` waits for
+      // network idle which never fires under offline.
+      await page.reload({ waitUntil: 'domcontentloaded', timeout: 15_000 });
       await expect(page.locator('#root')).toBeVisible({ timeout: 10_000 });
     } finally {
       await context.setOffline(false);
