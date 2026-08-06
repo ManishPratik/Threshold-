@@ -16,4 +16,7 @@ export type {
   SurfaceSlot,
   SurfaceProps,
   ProgramSurface,
+  HomeSurfaceLayer,
+  HomeSurfaceProps,
+  HomeSurface,
 } from './types';

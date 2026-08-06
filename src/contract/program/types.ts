@@ -30,6 +30,14 @@ export interface LifeProgram {
    * See ADR 0009 §3, §5.
    */
   surfaces?: readonly ProgramSurface[];
+  /**
+   * Slice E — Home multi-module composition. Optional array of home
+   * surfaces the module contributes at Home's layered positions
+   * (identity / hero / supporting / quiet). Home enumerates every
+   * registered module's `homeSurfaces` and renders them in weight
+   * order per layer; no module receives privileged treatment.
+   */
+  homeSurfaces?: readonly HomeSurface[];
 }
 
 /**
@@ -138,5 +146,47 @@ export interface SurfaceProps {
 export interface ProgramSurface {
   slot: SurfaceSlot;
   component: ComponentType<SurfaceProps>;
+  weight: number;
+}
+
+/**
+ * Slice E — Home multi-module composition.
+ *
+ * Layered position where a module's home surface renders on the Today
+ * page. Home enumerates registered modules and renders each module's
+ * `homeSurfaces` at the appropriate layer.
+ *
+ * - identity: the "who am I in this session" strip at the top of Home
+ *   (anchors, self-trust indicators).
+ * - hero: the single conscious decision surface below identity
+ *   (interventions, reflection invitations).
+ * - supporting: the operational strip below hero (routines, ambient
+ *   widgets).
+ * - quiet: the low-attention footer (aggregate summaries, principle
+ *   reinforcement, module reminders).
+ */
+export type HomeSurfaceLayer = 'identity' | 'hero' | 'supporting' | 'quiet';
+
+/**
+ * Module-agnostic props every Home surface receives. Kept intentionally
+ * narrow so modules cannot request Promise-domain fields at the
+ * contract level. Modules that need per-module state load it
+ * internally via their own repositories and services.
+ */
+export interface HomeSurfaceProps {
+  /** Today's logical date, resolved through the app's day-boundary
+   *  rule. Provided so surfaces do not have to import the shared date
+   *  helper independently. */
+  today: string;
+}
+
+/**
+ * A single home-layer surface declared by a module. Weight orders
+ * multiple surfaces within the same layer (higher wins the earlier
+ * position). Home does not privilege any module id.
+ */
+export interface HomeSurface {
+  layer: HomeSurfaceLayer;
+  component: ComponentType<HomeSurfaceProps>;
   weight: number;
 }
