@@ -23,7 +23,7 @@ export type {
   SurfaceSlot,
   SurfaceProps,
   ProgramSurface,
-} from './types';
+} from '@contract/program';
 
 export { TodayProgramWidgets } from './TodayProgramWidgets';
 export type { TodayProgramWidgetsProps } from './TodayProgramWidgets';

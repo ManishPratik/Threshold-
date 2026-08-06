@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AppStateRepository } from '@data/repositories/frozen/AppStateRepository';
-import {
-  getProgram,
-  type Intervention,
-  type InterventionContext,
-  type LifeProgram,
-} from '@features/programs';
+import { getProgram } from '@features/programs';
+import type {
+  Intervention,
+  InterventionContext,
+  LifeProgram,
+} from '@contract/program';
 import { markAcked, readSeenTodayIds } from './ackLog';
 import { readAggregateAckRate } from './analytics';
 import { toDateKey } from './dateKey';
-import { listInterventions } from './interventionQueue';
+import { listInterventions } from './interventionQueueEngine';
 import { resolvePhase } from './resolvePhase';
 import {
   bumpQueueVersion,

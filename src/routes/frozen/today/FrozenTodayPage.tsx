@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Declaration } from '@data/types/frozen/Declaration';
 import type { Principle } from '@data/types/Principle';
 import type { PromiseRecord } from '@data/types/PromiseRecord';
 import type { Routine, RoutineBlock } from '@data/types/frozen/Routine';
+import { AppStateRepository } from '@data/repositories/frozen/AppStateRepository';
 import {
   BlockCompletionService,
   CeremonialFade,
@@ -46,8 +48,20 @@ export interface FrozenTodayPageProps {
   onPromiseAnchorTap?: () => void;
   /** Fired when the "Edit routine" link is tapped. Default: noop. */
   onEditRoutine?: () => void;
-  /** Fired when the empty-state "Make one." text link is tapped. Default: noop. */
+  /**
+   * Fired when the empty-state "Make one." text link is tapped. Reserved
+   * for the pre-onboarding Promise-forced empty-state path; post
+   * Home-first-onboarding the empty-state links to `/modules` via
+   * `onExplore` instead. Kept optional for backward compatibility with
+   * adapters that still wire the create-promise callback.
+   */
   onCreatePromise?: () => void;
+  /**
+   * Fired when the "Choose a module to begin." link is tapped in the
+   * post-onboarding empty state (user picked "Look around first." and
+   * has no active Promise). Default: noop.
+   */
+  onExplore?: () => void;
 }
 
 /**
@@ -59,8 +73,9 @@ export function FrozenTodayPage({
   onReflect,
   onPromiseAnchorTap,
   onEditRoutine,
-  onCreatePromise,
+  onExplore,
 }: FrozenTodayPageProps = {}) {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [promise, setPromise] = useState<PromiseRecord | null>(null);
   const [routine, setRoutine] = useState<Routine | null>(null);
@@ -73,6 +88,56 @@ export function FrozenTodayPage({
     'kept' | 'broken' | null
   >(null);
   const [selfTrust, setSelfTrust] = useState<SelfTrustResult | null>(null);
+  // `undefined` = not yet loaded from AppState; `null` = onboarding not
+  // yet completed (Home renders the onboarding state); string = user
+  // has picked a Starting Point (Home renders operating state).
+  const [startingPoint, setStartingPoint] = useState<string | null | undefined>(
+    undefined,
+  );
+
+  // Load the chosen Starting Point on mount. Independent of the primary
+  // data useEffect below so onboarding-state rendering does not have to
+  // wait for the Promise/Routine reads (which return early when
+  // `activePromise === null` anyway).
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const repo = new AppStateRepository();
+      const sp = await repo.getStartingPoint();
+      if (!cancelled) setStartingPoint(sp);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleChooseStartingPoint = async (
+    sp: 'quit-addiction' | 'daily-routine' | 'serious-promise' | 'look-around',
+  ) => {
+    const repo = new AppStateRepository();
+    try {
+      await repo.setStartingPoint(sp);
+      if (sp === 'quit-addiction') {
+        // Pre-enable Smoking so the post-Promise Home immediately shows
+        // its ambient widget + interventions. Then flow into the
+        // Promise-creation ritual as the natural continuation of
+        // onboarding — the user is not "leaving" onboarding; they are
+        // completing it.
+        await repo.setEnabledProgramIds(['smoking']);
+        navigate('/create-promise');
+      } else if (sp === 'daily-routine') {
+        navigate('/modules/routine');
+      } else if (sp === 'serious-promise') {
+        navigate('/create-promise');
+      } else {
+        // 'look-around' — stay on Home; the operating state renders the
+        // module-agnostic empty-state prompt linking to /modules.
+        setStartingPoint(sp);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not save your choice.');
+    }
+  };
 
   useEffect(() => {
     const promiseService = new PromiseService();
@@ -188,10 +253,19 @@ export function FrozenTodayPage({
   return (
     <div className={styles.column}>
       <Greeting />
-      {loading ? (
+      {loading || startingPoint === undefined ? (
         <p className={styles.loadingLine}>Loading Personal OS.</p>
+      ) : startingPoint === null ? (
+        <OnboardingSection
+          onChoose={(sp) => {
+            void handleChooseStartingPoint(sp);
+          }}
+        />
       ) : (
         <>
+          {/* Layer 1 — Identity (always). Greeting is above. Anchor +
+              Self-Trust complete the identity strip per the Daily
+              Momentum composition. */}
           {promise ? (
             <PromiseAnchor
               promise={promise}
@@ -200,15 +274,27 @@ export function FrozenTodayPage({
               onTap={onPromiseAnchorTap ?? noop}
             />
           ) : (
-            <EmptyState onCreate={onCreatePromise ?? noop} />
+            <EmptyState onExplore={onExplore ?? noop} />
           )}
           {promise && selfTrust ? (
             <SelfTrustLine result={selfTrust} />
           ) : null}
-          {promise ? <DailyFlowSummary promiseId={promise.id} /> : null}
+          {/* Layer 2 — Hero (single conscious decision). Reflection
+              takes the hero when the ritual window is open per line
+              180-184. Otherwise the Intervention Queue occupies the
+              first-below-identity position and self-nulls when nothing
+              fires per InterventionQueue.tsx:128-130 — leaving the
+              routine section visually next in line. */}
+          <CeremonialFade visible={reflectionState === 'awaiting'}>
+            <ReflectionInvitation
+              state={reflectionState}
+              onReflect={onReflect ?? noop}
+            />
+          </CeremonialFade>
           {promise ? <InterventionQueue promiseId={promise.id} /> : null}
-          {promise ? <TodayProgramWidgets promiseId={promise.id} /> : null}
-          {principle ? <RememberSection principle={principle} /> : null}
+          {/* Layer 3 — Supporting. Routine section (Current focus +
+              progress + strip) or its empty-state promo, then ambient
+              module widgets. */}
           {routine ? (
             (() => {
               const routineProgress = getTodayProgress(
@@ -230,13 +316,14 @@ export function FrozenTodayPage({
                 </>
               );
             })()
+          ) : promise ? (
+            <RoutineEmptyStatePromo onEditRoutine={onEditRoutine ?? noop} />
           ) : null}
-          <CeremonialFade visible={reflectionState === 'awaiting'}>
-            <ReflectionInvitation
-              state={reflectionState}
-              onReflect={onReflect ?? noop}
-            />
-          </CeremonialFade>
+          {promise ? <TodayProgramWidgets promiseId={promise.id} /> : null}
+          {/* Layer 4 — Quiet. Aggregate engagement summary + principle
+              reinforcement. */}
+          {promise ? <DailyFlowSummary promiseId={promise.id} /> : null}
+          {principle ? <RememberSection principle={principle} /> : null}
         </>
       )}
       {error ? (
@@ -315,14 +402,77 @@ function PromiseAnchor({
   );
 }
 
-function EmptyState({ onCreate }: { onCreate: () => void }) {
+function EmptyState({ onExplore }: { onExplore: () => void }) {
   return (
     <div className={styles.emptyBlock}>
-      <p className={styles.emptyLine}>You haven&apos;t made a promise yet.</p>
-      <button type="button" className={styles.textLink} onClick={onCreate}>
-        Make one.
+      <p className={styles.emptyLine}>Personal OS is quiet today.</p>
+      <button type="button" className={styles.textLink} onClick={onExplore}>
+        Choose a module to begin.
       </button>
     </div>
+  );
+}
+
+function OnboardingSection({
+  onChoose,
+}: {
+  onChoose: (
+    sp: 'quit-addiction' | 'daily-routine' | 'serious-promise' | 'look-around',
+  ) => void;
+}) {
+  return (
+    <section aria-label="Getting started">
+      <p className={styles.welcomeEyebrow}>Welcome to Personal OS.</p>
+      <h1 className={styles.welcomeQuestion}>
+        What would you like help with today?
+      </h1>
+      <div className={styles.startingPoints}>
+        <StartingPointCard
+          title="Quit an addiction."
+          subtitle="Nicotine, sugar, screens."
+          onSelect={() => onChoose('quit-addiction')}
+        />
+        <StartingPointCard
+          title="Build a daily routine."
+          subtitle="Blocks by morning, midday, evening, night."
+          onSelect={() => onChoose('daily-routine')}
+        />
+        <StartingPointCard
+          title="Keep a promise to yourself."
+          subtitle="A contract with a start, an end, and an honour."
+          onSelect={() => onChoose('serious-promise')}
+        />
+        <StartingPointCard
+          title="Look around first."
+          subtitle="No commitments yet. Change your mind anytime."
+          onSelect={() => onChoose('look-around')}
+        />
+      </div>
+      <p className={styles.startingHint}>
+        You can enable more areas later from Modules.
+      </p>
+    </section>
+  );
+}
+
+function StartingPointCard({
+  title,
+  subtitle,
+  onSelect,
+}: {
+  title: string;
+  subtitle: string;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className={styles.startingPointCard}
+      onClick={onSelect}
+    >
+      <span className={styles.startingPointTitle}>{title}</span>
+      <span className={styles.startingPointSubtitle}>{subtitle}</span>
+    </button>
   );
 }
 
@@ -410,6 +560,26 @@ function RoutineStrip({
           Edit routine.
         </button>
       </div>
+    </section>
+  );
+}
+
+function RoutineEmptyStatePromo({
+  onEditRoutine,
+}: {
+  onEditRoutine: () => void;
+}) {
+  return (
+    <section className={styles.remember} aria-label="Routine">
+      <p className={styles.eyebrow}>Routine</p>
+      <p className={styles.rememberText}>You have no routine yet.</p>
+      <button
+        type="button"
+        className={styles.textLink}
+        onClick={onEditRoutine}
+      >
+        Add your first block.
+      </button>
     </section>
   );
 }

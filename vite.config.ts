@@ -59,6 +59,8 @@ export default defineConfig({
       '@shared': path.resolve(__dirname, 'src/shared'),
       '@data': path.resolve(__dirname, 'src/data'),
       '@ds': path.resolve(__dirname, 'src/design-system'),
+      '@contract': path.resolve(__dirname, 'src/contract'),
+      '@kernel': path.resolve(__dirname, 'src/kernel'),
     },
   },
   build: {

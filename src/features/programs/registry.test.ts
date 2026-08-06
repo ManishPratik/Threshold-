@@ -1,5 +1,5 @@
 import { afterEach, describe, it, expect } from 'vitest';
-import type { LifeProgram, ProgramSurface } from './types';
+import type { LifeProgram, ProgramSurface } from '@contract/program';
 import {
   clearRegistry,
   getProgram,

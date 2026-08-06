@@ -24,6 +24,77 @@
   font-weight: var(--fw-regular);
 }
 
+/* Onboarding state — Home's first render when startingPoint is unset.
+ * "What would you like help with today?" + four Starting Points. */
+
+.welcomeEyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-eyebrow-size);
+  line-height: var(--type-meta-eyebrow-lh);
+  letter-spacing: var(--type-meta-eyebrow-tracking);
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  margin: 0 0 var(--space-s) 0;
+  font-weight: var(--fw-medium);
+}
+
+.welcomeQuestion {
+  font-family: var(--font-serif);
+  font-size: var(--type-display-reading-size);
+  line-height: var(--type-display-reading-lh);
+  color: var(--ink-primary);
+  margin: 0 0 var(--space-xl) 0;
+  font-weight: var(--fw-regular);
+}
+
+.startingPoints {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+  margin-bottom: var(--space-xl);
+}
+
+.startingPointCard {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-m) 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  align-self: stretch;
+  border-radius: var(--radius-sm);
+}
+.startingPointCard:hover .startingPointTitle { color: var(--accent); }
+.startingPointCard:focus-visible {
+  outline: 2px solid var(--focus-ring-accent-color);
+  outline-offset: 3px;
+}
+
+.startingPointTitle {
+  font-family: var(--font-serif);
+  font-size: var(--type-display-reading-size);
+  line-height: var(--type-display-reading-lh);
+  color: var(--ink-primary);
+  margin: 0;
+  font-weight: var(--fw-regular);
+}
+
+.startingPointSubtitle {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+.startingHint {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta-body-size);
+  color: var(--ink-muted);
+  margin: 0;
+}
+
 .anchor {
   background: none;
   border: none;

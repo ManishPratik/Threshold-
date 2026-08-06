@@ -2,11 +2,8 @@ import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { AppStateRepository } from '@data/repositories/frozen/AppStateRepository';
 import { deleteDb } from '@data/db/client';
-import {
-  clearRegistry,
-  registerProgram,
-  type Intervention,
-} from '@features/programs';
+import { clearRegistry, registerProgram } from '@features/programs';
+import type { Intervention } from '@contract/program';
 import { InterventionQueue } from './InterventionQueue';
 import { markAcked, readAckRecord } from './ackLog';
 

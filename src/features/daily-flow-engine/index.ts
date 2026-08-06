@@ -15,7 +15,7 @@ export {
 } from './constants';
 
 export { resolvePhase } from './resolvePhase';
-export { listInterventions } from './interventionQueue';
+export { listInterventions } from './interventionQueueEngine';
 export { listSurfaces } from './surfaces';
 
 export {

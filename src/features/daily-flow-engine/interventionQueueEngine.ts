@@ -2,7 +2,7 @@ import type {
   Intervention,
   InterventionContext,
   LifeProgram,
-} from '@features/programs';
+} from '@contract/program';
 import {
   MAX_ABOVE_FOLD,
   P1_PER_PHASE,

@@ -1,4 +1,4 @@
-import type { Phase } from '@features/programs';
+import type { Phase } from '@contract/program';
 
 /**
  * Coarse clock-derived phase heuristic. ADR 0009 §2 fixes the four V1
