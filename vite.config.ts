@@ -23,7 +23,17 @@ export default defineConfig({
       strategies: 'injectManifest',
       srcDir: 'src/pwa',
       filename: 'sw.ts',
-      registerType: 'prompt',
+      // v1.1.x hotfix — autoUpdate replaces the previous 'prompt' registration
+      // policy for the module-independence rollout. Existing installed clients
+      // running the pre-Slice-G bundle stayed on the old app because 'prompt'
+      // required a user click to activate the new SW. autoUpdate lets the new
+      // SW take control automatically on next update check. See release-log
+      // entry "Post-v1.1.0 hotfix — SW auto-update for module-independence".
+      // ADR-0005's 'prompt' preference is temporarily overridden for this
+      // rollout; UpdatePrompt.tsx + useServiceWorkerUpdate.ts remain in tree
+      // (unused for this cycle) so 'prompt' can be reinstated later without
+      // recovering deleted code.
+      registerType: 'autoUpdate',
       injectRegister: false,
       manifest: {
         name: 'Personal OS',

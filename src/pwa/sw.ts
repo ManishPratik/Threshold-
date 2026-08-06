@@ -32,10 +32,16 @@ registerRoute(
   new StaleWhileRevalidate({ cacheName: 'external-assets' }),
 );
 
-// Update flow: waits for the client to send SKIP_WAITING before activating.
-// See registerSW.ts for the prompt UI hook point.
-self.addEventListener('message', (event) => {
-  if (event.data && (event.data as { type?: string }).type === 'SKIP_WAITING') {
-    void self.skipWaiting();
-  }
+// v1.1.x hotfix — Automatic update activation. Pairs with
+// `registerType: 'autoUpdate'` in vite.config.ts. The prior SKIP_WAITING
+// message handler required a user click on UpdatePrompt to fire; that path
+// left pre-Slice-G clients stuck on the old bundle because the click never
+// happened. The new SW now skips waiting on install and claims all clients
+// on activate so the module-independent build is served without user action.
+self.addEventListener('install', () => {
+  void self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
 });
