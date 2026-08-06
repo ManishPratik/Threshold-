@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { AppStateRepository } from '@data/repositories/frozen/AppStateRepository';
 import { listSurfaces, SurfaceErrorBoundary } from '@features/daily-flow-engine';
 import { getProgram } from './registry';
-import type { LifeProgram } from './types';
+import type { LifeProgram } from '@contract/program';
 
 export interface TodayProgramWidgetsProps {
   promiseId: string;

@@ -1,6 +1,6 @@
-# Architecture Summary — v1.1.0-rc1
+# Architecture Summary — v1.1.0
 
-*Baseline snapshot for release candidate 1.*
+*Baseline snapshot.*
 
 ## Stack
 
@@ -79,7 +79,7 @@ Route  →  Feature service (domain rules)  →  Repository (single-store CRUD) 
 - Baseline security headers set (X-Frame-Options DENY, nosniff, strict Referrer, locked Permissions-Policy).
 - Update prompt is a sticky bar; explicit user action to reload; no silent reloads.
 
-## Counts at v1.1.0-rc1
+## Counts at v1.1.0
 
 - Feature folders: `frozen`, `routine-engine`, `self-trust`, `programs`, `daily-flow-engine`.
 - Concrete Life Programs: `smoking`.

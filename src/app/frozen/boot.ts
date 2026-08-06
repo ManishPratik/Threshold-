@@ -14,6 +14,7 @@ import {
   purgeOlderThan30Days,
   toDateKey,
 } from '@features/daily-flow-engine';
+import { AppStateRepository } from '@data/repositories/frozen/AppStateRepository';
 
 /**
  * Threshold above which the app root renders a plain "Loading…" line
@@ -31,6 +32,10 @@ export interface FrozenBootData {
   todayDeclaration: Declaration | null;
   todayCompletions: BlockCompletion[];
   routine: Routine | null;
+  /** The chosen Starting Point (`AppState.startingPoint`). `null` when
+   *  onboarding has not yet been completed. Home reads this to decide
+   *  between its onboarding state and its operating state. */
+  startingPoint: string | null;
 }
 
 /**
@@ -56,7 +61,11 @@ export async function bootstrapFrozen(): Promise<FrozenBootData> {
   void purgeOlderThan30Days(toDateKey(Date.now())).catch(() => {});
 
   const promiseService = new PromiseService();
-  const active = (await promiseService.getActivePromise()) ?? null;
+  const appStateRepo = new AppStateRepository();
+  const [active, startingPoint] = await Promise.all([
+    promiseService.getActivePromise().then((p) => p ?? null),
+    appStateRepo.getStartingPoint(),
+  ]);
 
   if (active === null) {
     return {
@@ -65,6 +74,7 @@ export async function bootstrapFrozen(): Promise<FrozenBootData> {
       todayDeclaration: null,
       todayCompletions: [],
       routine: null,
+      startingPoint,
     };
   }
 
@@ -84,5 +94,6 @@ export async function bootstrapFrozen(): Promise<FrozenBootData> {
     todayDeclaration: declaration ?? null,
     todayCompletions: completions,
     routine: routine ?? null,
+    startingPoint,
   };
 }

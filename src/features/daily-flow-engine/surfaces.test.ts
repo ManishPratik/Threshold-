@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { LifeProgram, ProgramSurface } from '@features/programs';
+import type { LifeProgram, ProgramSurface } from '@contract/program';
 import { listSurfaces } from './surfaces';
 
 const AmbientA = () => null;

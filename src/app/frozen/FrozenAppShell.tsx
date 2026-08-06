@@ -12,7 +12,6 @@ import {
   bootstrapFrozen,
   type FrozenBootData,
 } from './boot';
-import { selectInitialRoute } from './firstLaunch';
 import { frozenRouter } from './router';
 import { FrozenModalRoot } from './FrozenModalRoot';
 
@@ -56,11 +55,10 @@ export function FrozenAppShell() {
       try {
         const boot = await bootstrapFrozen();
         if (cancelled) return;
-        const initial = selectInitialRoute(boot);
-        if (initial === 'create-promise') {
-          await frozenRouter.navigate('/create-promise');
-        }
-        if (cancelled) return;
+        // Boot always resolves to Home. Home renders its own onboarding
+        // state when `AppState.startingPoint` is unset (per
+        // FrozenTodayPage) — the kernel does not decide the initial
+        // screen anymore.
         setState({ status: 'ready', boot });
       } catch (err) {
         if (cancelled) return;

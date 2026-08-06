@@ -115,4 +115,29 @@ export class AppStateRepository {
     const db = await getDb();
     await db.put(this.storeName, next);
   }
+
+  /**
+   * Read the chosen Starting Point. Returns `null` when onboarding has
+   * not yet been completed — Home renders its onboarding state in that
+   * case.
+   */
+  async getStartingPoint(): Promise<string | null> {
+    const current = await this.get();
+    return current?.startingPoint ?? null;
+  }
+
+  /**
+   * Persist the chosen Starting Point. Initialises the singleton first
+   * if it is absent so callers do not have to sequence init + write.
+   */
+  async setStartingPoint(startingPoint: string): Promise<void> {
+    const current = (await this.get()) ?? {
+      id: APP_STATE_ID,
+      currentPromiseId: null,
+      schemaVersion: 1,
+    };
+    const next: AppState = { ...current, startingPoint };
+    const db = await getDb();
+    await db.put(this.storeName, next);
+  }
 }

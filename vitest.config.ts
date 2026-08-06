@@ -14,6 +14,8 @@ export default defineConfig({
       '@shared': path.resolve(process.cwd(), 'src/shared'),
       '@data': path.resolve(process.cwd(), 'src/data'),
       '@ds': path.resolve(process.cwd(), 'src/design-system'),
+      '@contract': path.resolve(process.cwd(), 'src/contract'),
+      '@kernel': path.resolve(process.cwd(), 'src/kernel'),
     },
   },
   test: {

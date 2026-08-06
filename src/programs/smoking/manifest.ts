@@ -1,9 +1,9 @@
-import { registerProgram } from '@features/programs';
+import { registerModule } from '@kernel/registry';
 import { SmokingTodayWidget } from './SmokingTodayWidget';
 import { SMOKING_INTERVENTIONS } from './interventions';
 import { preloadSmokingContext } from './interventionState';
 
-registerProgram({
+registerModule({
   id: 'smoking',
   displayName: 'Smoking Cessation',
   description:

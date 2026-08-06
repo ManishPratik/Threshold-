@@ -4,6 +4,7 @@ import styles from './FrozenAppLayout.module.css';
 
 const NAV_ITEMS = [
   { key: 'today', label: 'Today' },
+  { key: 'modules', label: 'Modules' },
   { key: 'chain', label: 'Chain' },
   { key: 'history', label: 'History' },
   { key: 'settings', label: 'Settings' },
@@ -11,6 +12,7 @@ const NAV_ITEMS = [
 
 function activeKeyFromPath(pathname: string): string | undefined {
   if (pathname === '/' || pathname.startsWith('/today')) return 'today';
+  if (pathname.startsWith('/modules')) return 'modules';
   if (pathname === '/chain' || /^\/promise\/[^/]+\/chain$/.test(pathname)) {
     return 'chain';
   }
@@ -35,6 +37,7 @@ export function FrozenAppLayout() {
 
   const handleSelect = (key: string) => {
     if (key === 'today') navigate('/today');
+    else if (key === 'modules') navigate('/modules');
     else if (key === 'chain') navigate('/chain');
     else if (key === 'history') navigate('/history');
     else if (key === 'settings') navigate('/settings');

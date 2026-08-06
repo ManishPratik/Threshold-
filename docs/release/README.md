@@ -1,10 +1,10 @@
 # Release Artefacts
 
-*Baseline snapshot for v1.1.0-rc1. Any change here is a release-management change, not a product or architectural one.*
+*Baseline snapshot for v1.1.0. Any change here is a release-management change, not a product or architectural one.*
 
 | Artefact | File |
 | -------- | ---- |
-| Release notes (v1.1.0-rc1) | ./release-notes-v1.1.0-rc1.md |
+| Release notes (v1.1.0) | ./release-notes-v1.1.0.md |
 | Architecture summary | ./architecture-summary.md |
 | ADR index | ./adr-index.md |
 | Deployment checklist | ./deployment-checklist.md |
@@ -14,7 +14,7 @@
 
 ## Baseline
 
-- Version: **v1.1.0-rc1** (the semver `1.1.0` lives in `package.json`; the RC1 marker is documented here and in the release notes).
+- Version: **v1.1.0**.
 - Verification pipeline at freeze: typecheck clean, lint 0 errors (4 pre-existing test-file non-null-assertion warnings), 335 tests across 23 files, production build with 14 precache entries at ~525 KiB.
 - Zero TODO / FIXME / XXX markers in `src/`.
 

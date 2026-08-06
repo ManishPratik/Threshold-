@@ -1,9 +1,9 @@
-import {
-  getProgramSurfaces,
-  type LifeProgram,
-  type ProgramSurface,
-  type SurfaceSlot,
-} from '@features/programs';
+import { getProgramSurfaces } from '@features/programs';
+import type {
+  LifeProgram,
+  ProgramSurface,
+  SurfaceSlot,
+} from '@contract/program';
 
 /**
  * Collect every registered program's surfaces for one slot.

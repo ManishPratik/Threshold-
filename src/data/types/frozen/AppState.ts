@@ -16,6 +16,17 @@ export interface AppState {
    * "no programs enabled" by the runtime.
    */
   enabledProgramIds?: readonly string[];
+  /**
+   * The Starting Point the user picked during first-launch onboarding.
+   * Set exactly once when the user selects one of the Home starting-point
+   * cards. `undefined` means onboarding has not yet been completed —
+   * Home renders its onboarding state (`FrozenTodayPage` branches on
+   * `startingPoint === null`). Values are opaque strings written by the
+   * onboarding surface; the field is optional so existing AppState rows
+   * remain valid without a schema bump (same pattern as
+   * `enabledProgramIds` above).
+   */
+  startingPoint?: string;
   schemaVersion: number;
 }
 

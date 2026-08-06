@@ -1,4 +1,4 @@
-import type { Intervention, InterventionContext } from '@features/programs';
+import type { Intervention, InterventionContext } from '@contract/program';
 import { DEFAULT_MANTRA, DEFAULT_PLEDGE_BODY } from './editableSlots';
 import {
   computeCleanHours,

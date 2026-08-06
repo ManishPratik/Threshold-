@@ -12,6 +12,10 @@ import { FrozenSettingsPage } from '@routes/frozen/settings';
 import { FrozenCreatePromisePage } from '@routes/frozen/create-promise';
 import { FrozenDailyFlowAnalyticsPage } from '@routes/frozen/daily-flow-analytics';
 import {
+  FrozenModulesPage,
+  FrozenSmokingModuleDetailPage,
+} from '@routes/frozen/modules';
+import {
   EVENING_REFLECTION_HOUR,
   LOGICAL_DAY_BOUNDARY_HOUR,
 } from '@routes/frozen/today';
@@ -120,7 +124,7 @@ export function TodayRouteAdapter() {
         if (promise) navigate(`/promise/${promise.id}`);
       }}
       onEditRoutine={() => navigate('/routine')}
-      onCreatePromise={() => navigate('/create-promise')}
+      onExplore={() => navigate('/modules')}
     />
   );
 }
@@ -262,6 +266,22 @@ export function CreatePromiseRouteAdapter() {
       onCreated={() => navigate('/today')}
       onCancel={() => navigate('/today')}
     />
+  );
+}
+
+export function ModulesRouteAdapter() {
+  const navigate = useNavigate();
+  return (
+    <FrozenModulesPage
+      onOpenModule={(id) => navigate(`/modules/${id}`)}
+    />
+  );
+}
+
+export function ModulesSmokingRouteAdapter() {
+  const navigate = useNavigate();
+  return (
+    <FrozenSmokingModuleDetailPage onBack={() => navigate('/modules')} />
   );
 }
 

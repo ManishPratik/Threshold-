@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
-import type { Intervention, InterventionContext } from '@features/programs';
+import type { Intervention, InterventionContext } from '@contract/program';
 import type * as IntervStateModule from './interventionState';
 import type { SmokingContext } from './interventionState';
 import { DEFAULT_MANTRA, DEFAULT_PLEDGE_BODY } from './editableSlots';

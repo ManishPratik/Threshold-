@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { TodayWidgetProps } from '@features/programs';
+import type { TodayWidgetProps } from '@contract/program';
 import { CravingSOSOverlay } from './CravingSOSOverlay';
 import { SmokingScienceWidget } from './SmokingScienceWidget';
 import { fetchSurfedCount } from './state';

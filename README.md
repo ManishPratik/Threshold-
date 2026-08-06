@@ -10,11 +10,11 @@ The primary metric is **Self-Trust** — a score derived from an append-only log
 
 ## Status
 
-Release Candidate 1 (v1.1.0-rc1).
+v1.1.0.
 
 Shipped surfaces: Today, Chain, History, Settings, Daily Flow Analytics. Shipped kernel: Promise, Routine (with anchor grouping), Reflection, Self-Trust. Shipped runtime: Daily Flow Engine (Intervention Queue, Ack Log, Daily Flow Summary, tier-adaptive interventions, per-day retention purge). Shipped Life Program: Smoking Cessation.
 
-See `docs/release/release-notes-v1.1.0-rc1.md` for a feature-by-feature manifest.
+See `docs/release/release-notes-v1.1.0.md` for a feature-by-feature manifest.
 
 ## Requirements
 

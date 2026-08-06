@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Heading, Text } from '@shared/ui';
-import { ModalShell } from '@features/frozen';
+import { ModalShell } from '@kernel/modal';
 import {
   BREATH_CYCLE,
   buildSurfedEntry,

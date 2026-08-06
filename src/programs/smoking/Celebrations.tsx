@@ -1,5 +1,5 @@
 import { Button, Heading, Text } from '@shared/ui';
-import { ModalShell } from '@features/frozen';
+import { ModalShell } from '@kernel/modal';
 import type { Hurdle } from './science';
 import styles from './Celebrations.module.css';
 

@@ -1,4 +1,4 @@
-import type { LifeProgram, ProgramSurface } from './types';
+import type { LifeProgram, ProgramSurface } from '@contract/program';
 
 /**
  * Static Life Program registry. Programs register at module-load time

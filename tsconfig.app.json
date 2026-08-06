@@ -36,7 +36,9 @@
       "@features/*": ["./src/features/*"],
       "@shared/*": ["./src/shared/*"],
       "@data/*": ["./src/data/*"],
-      "@ds/*": ["./src/design-system/*"]
+      "@ds/*": ["./src/design-system/*"],
+      "@contract/*": ["./src/contract/*"],
+      "@kernel/*": ["./src/kernel/*"]
     }
   },
   "include": ["src", "src/**/*.tsx", "src/**/*.ts"],

@@ -3,8 +3,8 @@ import type {
   Intervention,
   InterventionContext,
   LifeProgram,
-} from '@features/programs';
-import { listInterventions } from './interventionQueue';
+} from '@contract/program';
+import { listInterventions } from './interventionQueueEngine';
 
 function ctx(overrides: Partial<InterventionContext> = {}): InterventionContext {
   return {

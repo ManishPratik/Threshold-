@@ -1,6 +1,6 @@
-# v1.1.0-rc1 ADR Index
+# v1.1.0 ADR Index
 
-*Baseline snapshot for v1.1.0-rc1. Canonical list of every accepted architecture decision.*
+*Baseline snapshot for v1.1.0. Canonical list of every accepted architecture decision.*
 
 | # | Title | Established in | File |
 | - | ----- | -------------- | ---- |
@@ -26,6 +26,6 @@
 - ADR 0007 documents the Mission-Contract service pattern. The Mission aggregate was renamed to Promise; the service pattern applies verbatim to `PromiseService`, `DeclarationService`, `RoutineService`.
 - ADR 0009 governs the Daily Flow Engine, Program contract (interventions + surfaces + slot ownership), Today render tree, ack log semantics, retention window, and the three engagement tiers.
 
-## Freeze note for v1.1.0-rc1
+## Freeze note for v1.1.0
 
 No ADR beyond 0009 is required for this release. Any new ADR belongs to a v1.2 or v2 planning cycle.

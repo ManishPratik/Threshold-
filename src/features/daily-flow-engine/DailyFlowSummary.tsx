@@ -1,11 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AppStateRepository } from '@data/repositories/frozen/AppStateRepository';
-import {
-  getProgram,
-  type InterventionContext,
-  type LifeProgram,
-} from '@features/programs';
-import { listInterventions } from './interventionQueue';
+import { getProgram } from '@features/programs';
+import type { InterventionContext, LifeProgram } from '@contract/program';
+import { listInterventions } from './interventionQueueEngine';
 import { readSeenTodayIds } from './ackLog';
 import { readAggregateAckRate } from './analytics';
 import { toDateKey } from './dateKey';

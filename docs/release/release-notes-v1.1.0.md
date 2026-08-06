@@ -1,6 +1,6 @@
-# Personal OS — Release Notes v1.1.0-rc1
+# Personal OS — Release Notes v1.1.0
 
-*Release Candidate 1. Baseline snapshot of the shipped product.*
+*Baseline snapshot of the shipped product.*
 
 ## Overview
 
@@ -106,5 +106,5 @@ The primary metric is **Self-Trust** — a score derived from the append-only lo
 
 ## Release tag
 
-- Suggested tag: `v1.1.0-rc1`.
+- Suggested tag: `v1.1.0`.
 - Prerequisites: deployment checklist at `docs/release/deployment-checklist.md`.
