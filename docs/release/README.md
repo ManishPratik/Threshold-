@@ -8,6 +8,7 @@
 | Architecture summary | ./architecture-summary.md |
 | ADR index | ./adr-index.md |
 | Deployment checklist | ./deployment-checklist.md |
+| Release verification policy | ./release-verification-policy.md |
 | Rollback procedure | ./rollback-procedure.md |
 | Backup / restore verification | ./backup-restore-verification.md |
 | Deferred roadmap | ./deferred-roadmap.md |

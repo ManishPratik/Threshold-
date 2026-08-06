@@ -963,3 +963,294 @@ Final Phase 1 gate matrix:
 
 Proceeding to Phase 2 per RELEASE_PLAN §3 — release commit + branch
 cut of `release/v1.1.0` from `main`.
+
+---
+
+## Phase 2 execution
+
+**Date:** 2026-08-06.
+
+- **W2.1 — Release branch cut.** `git switch -c release/v1.1.0 main`. Source `main` SHA `c1ce60291e32a2efe4aad091c0e23fec52fefdfb`; release-branch HEAD SHA identical. **PASS.**
+- **W2.2 — Release commit.** Package.json version re-applied to `1.1.0` at `package.json:3`. Staged 50 Category A files explicitly (no `git add -A`; `docs/roadmap/v1.2-backlog.md` excluded per v1.2 scope; `package-lock.json` unstaged per Founder ruling). Commit SHA `35b00ba2b067bd5f1fa39ef09d6cc1c6b6117f5f`. Message: `Release: Personal OS v1.1.0`. 50 files changed, 2131 insertions, 97 deletions. **PASS.**
+- **W2.3 — Push + PR.** `git push -u origin release/v1.1.0` succeeded. PR #3 opened at https://github.com/ManishPratik/Threshold-/pull/3 (base `main`, head `release/v1.1.0`, state OPEN, mergedAt null). No tag; no merge; main unchanged at `c1ce602`. **PASS.**
+
+---
+
+## Gate FA — Founder Acceptance
+
+**Date:** 2026-08-06.
+
+Founder Review Package presented (Sections 1–7). Founder Decision recorded verbatim:
+
+> **Founder Decision: GO**
+> Scope of approval: Phase 3 (Deploy Preview) only.
+> Production promotion remains prohibited.
+
+**Gate FA status: PASS.**
+
+Authorization: transition from Phase 2 to Phase 3. Constraints: do not
+merge; do not tag; do not deploy to production. If any P0 defect is
+discovered during Phase 3, stop immediately, record in this log, and
+return to the appropriate earlier phase per RELEASE_PLAN.
+
+Proceeding to Phase 3 execution.
+
+---
+
+## Phase 3 execution
+
+**Date:** 2026-08-06.
+
+### W3.1 — Netlify deploy preview builds green
+
+**Status: PASS.**
+
+`gh pr checks 3` on commit `35b00ba2b067bd5f1fa39ef09d6cc1c6b6117f5f`
+returns success across all Netlify checks:
+
+- `netlify/makeyoudiscplined/deploy-preview` — **pass** — Deploy Preview ready!
+- `netlify/stellular-druid-c837e6/deploy-preview` — **pass** — Deploy Preview ready!
+- `Header rules - makeyoudiscplined` — **pass** — 4 header rules processed
+- `Header rules - stellular-druid-c837e6` — **pass** — 4 header rules processed
+- `Redirect rules - makeyoudiscplined` — **pass** — 1 redirect rule processed
+- `Redirect rules - stellular-druid-c837e6` — **pass** — 1 redirect rule processed
+- `Pages changed - makeyoudiscplined` — **neutral** — 5 new files uploaded (1 generated page + 4 assets changed)
+- `Pages changed - stellular-druid-c837e6` — **neutral** — all files already uploaded
+
+**Deploy preview URLs (per Netlify PR comment):**
+- Primary: https://deploy-preview-3--makeyoudiscplined.netlify.app
+- Secondary: https://deploy-preview-3--stellular-druid-c837e6.netlify.app
+
+**Deploy log links (per Netlify PR comment):**
+- Primary: https://app.netlify.com/projects/makeyoudiscplined/deploys/6a742f9d07dafe00086fad55
+- Secondary: https://app.netlify.com/projects/stellular-druid-c837e6/deploys/6a742f9db44dbb00080de9b5
+
+### W3.2 – W3.10 — Blocked by two independent constraints
+
+Attempted `curl -sI https://deploy-preview-3--makeyoudiscplined.netlify.app/`
+and every path (`/`, `/sw.js`, `/manifest.webmanifest`, `/assets/*`,
+SPA-rewrite probe, `/favicon.ico`) returns **HTTP/2 401** with
+`content-type: text/html; charset=utf-8`. The Netlify deploy preview
+is behind site-level protection — every path returns 401 without
+authentication. Only the platform-level `strict-transport-security`
+header from Netlify's edge is visible.
+
+Two constraints stack on Phase 3 W3.2–W3.10:
+
+- **C1 — Browser tooling.** W3.2 (boot < 3 s, no console errors),
+  W3.3 (IndexedDB inspection), W3.4 (route smoke tests), W3.5
+  (Life Program smoke), W3.6 (Daily Flow behaviour), W3.7 (PWA
+  install + update flow), W3.8 (backup/restore round-trip), W3.9
+  (accessibility keyboard-only spot-check), W3.10 (cross-browser
+  Chrome/Safari desktop+mobile) all require live browser execution.
+  No browser or browser-automation tool is available in this
+  environment (`ToolSearch` for "browser puppeteer playwright chrome
+  devtools" returned only Google Calendar/Drive OAuth tools this
+  turn — see W1.7 for the same finding).
+- **C2 — Preview URL authentication.** Even the curl-inspectable
+  header checks that would close the W1.7 ENV-LIMITED gap for
+  `netlify.toml:19-47` (security headers, asset long-cache,
+  `Service-Worker-Allowed`, `manifest.webmanifest` `Cache-Control`)
+  cannot be executed because every path returns 401 without
+  credentials.
+
+**Neither constraint is fixable from this environment.**
+
+### Phase 3 status
+
+**Phase 3 status: PARTIAL.** W3.1 PASS; W3.2–W3.10 blocked by C1 +
+C2. Full Phase 3 completion requires a human operator (or
+browser-automation running with preview credentials) to execute
+W3.2–W3.10 against the Netlify deploy preview URL after providing
+the site-protection credential.
+
+**P0 defect check.** No P0 defect discovered during Phase 3
+execution to date. W3.1 is green; W3.2–W3.10 cannot be executed
+in this environment, so no evidence of a defect has been produced
+either way from those items.
+
+Per Founder Acceptance rule at Gate FA, Phase 3 must complete
+successfully before production promotion (Phase 4) is authorized.
+Production promotion remains prohibited per Founder ruling.
+
+---
+
+## Phase 3 reclassification (Founder ruling 2026-08-06)
+
+Per Founder ruling, Phase 3 is split into two parts:
+
+### Phase 3A — Automated Deploy-Preview Verification
+
+**Status: COMPLETE.**
+
+Scope: W3.1 (Netlify deploy preview builds green). Executed and passed
+via `gh pr checks 3` against commit `35b00ba2b067bd5f1fa39ef09d6cc1c6b6117f5f`;
+both `netlify/makeyoudiscplined/deploy-preview` and
+`netlify/stellular-druid-c837e6/deploy-preview` report `pass`.
+
+### Phase 3B — Interactive Runtime Verification
+
+**Status: PENDING — Interactive Runtime Verification Required.**
+
+Scope (moved from Phase 3): W3.2 Preview URL boot < 3 s + no console
+errors; W3.3 IndexedDB inspection; W3.4 Route smoke tests; W3.5
+Life Program smoke; W3.6 Daily Flow behaviour smoke; W3.7 PWA install
++ update flow; W3.8 Backup/restore round-trip; W3.9 Accessibility
+spot-check; W3.10 Cross-browser spot-check.
+
+Each item classified **PENDING — Interactive Runtime Verification Required**, not FAIL.
+
+**Recorded reasons for the pending state (per Founder direction):**
+
+- **Netlify authentication prevented automated verification.** Every
+  path on `https://deploy-preview-3--makeyoudiscplined.netlify.app/`
+  returns `HTTP/2 401` with `content-type: text/html; charset=utf-8`.
+  Only `strict-transport-security: max-age=31536000; includeSubDomains; preload`
+  from the Netlify edge is observable. The deploy preview is behind
+  site-level protection, blocking automated curl-based verification.
+- **Browser tooling was unavailable.** `ToolSearch` for "browser
+  puppeteer playwright chrome devtools screenshot" surfaced no browser
+  automation MCP; only Google Calendar/Drive OAuth tools were returned.
+  No headless browser can execute W3.2–W3.10 from this environment.
+- **Neither condition constitutes a software defect.** The v1.1.0
+  release commit builds green on Netlify (Phase 3A W3.1); every Phase 1
+  gate PASS/WAIVED; no P0 defect discovered.
+
+### Phase 3B → Phase 4 gate
+
+Phase 4 (production promotion) remains **BLOCKED** until Phase 3B is
+completed by the highest-capability verifier available (per Founder
+Amendment 2026-08-06 and `docs/release/release-verification-policy.md`
+§3 Capability Rule) executing W3.2–W3.10 against the Netlify deploy
+preview URL per `docs/release/deployment-checklist.md` smoke-test
+procedures.
+
+No merge; no tag; no production deploy performed. `main` at
+`c1ce60291e32a2efe4aad091c0e23fec52fefdfb`; `release/v1.1.0` at
+`35b00ba2b067bd5f1fa39ef09d6cc1c6b6117f5f`; PR #3 state OPEN,
+mergedAt null; no `v1.1.0` tag exists (local or remote).
+
+---
+
+## Founder Amendment 2026-08-06 — Verification model made capability-based
+
+Per Founder ruling, the release verification model is amended:
+
+- **Verification is capability-based, not person-based.** The governing
+  requirement for Phase 3B is that the application executes in a real
+  browser and produces observable evidence — not that a specific
+  person conducts the test.
+- **Three phases codified:** Phase 3A (Infrastructure Verification),
+  Phase 3B (Interactive Runtime Verification), Phase 3C (Production
+  Validation). Full definitions, capability priority order, blocking
+  rules, and terminology retirement map are in the new
+  `docs/release/release-verification-policy.md`.
+- **Capability priority for Phase 3B:** Playwright → Chrome DevTools
+  automation → Puppeteer → Human reviewer. Human verification is
+  the fallback, not the primary mechanism.
+- **Blocking rules.** Phase 4 cannot begin unless Phase 3A + Phase 3B
+  complete. Phase 5 cannot begin unless Phase 3C complete.
+- **Terminology retired:** "Human Verification" / "Human Acceptance" /
+  "Human Acceptance Verification" replaced everywhere with
+  "Interactive Runtime Verification".
+
+### Current release state after this amendment
+
+- **Phase 3A: COMPLETE.** W3.1 Netlify deploy preview built green
+  (unchanged from prior Phase 3A record above).
+- **Phase 3B: BLOCKED.** Reasons recorded:
+  - Deploy Preview authentication prevented automated execution (every
+    path returns `HTTP/2 401`).
+  - No browser automation available in this environment (`ToolSearch`
+    for "browser puppeteer playwright chrome devtools screenshot"
+    returned only Google Calendar/Drive OAuth tools).
+  - **This is an environmental limitation, not a software defect.**
+- **Release-state changes from this amendment: none** beyond terminology
+  and process documentation. No merge, tag, deploy, or code change
+  performed. `main` still at `c1ce60291e32a2efe4aad091c0e23fec52fefdfb`;
+  `release/v1.1.0` still at `35b00ba2b067bd5f1fa39ef09d6cc1c6b6117f5f`;
+  PR #3 state OPEN; no `v1.1.0` tag.
+
+---
+
+## Phase 4 execution — Production promotion
+
+**Date:** 2026-08-06.
+**Authorization:** Founder instruction 2026-08-06 authorized merge, production deployment, and tag creation.
+
+### Safety pre-flight
+
+- `git fetch origin` completed.
+- `main` HEAD before merge: `c1ce60291e32a2efe4aad091c0e23fec52fefdfb` (unchanged from Phase-0 recorded value).
+- `release/v1.1.0` HEAD: `35b00ba2b067bd5f1fa39ef09d6cc1c6b6117f5f` (matches approved release commit).
+- PR #3 pre-merge state per `gh pr view 3 --json state,mergeable,mergeStateStatus`: `{"state":"OPEN","mergeable":"MERGEABLE","mergeStateStatus":"CLEAN"}`. No merge conflicts.
+
+### Merge
+
+- Command: `gh pr merge 3 --merge --admin` (standard GitHub merge strategy; `--admin` bypasses required-review checks per Founder authorization).
+- Result: main advanced `c1ce602…` → `aa947e6…`.
+- **Merge commit SHA: `aa947e6e20876895e42ead0b4af4fb9436a5eac7`**.
+- PR #3 post-merge state: `{"state":"MERGED","mergedAt":"2026-08-06T08:01:54Z","mergedBy":"ManishPratik","mergeCommit":{"oid":"aa947e6e20876895e42ead0b4af4fb9436a5eac7"}}`.
+- Post-merge main log:
+  ```
+  aa947e6 Merge pull request #3 from ManishPratik/release/v1.1.0
+  35b00ba Release: Personal OS v1.1.0
+  c1ce602 Personal OS v1.1.0-rc1 — Daily Flow Engine + Life Programs + release hardening
+  ```
+
+### Tag
+
+- Command: `git tag -a v1.1.0 -m "Personal OS v1.1.0"` on main HEAD `aa947e6…`; `git push origin v1.1.0`.
+- Result: annotated tag object `3de057a89edddb34e1d6ede915a27d16c5ae8590` created, pointing to commit `aa947e6e20876895e42ead0b4af4fb9436a5eac7`.
+- Origin tag verification (`git ls-remote --tags origin | grep v1.1.0`):
+  - `3de057a89edddb34e1d6ede915a27d16c5ae8590	refs/tags/v1.1.0`
+  - `aa947e6e20876895e42ead0b4af4fb9436a5eac7	refs/tags/v1.1.0^{}`
+
+### Production deployment
+
+- **Production URL:** `https://makeyoudiscplined.netlify.app/`.
+- **Deployed commit SHA:** `aa947e6e20876895e42ead0b4af4fb9436a5eac7` (Netlify auto-built from main HEAD after merge).
+- **Netlify build was independent of the local build:** production JS bundle `/assets/index-C4RruODU.js` (160330 bytes) and CSS `/assets/index-B4Ly2A-1.css` (96022 bytes) have different content-hashes than the local W1.2-A build (`/assets/index-BJzsOg-g.js`, `/assets/index-DWzQO4x7.css`). Same source commit; different transitive-dep resolution under Netlify's Node 20 + npm 10.x per W1.3 findings. Behavioural equivalence is verified by Phase 3B human/browser test, not by bundle-hash comparison. Vendor bundle `/assets/react-CkDVGEv-.js` hash matches.
+- **Netlify deploy URL:** `https://app.netlify.com/projects/makeyoudiscplined/` (dashboard). Specific deploy ID for `aa947e6…` is available in the Netlify dashboard deploys list; not extractable via `gh api /repos/…/commits/…/check-runs` because Netlify posts check-runs only for PR builds, not main-branch pushes.
+- **Deployment duration:** not directly measurable from this environment (no direct Netlify API access). Netlify's typical Node-20 build for this repo runs in the 1–2 minute range per `docs/release/session-handoff-v2.md:44`.
+
+### Phase 3C — Production Validation (per release-verification-policy.md)
+
+All 9 curl-inspectable production checks PASS against `https://makeyoudiscplined.netlify.app/`:
+
+| # | Check | Result | Evidence |
+|---|---|---|---|
+| 3C.1 | HTTP 200 on `/` | PASS | `HTTP/2 200`. |
+| 3C.2 | `index.html` loads | PASS | `content-type: text/html; charset=UTF-8`; `content-length: 1422`. |
+| 3C.3 | JS bundle loads | PASS | `/assets/index-C4RruODU.js` returns 200; `content-length: 160330`; `content-type: application/javascript; charset=UTF-8`. |
+| 3C.4 | CSS bundle loads | PASS | `/assets/index-B4Ly2A-1.css` returns 200; `content-length: 96022`; `content-type: text/css; charset=UTF-8`. |
+| 3C.5 | manifest loads | PASS | `/manifest.webmanifest` returns 200; `content-type: application/manifest+json` (matches `netlify.toml:34`). |
+| 3C.6 | service worker serves | PASS | `/sw.js` returns 200; `content-type: application/javascript; charset=UTF-8`; `service-worker-allowed: /` (matches `netlify.toml:26-30`). |
+| 3C.7 | security headers | PASS | `x-frame-options: DENY`, `x-content-type-options: nosniff`, `referrer-policy: strict-origin-when-cross-origin`, `permissions-policy: camera=(), microphone=(), geolocation=()`, `strict-transport-security: max-age=31536000; includeSubDomains; preload` — all present per `netlify.toml:41-47` + Netlify edge default. |
+| 3C.8 | cache headers | PASS | `/` and `/manifest.webmanifest` and `/sw.js`: `cache-control: public,max-age=0,must-revalidate` per netlify.toml. `/assets/*`: `cache-control: public,max-age=31536000,immutable` per `netlify.toml:19-22`. |
+| 3C.9 | SPA routing | PASS | `/some-nonexistent-route` returns 200 with `text/html` body; `/modules` (new v1.1.0 route) returns 200. Netlify rewrite per `netlify.toml:14-17` works. |
+| 3C.10 | no broken production assets | PASS | All 4 icons + react bundle + workbox-window bundle return 200; `/favicon.ico` returns 200 (Netlify serves a default; not 404 as local Vite preview did). |
+
+**Phase 3C status: COMPLETE.** All Netlify-edge-applied headers verified; SPA routing verified; every probed asset returns 200.
+
+### Phase 3B — Interactive Runtime Verification
+
+**Status: PENDING — Human Acceptance Checklist below.**
+
+Per `docs/release/release-verification-policy.md` §3 Capability Rule, browser automation is preferred (Playwright / Chrome DevTools / Puppeteer). None is available in this environment (`ToolSearch` for browser-automation MCP surfaced only Google Calendar/Drive OAuth tools this turn). Therefore fallback to Human reviewer per §3 capability priority order.
+
+Founder rule from Phase 4 execution brief: "If browser automation is available: execute the complete Interactive Runtime Verification checklist. Otherwise: stop after production deployment and produce a Human Acceptance Checklist for testing."
+
+Phase 4 blocking rule from `docs/release/release-verification-policy.md` §4 has been evaluated: Phase 3A COMPLETE (W3.1); Phase 3B not COMPLETE — Founder authorization overrode the standing block ("Assume Founder Approval for: Merge to main, Production deployment, Tag creation") for this release. Phase 3B human verification is now the next required step to close the release cycle.
+
+### Release status
+
+- **Version:** v1.1.0.
+- **Tag:** `v1.1.0` at commit `aa947e6…`.
+- **Production commit deployed:** `aa947e6…`.
+- **Production URL live:** `https://makeyoudiscplined.netlify.app/`.
+- **Phase 3A:** COMPLETE.
+- **Phase 3B:** PENDING human verification (checklist below).
+- **Phase 3C:** COMPLETE.
+- **Phase 4:** COMPLETE (merge + tag + production deploy).
+- **Phase 5:** PENDING — 24-hour observation window begins when Phase 3B closes.
